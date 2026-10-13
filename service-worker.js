@@ -1,5 +1,5 @@
-const CACHE_NAME = 'dts-v1.0.0';
-const RUNTIME_CACHE = 'dts-runtime-v1.0.0';
+const CACHE_NAME = 'dts-v1.0.1';
+const RUNTIME_CACHE = 'dts-runtime-v1.0.1';
 
 const APP_SHELL = [
   './',
