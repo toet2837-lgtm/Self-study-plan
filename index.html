@@ -973,7 +973,6 @@ async function toggleVoiceRecord(){
  try{
   const stream=await navigator.mediaDevices.getUserMedia({audio:true});
   
-  // Browser ထောက်ပံ့တဲ့ MIME type ကို ရွေးချယ်ခြင်း (iOS/Android compatibility အတွက်)
   let mimeType = '';
   if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4'; 
   else if (MediaRecorder.isTypeSupported('audio/webm')) mimeType = 'audio/webm'; 
@@ -1145,28 +1144,14 @@ window.addEventListener('resize',()=>{if(document.getElementById('tab-stats').cl
 })();
 </script>
 
-<!-- Service Worker Auto Update Script -->
+<!-- Service Worker Registration (Safe Mode - No Auto Reload) -->
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    let refreshing = false;
-    // SW အသစ်ဝင်လာရင် Page ကို Auto Refresh လုပ်ရန်
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (refreshing) return;
-      refreshing = true;
-      window.location.reload();
-    });
-
     navigator.serviceWorker.register('./service-worker.js').then(reg => {
-      reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('[PWA] New content available, reloading...');
-            window.location.reload();
-          }
-        });
-      });
+      console.log('[PWA] Service Worker registered successfully.');
+      // Auto reload လုပ်တဲ့စနစ်ကို လုံးဝဖြုတ်ထားပါတယ်။ 
+      // Update ရှိရင် User ကိုယ်တိုင် Refresh လုပ်မှ အသစ်ရမှာပါ။
     }).catch(err => console.warn('[PWA] SW failed:', err));
   });
 }
