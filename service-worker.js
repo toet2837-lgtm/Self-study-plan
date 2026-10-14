@@ -1,77 +1,65 @@
-const CACHE_NAME = 'dts-v1.0.1';
-const RUNTIME_CACHE = 'dts-runtime-v1.0.1';
-
-const APP_SHELL = [
+const CACHE_NAME = 'daily-time-v1.0.2'; // Version ပြောင်းတိုင်း ဒီနေရာမှာ နံပါတ်တင်ပါ
+const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './icon-192.png'
 ];
 
-self.addEventListener('install', event => {
+// 1. Install Event - Cache သိမ်းခြင်း
+self.addEventListener('install', (event) => {
+  self.skipWaiting(); // Service Worker အသစ်ကို ချက်ချင်း activate လုပ်စေရန်
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL.map(url => new Request(url, { cache: 'reload' }))))
-      .then(() => self.skipWaiting())
-      .catch(err => console.error('SW install failed:', err))
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS_TO_CACHE);
+    })
   );
 });
 
-self.addEventListener('activate', event => {
+// 2. Activate Event - Cache အဟောင်းများ ရှင်းလင်းခြင်း
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(names => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        names.filter(n => n !== CACHE_NAME && n !== RUNTIME_CACHE)
-          .map(n => caches.delete(n))
-      );
-    }).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  if (url.origin !== location.origin) return;
-  if (request.method !== 'GET') return;
-
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then(res => {
-          const copy = res.clone();
-          caches.open(RUNTIME_CACHE).then(c => c.put(request, copy));
-          return res;
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
         })
-        .catch(() => caches.match('./index.html'))
+      );
+    }).then(() => self.clients.claim()) // ချက်ချင်း control ယူရန်
+  );
+});
+
+// 3. Fetch Event - Offline မှာ Cache ကနေ ပြန်ပေးခြင်း
+self.addEventListener('fetch', (event) => {
+  if (event.request.mode === 'navigate') {
+    // index.html ကို Network First နဲ့ ယူမယ်၊ မရရင် Cache ကနေ ယူမယ်
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
     );
-    return;
+  } else {
+    // ကျန်တဲ့ assets တွေကို Cache First နဲ့ ယူမယ်
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        return cachedResponse || fetch(event.request).then((response) => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        });
+      })
+    );
   }
-
-  event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-      return fetch(request).then(res => {
-        if (!res || res.status !== 200 || res.type === 'opaque') return res;
-        const copy = res.clone();
-        caches.open(RUNTIME_CACHE).then(c => c.put(request, copy));
-        return res;
-      }).catch(() => new Response('Offline', { status: 503 }));
-    })
-  );
-});
-
-self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      for (const c of list) if ('focus' in c) return c.focus();
-      if (clients.openWindow) return clients.openWindow('./');
-    })
-  );
-});
-
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
