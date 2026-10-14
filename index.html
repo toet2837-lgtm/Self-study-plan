@@ -959,6 +959,9 @@ function makeVoiceItem(id,blob){
  audio.controls=true;
  audio.preload='metadata'; 
  audio.style.width='100%'; 
+ // ဖုန်း Browser တွေအတွက် အရေးကြီးတဲ့ attribute များ ထည့်ခြင်း
+ audio.setAttribute('playsinline','true');
+ audio.setAttribute('webkit-playsinline','true');
  audio.src=url;
  const del=document.createElement('button');del.type='button';del.className='icon danger';del.textContent='🗑';del.onclick=()=>{wrap.remove();editingNoteAudioIds=editingNoteAudioIds.filter(x=>x!==id);URL.revokeObjectURL(url)};
  wrap.appendChild(audio);wrap.appendChild(del);return wrap;
@@ -987,7 +990,9 @@ async function toggleVoiceRecord(){
    stream.getTracks().forEach(t=>t.stop());
    if(!recordedChunks.length)return;
    
-   const blob=new Blob(recordedChunks);
+   // MIME type ကို တိကျစွာ ထည့်သွင်း၍ Blob ဖန်တီးခြင်း (အရေးကြီးဆုံးအချက်)
+   const actualMime = mediaRecorder.mimeType || mimeType || 'audio/webm';
+   const blob = new Blob(recordedChunks, { type: actualMime });
    
    if(blob.size>5*1024*1024){if(!confirm('အသံဖိုင် ကြီးနေပါတယ် ('+(blob.size/1024/1024).toFixed(1)+'MB)။ သိမ်းမလား?'))return}
    const id='aud_'+uid();
@@ -1006,9 +1011,27 @@ async function saveNoteItem(){
  try{
   const dataList=[];for(const f of files){if(!f.type.startsWith('image/'))continue;dataList.push(await compressImage(f))}
   let note;
-  if(editingNoteId){note=cache.notes.find(x=>x.id===editingNoteId);if(!note)throw new Error('မှတ်စု မတွေ့ပါ');note.title=title;note.body=body;note.imageIds=note.imageIds||[];note.audioIds=editingNoteAudioIds}
-  else{note={id:uid(),folderId:currentFolderId,title,body,imageIds:[],audioIds:[],createdAt:Date.now()};cache.notes.unshift(note)}
-  for(const aId of editingNoteAudioIds||[]){const a=await idbGetAudio(aId);if(a&&a.noteId&&a.noteId.startsWith('temp_')){a.noteId=note.id;await idbAddAudio(a)}}
+  if(editingNoteId){
+    note=cache.notes.find(x=>x.id===editingNoteId);
+    if(!note)throw new Error('မှတ်စု မတွေ့ပါ');
+    note.title=title;note.body=body;
+    note.imageIds=note.imageIds||[];
+    note.audioIds=[...editingNoteAudioIds]; // <--- အသံဖိုင် ID များကို သိမ်းဆည်းခြင်း
+  } else {
+    // မှတ်စုအသစ် ဖန်တီးတဲ့အခါ အသံဖိုင် ID များကို ပါ တစ်ခါတည်း ထည့်သိမ်းခြင်း (ဒီနေရာမှာ ပြင်လိုက်တာပါ)
+    note={id:uid(),folderId:currentFolderId,title,body,imageIds:[],audioIds:[...editingNoteAudioIds],createdAt:Date.now()};
+    cache.notes.unshift(note);
+  }
+  
+  // အသံဖိုင်များကို မှတ်စု ID နှင့် ချိတ်ဆက်ခြင်း
+  for(const aId of editingNoteAudioIds||[]){
+    const a=await idbGetAudio(aId);
+    if(a&&a.noteId&&a.noteId.startsWith('temp_')){
+      a.noteId=note.id;
+      await idbAddAudio(a);
+    }
+  }
+  
   for(const data of dataList){const imgId='img_'+uid();await idbAddImage({id:imgId,noteId:note.id,data,createdAt:Date.now()});note.imageIds.push(imgId)}
   if(!await saveNotes())return;
   if(!editingNoteId)await addXp(3,'note');
@@ -1021,24 +1044,46 @@ async function viewNote(id){
  const n=cache.notes.find(x=>x.id===id);if(!n)return;currentViewNoteId=id;
  document.getElementById('viewNoteTitle').textContent='📝 '+n.title;
  document.getElementById('viewNoteBody').innerHTML=mdToHtml(n.body||'');
- const box=document.getElementById('viewNoteImages');box.innerHTML='';
- for(const imgId of n.imageIds||[]){const im=await idbGetImage(imgId);if(im){const el=document.createElement('img');el.className='thumb';el.src=im.data;el.onclick=()=>openFullscreen(imgId,n.imageIds);box.appendChild(el)}}
  
- const abox=document.getElementById('viewNoteAudio');abox.innerHTML='';
- for(const aId of n.audioIds||[]){
-   const a=await idbGetAudio(aId);
-   if(a){
-     const wrap=document.createElement('div');wrap.className='voice-item';
-     const audio=document.createElement('audio');
-     audio.controls=true;
-     audio.preload='metadata';
-     audio.style.width='100%';
-     audio.src=URL.createObjectURL(a.blob);
-     wrap.appendChild(audio);
-     abox.appendChild(wrap);
+ // ပုံများ ပြသခြင်း
+ const box=document.getElementById('viewNoteImages');box.innerHTML='';
+ for(const imgId of n.imageIds||[]){
+   const im=await idbGetImage(imgId);
+   if(im){const el=document.createElement('img');el.className='thumb';el.src=im.data;el.onclick=()=>openFullscreen(imgId,n.imageIds);box.appendChild(el)}
+ }
+ 
+ // 🎙️ အသံဖိုင်များ ပြသခြင်း (အဓိက ပြင်ဆင်ထားသော အပိုင်း)
+ const abox=document.getElementById('viewNoteAudio');
+ abox.innerHTML='';
+ if(n.audioIds && n.audioIds.length > 0){
+   for(const aId of n.audioIds){
+     const a = await idbGetAudio(aId);
+     if(a && a.blob){
+       const wrap = document.createElement('div');
+       wrap.className = 'voice-item';
+       wrap.style.marginTop = '10px';
+       wrap.style.padding = '10px';
+       wrap.style.background = '#f1f5f9';
+       wrap.style.borderRadius = '10px';
+       
+       const audio = document.createElement('audio');
+       audio.controls = true;
+       audio.preload = 'auto'; // Metadata အစား auto ပြောင်းထားပါတယ်
+       audio.style.width = '100%';
+       // ဖုန်း Browser တွေမှာ အသံဖွင့်လို့ရအောင် ဒီနှစ်ခု ထည့်ရပါတယ်
+       audio.setAttribute('playsinline', 'true');
+       audio.setAttribute('webkit-playsinline', 'true');
+       
+       const audioUrl = URL.createObjectURL(a.blob);
+       audio.src = audioUrl;
+       
+       wrap.appendChild(audio);
+       abox.appendChild(wrap);
+     }
    }
  }
- document.getElementById('modalViewNote').classList.add('show')
+ 
+ document.getElementById('modalViewNote').classList.add('show');
 }
 async function deleteCurrentNote(){if(currentViewNoteId==null)return;const id=currentViewNoteId;closeModal('modalViewNote');await delNote(id);currentViewNoteId=null}
 async function openFullscreen(imageId,ids){fsImages=ids||[imageId];fsIndex=Math.max(0,fsImages.indexOf(imageId));await showFsImage();document.getElementById('fullscreenViewer').classList.add('show')}
