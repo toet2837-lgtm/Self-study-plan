@@ -2,1204 +2,2103 @@
 <html lang="my">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<title>Daily Time System</title>
+<title>Study System</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Daily Time">
+<meta name="apple-mobile-web-app-title" content="Study System">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
-:root{
-  --primary:#315efb;--primary-soft:#eef3ff;--ink:#172033;--muted:#697386;
-  --line:#e5e9f2;--bg:#f8fafc;--card:#fff;--green:#16845b;--red:#c43d4b;
-  --amber:#a86500;--purple:#7c3aed;
-  --shadow-sm:0 2px 8px rgba(21,36,71,0.04);
-  --shadow-md:0 8px 24px rgba(21,36,71,0.08);
-  --shadow-lg:0 12px 32px rgba(21,36,71,0.12);
-  --radius:16px;--radius-sm:12px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font-family:system-ui,-apple-system,"Noto Sans Myanmar",sans-serif;
-  padding-bottom:90px;line-height:1.5;-webkit-tap-highlight-color:transparent;
-}
-button,input,textarea,select{font:inherit;outline:none}
-button{
-  border:0;border-radius:var(--radius-sm);background:var(--primary);color:#fff;
-  padding:11px 16px;font-weight:600;cursor:pointer;transition:all 0.2s ease;
-  display:inline-flex;align-items:center;justify-content:center;gap:6px;
-}
-button:hover{filter:brightness(1.05);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
-button:active{transform:translateY(0);filter:brightness(0.95)}
-button:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.secondary{background:#f1f4f9;color:#4a5568;border:1px solid #e2e8f0}
-.secondary:hover{background:#e2e8f0}
-.danger{background:#fff0f1;color:var(--red);border:1px solid #fecdd3}
-.success{background:#e8f8ef;color:#146c43;border:1px solid #bbf7d0}
-.purple{background:#f3ecff;color:var(--purple);border:1px solid #e9d5ff}
-.small{padding:7px 12px;font-size:12px;border-radius:8px}
-.icon{background:transparent;color:var(--primary);padding:6px;width:auto;border:none;box-shadow:none}
-.icon:hover{background:var(--primary-soft);transform:none;box-shadow:none}
-.icon.danger{color:var(--red)}
-.icon.danger:hover{background:#fff0f1}
-
-/* Header */
-header{
-  background:linear-gradient(135deg,#ffffff 0%,#f8fafc 100%);
-  border-bottom:1px solid var(--line);padding:24px 16px 20px;text-align:center;
-  position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
-}
-header h1{font-size:22px;margin:0;font-weight:800;letter-spacing:-0.5px;color:#1a2744}
-header p{font-size:13px;color:var(--muted);margin:6px 0 0}
-
-/* Layout */
-.container{max-width:780px;margin:auto;padding:16px}
-.card{
-  background:var(--card);border:1px solid rgba(229,233,242,0.8);
-  border-radius:var(--radius);padding:20px;margin-bottom:16px;
-  box-shadow:var(--shadow-sm);transition:box-shadow 0.3s ease;
-}
-.card:hover{box-shadow:var(--shadow-md)}
-.card h2{font-size:16px;margin:0 0 16px;color:#1a2744;font-weight:700;display:flex;align-items:center;gap:8px}
-.muted{color:var(--muted);font-size:13px}
-.hint{font-size:12px;color:var(--muted);margin:-4px 0 12px}
-
-/* Grid & Stat */
-.stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stat{
-  border:1px solid var(--line);border-radius:var(--radius-sm);padding:16px;
-  background:linear-gradient(135deg,#ffffff,#f8fafc);transition:transform 0.2s;
-}
-.stat:hover{transform:translateY(-2px)}
-.stat .num{font-size:26px;font-weight:800;letter-spacing:-0.5px;color:#1a2744}
-.stat .label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
-
-/* Progress & Inputs */
-.row{display:flex;gap:10px;align-items:center}
-.row>*{min-width:0;flex:1}
-.row.wrap{flex-wrap:wrap}
-.row.wrap>*{flex:0 1 auto}
-input,textarea,select{
-  width:100%;border:1.5px solid #e2e8f0;background:#fff;border-radius:var(--radius-sm);
-  padding:12px 14px;margin:0 0 12px;color:var(--ink);transition:all 0.2s;
-}
-input:focus,textarea:focus,select:focus{
-  border-color:var(--primary);box-shadow:0 0 0 4px rgba(49,94,251,0.1);background:#fff;
-}
-textarea{min-height:100px;resize:vertical}
-input[type="checkbox"]{width:auto;margin:0;accent-color:var(--primary);transform:scale(1.2);cursor:pointer}
-
-/* Progress Bars */
-.progress-bar{height:10px;border-radius:99px;background:#eef1f6;overflow:hidden;margin-top:8px}
-.progress-fill{height:100%;background:linear-gradient(90deg,#315efb,#6b8cff);width:0;transition:width 0.4s cubic-bezier(0.4,0,0.2,1);border-radius:99px}
-.progress-fill.purple{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
-.progress-fill.green{background:linear-gradient(90deg,#16845b,#22c55e)}
-
-/* Lists & Items */
-.list-item{
-  border:1px solid var(--line);border-left:4px solid #cbd5e8;border-radius:var(--radius-sm);
-  padding:14px;margin:10px 0;background:#fff;transition:all 0.2s ease;
-}
-.list-item:hover{box-shadow:var(--shadow-sm);transform:translateX(2px)}
-.list-item.done{border-left-color:#24a06b;background:#f2fbf6}
-.list-item.active-now{border-left-color:#e8a23b;background:#fffaf0;box-shadow:0 0 0 1px #fef3c7}
-.list-item.pri-high{border-left-color:#c43d4b}
-.list-item.pri-med{border-left-color:#e8a23b}
-.head{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.head>span:first-child{min-width:0}
-.time{font-size:12px;color:var(--muted);font-weight:500}
-.block-tag,.badge{
-  display:inline-block;border-radius:6px;padding:3px 8px;font-size:11px;
-  font-weight:700;background:#eef3ff;color:#3151a7;margin-left:4px;
+:root {
+  --primary: #2563eb;
+  --primary-soft: #eff6ff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --green: #10b981;
+  --green-soft: #ecfdf5;
+  --red: #ef4444;
+  --red-soft: #fef2f2;
+  --amber: #f59e0b;
+  --amber-soft: #fffbeb;
+  --purple: #7c3aed;
+  --purple-soft: #f5f3ff;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.02);
+  --shadow-md: 0 10px 25px -5px rgba(15,23,42,0.08);
 }
 
-/* Tabs & Navigation */
-.tab{display:none;animation:fadeIn 0.3s ease}
-.tab.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-nav{
-  position:fixed;z-index:20;bottom:0;left:0;right:0;
-  background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);
-  border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);
-  overflow-x:auto;box-shadow:0 -4px 16px rgba(0,0,0,0.04);
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-nav button{
-  flex:1;min-width:14.28%;background:transparent;color:#8894a8;border-radius:0;
-  padding:12px 4px;font-size:10px;font-weight:600;transition:all 0.2s;
-  flex-direction:column;gap:4px;
-}
-nav button.active{color:var(--primary);background:var(--primary-soft)}
-nav button:hover{background:#f1f5f9;transform:none;box-shadow:none}
 
-/* Modals */
-.modal-bg{
-  display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);
-  z-index:50;align-items:center;justify-content:center;padding:16px;
-  backdrop-filter:blur(4px);animation:fadeIn 0.2s ease;
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Myanmar", sans-serif;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  line-height: 1.5;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow-x: hidden;
 }
-.modal-bg.show{display:flex}
-.modal{
-  background:#fff;border-radius:var(--radius);padding:24px;width:100%;
-  max-width:460px;max-height:90vh;overflow:auto;box-shadow:var(--shadow-lg);
-  animation:slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
+
+input, textarea, select {
+  user-select: text;
+  -webkit-user-select: text;
+  font: inherit;
+  outline: none;
 }
-@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-.modal h2{font-size:18px;margin:0 0 18px;color:#1a2744}
-.actions{display:flex;gap:10px;margin-top:16px}
-.actions>*{flex:1}
+
+button {
+  font: inherit;
+  outline: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: #fff;
+  padding: 11px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, opacity 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.secondary { background: #f1f5f9; color: #334155; }
+.danger { background: var(--red-soft); color: var(--red); }
+.success { background: var(--green); color: #fff; }
+.purple { background: var(--purple); color: #fff; }
+.small { padding: 7px 12px; font-size: 12px; border-radius: 9px; }
+
+.icon-btn {
+  background: #f1f5f9;
+  color: #334155;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.icon-btn.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.icon-btn.ghost {
+  background: transparent;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn.danger-ghost {
+  background: transparent;
+  color: var(--red);
+  width: 32px;
+  height: 32px;
+}
+
+.hidden { display: none !important; }
+
+/* Sticky Native Header */
+header {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+
+header p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Container & Cards */
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.section-head h2 {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.muted { color: var(--muted); font-size: 12px; }
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 28px 16px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px dashed #cbd5e1;
+}
+
+/* Inputs */
+.row { display: flex; gap: 8px; align-items: center; }
+.row > * { flex: 1; min-width: 0; }
+
+input, textarea, select {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  margin-bottom: 12px;
+  color: var(--ink);
+  font-size: 14px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary);
+  background: #fff;
+}
+
+textarea { min-height: 110px; resize: vertical; }
+
+label.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+
+/* Hero Status Card */
+.hero-status {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: #fff;
+  border: none;
+  padding: 18px;
+}
+
+.hero-status .muted { color: rgba(255,255,255,0.75); }
+
+.progress-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.22);
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #fff;
+  width: 0%;
+  transition: width 0.35s ease;
+  border-radius: 99px;
+}
+
+.now-box {
+  background: rgba(255,255,255,0.14);
+  border-radius: 12px;
+  padding: 11px 13px;
+  margin-top: 10px;
+  backdrop-filter: blur(4px);
+}
+
+/* Schedule List Items */
+.tt-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 13px;
+  margin: 8px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  border-left: 4px solid #cbd5e1;
+  background: #fff;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.tt-item.done {
+  border-left-color: var(--green);
+  background: #f8fafc;
+}
+
+.tt-item.done .tt-act {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.tt-item.active-now {
+  border-left-color: var(--amber);
+  background: var(--amber-soft);
+  border-color: #fde68a;
+}
+
+.tt-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  display: block;
+}
+
+.tt-act {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--primary-soft);
+  color: var(--primary);
+  margin-left: 5px;
+}
+
+.check-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: transparent;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.tt-item.done .check-circle {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+/* Block Chips */
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip b { color: var(--primary); }
 
 /* Folders & Notes */
-.folder,.note-card{
-  border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px;
-  margin:10px 0;background:#fff;transition:all 0.2s ease;
+.folder-item, .note-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 13px;
+  margin: 8px 0;
+  background: #fff;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 }
-.folder:hover,.note-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
-.folder{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
-.folder .name,.note-card .title{font-weight:700;color:#1a2744}
-.folder .count{font-size:12px;color:var(--muted);margin-top:2px}
-.note-card .body{
-  white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;
-  color:#64748b;margin-top:6px;line-height:1.6;
-}
-.breadcrumb{font-size:12px;color:var(--muted);margin-bottom:12px}
-.breadcrumb a{color:var(--primary);cursor:pointer;font-weight:600;text-decoration:none}
-.breadcrumb a:hover{text-decoration:underline}
 
-/* Thumbnails & Media */
-.thumb-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
-.thumb{
-  width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;
-  border:1px solid var(--line);cursor:pointer;transition:transform 0.2s;
+.folder-item:active, .note-card:active {
+  transform: scale(0.99);
 }
-.thumb:hover{transform:scale(1.03);box-shadow:var(--shadow-sm)}
-.voice-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
-.voice-item{
-  display:flex;align-items:center;gap:10px;background:#f8fafc;
-  border-radius:10px;padding:8px 12px;font-size:12px;border:1px solid var(--line);
-}
-.voice-item audio{flex:1;height:36px;width:100%}
 
-/* Fullscreen Viewer */
-.fullscreen{display:none;position:fixed;inset:0;background:#05070b;z-index:80;align-items:center;justify-content:center}
-.fullscreen.show{display:flex}
-.fullscreen img{max-width:100%;max-height:100%;object-fit:contain}
-.fullscreen button{
-  position:absolute;border-radius:50%;width:44px;height:44px;padding:0;
-  background:rgba(255,255,255,0.9);color:#111;box-shadow:var(--shadow-md);
+.folder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.fullscreen .close{top:16px;right:16px}
-.fullscreen .prev{left:12px;top:50%}
-.fullscreen .next{right:12px;top:50%}
-.fullscreen .counter{position:absolute;bottom:24px;color:#fff;background:rgba(0,0,0,0.5);border-radius:20px;padding:6px 14px;font-size:12px}
 
-/* Timer & Special */
-.timer-face{
-  text-align:center;font-size:56px;font-weight:800;letter-spacing:1px;
-  margin:12px 0;color:#1a2744;font-variant-numeric:tabular-nums;
-  text-shadow:0 2px 4px rgba(0,0,0,0.05);
+.note-card .title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
 }
-.timer-mode{text-align:center;color:var(--muted);font-size:14px;font-weight:500}
-.pill{
-  border:1.5px solid var(--line);padding:8px 14px;border-radius:99px;
-  font-size:12px;background:#fff;color:var(--muted);cursor:pointer;
-  transition:all 0.2s;font-weight:600;
-}
-.pill.active{background:var(--primary-soft);color:var(--primary);border-color:#c7d4ff}
-.pill:hover{border-color:var(--primary);color:var(--primary)}
 
-/* Heatmap & Charts */
-.chart-wrap{position:relative;width:100%;height:180px;margin-top:12px}
-canvas{width:100%;height:100%;display:block}
-.heatmap{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,14px);gap:4px;overflow-x:auto;padding:8px 0}
-.heat-cell{width:14px;height:14px;border-radius:4px;background:#ebedf0;transition:transform 0.2s}
-.heat-cell:hover{transform:scale(1.2);box-shadow:0 0 0 2px rgba(49,94,251,0.3)}
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px}
-.ach{
-  border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 8px;
-  text-align:center;background:#fff;opacity:.4;transition:all 0.3s ease;
+.note-card .body {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
-.ach.unlocked{opacity:1;background:linear-gradient(135deg,#fff5e0,#fff9ee);border-color:#f0d9a8;box-shadow:var(--shadow-sm)}
-.ach.unlocked:hover{transform:translateY(-3px) scale(1.02);box-shadow:var(--shadow-md)}
-.ach .ico{font-size:28px;display:block}
-.ach .name{font-size:11px;font-weight:700;margin-top:6px;line-height:1.3;color:#4a5568}
-.session-bar{
-  position:fixed;left:12px;right:12px;bottom:84px;z-index:18;
-  background:linear-gradient(135deg,#315efb,#6b8cff);color:#fff;
-  border-radius:var(--radius);padding:14px 16px;box-shadow:0 8px 32px rgba(49,94,251,0.4);
-  display:none;align-items:center;gap:12px;
-}
-.session-bar.show{display:flex}
-.session-bar .s-time{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
-.session-bar .s-info{flex:1;min-width:0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.session-bar button{background:rgba(255,255,255,0.2);color:#fff;padding:8px 12px;font-size:12px;backdrop-filter:blur(4px)}
-.session-bar button:hover{background:rgba(255,255,255,0.3)}
 
-/* Animations */
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.recording{background:#ffe4e8!important;color:#c43d4b!important;animation:pulse 1s infinite}
-@media(min-width:650px){
-  .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .container{padding:24px}
-  .card{padding:24px}
-  nav button{font-size:11px;min-width:0}
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
+
+.breadcrumb span {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Media Previews */
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.thumb-wrap {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.thumb-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.75);
+  color: #fff;
+  font-size: 12px;
+  padding: 0;
+}
+
+.voice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.voice-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+.voice-item audio {
+  flex: 1;
+  height: 34px;
+}
+
+/* Bottom Navigation */
+.tab { display: none; animation: fade 0.18s ease; }
+.tab.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+nav button {
+  background: transparent;
+  color: var(--muted);
+  border-radius: 0;
+  padding: 9px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  flex-direction: column;
+  gap: 3px;
+}
+
+nav button:active { transform: none; }
+nav button .ico { font-size: 19px; line-height: 1.1; }
+nav button.active { color: var(--primary); }
+
+/* Bottom Sheet Modals */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 50;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.modal-bg.show { display: flex; }
+
+.modal {
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+  animation: slideUp 0.2s ease;
+}
+
+@media (min-width: 560px) {
+  .modal-bg { align-items: center; padding: 16px; }
+  .modal { border-radius: 20px; padding: 22px; }
+}
+
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.modal-head h2 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.actions > * { flex: 1; }
+
+/* Fullscreen Image Viewer */
+.fullscreen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 15, 0.96);
+  z-index: 80;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen.show { display: flex; }
+.fullscreen img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+.fullscreen button {
+  position: absolute;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.fullscreen .close { top: calc(16px + env(safe-area-inset-top)); right: 16px; }
+.fullscreen .prev { left: 12px; top: 50%; transform: translateY(-50%); }
+.fullscreen .next { right: 12px; top: 50%; transform: translateY(-50%); }
+.fullscreen .counter {
+  position: absolute;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+.recording { background: var(--red) !important; color: #fff !important; animation: pulse 1s infinite; }
 </style>
 </head>
 <body>
-<header><h1>📚 Daily Time System</h1><p id="todayDate">သင့်နေ့စဉ်စာလုပ်ချိန်ကို စနစ်တကျ စီမံပါ</p></header>
+
+<header>
+  <div>
+    <h1>📚 Study System</h1>
+    <p id="todayDate">--</p>
+  </div>
+  <div id="clockNow" style="font-size:15px;font-weight:800;color:var(--primary);background:var(--primary-soft);padding:6px 11px;border-radius:99px">--:--</div>
+</header>
+
 <main class="container">
 
-<section id="tab-home" class="tab active">
- <div class="card" id="notiCard" style="display:none"><h2>🔔 Notification ဖွင့်ရန်</h2><p class="muted">အချိန်ဇယား သတိပေးချက်များအတွက် ခွင့်ပြုပါ။</p><button onclick="enableNotification()">Notification ဖွင့်မည်</button></div>
- <div class="card"><div class="stat-grid">
-  <div class="stat"><div class="num" id="clockNow">--:--</div><div class="label">လက်ရှိအချိန်</div></div>
-  <div class="stat"><div class="num" id="streakDisplay">🔥 0</div><div class="label">ရက်ဆက်တိုက်</div></div>
-  <div class="stat"><div class="num" id="progressMini">0%</div><div class="label">ဒီနေ့တိုးတက်မှု</div></div>
-  <div class="stat"><div class="num" id="homeExamMini">--</div><div class="label">စာမေးပွဲအထိ</div></div>
- </div><button style="margin-top:12px;width:100%" onclick="markDone()">✅ ဒီနေ့ စာလုပ်ပြီးပြီ</button></div>
-
- <div class="card"><div class="row" style="align-items:center">
-   <div style="text-align:center"><div class="muted">Level</div><div id="homeLevel" style="font-size:26px;font-weight:850;color:var(--purple)">Lv 1</div></div>
-   <div style="flex:2"><div class="row" style="justify-content:space-between;font-size:12px"><span class="muted">XP</span><span id="xpText" class="muted">0 / 50</span></div><div class="progress-bar"><div class="progress-fill purple" id="xpFill"></div></div></div>
- </div></div>
-
- <div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-   <h2 style="margin:0">🎯 ဒီနေ့ ပန်းတိုင်</h2>
-   <button class="icon" onclick="openGoalSettings()" title="ပန်းတိုင် ပြင်" style="font-size:14px">⚙️</button>
-  </div>
-  <div style="display:flex;gap:14px;align-items:center">
-   <div style="flex:1;min-width:0">
-    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
-     <span class="muted">Block</span>
-     <span id="goalBlocks" style="font-weight:750">0/3</span>
+  <!-- 1. TIME TABLE TAB (Unified View + Pencil Toggle) -->
+  <section id="tab-timetable" class="tab active">
+    <div class="card hero-status">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div class="muted">ယနေ့ ပြီးစီးမှု</div>
+          <div style="font-size:24px;font-weight:800;margin-top:2px">
+            <span id="progressText">0%</span>
+            <span style="font-size:12px;font-weight:500;opacity:0.85">(<span id="doneCount">0</span>/<span id="totalCount">0</span>)</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted">လက်ရှိ အစီအစဉ်</div>
+          <div id="nowActivity" style="font-size:14px;font-weight:700;margin-top:3px">--</div>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="now-box">
+        <div id="nowNext" style="font-size:12px;font-weight:500">နောက်တစ်ခု: --</div>
+      </div>
     </div>
-    <div style="height:7px;border-radius:99px;background:#e9edf5;overflow:hidden">
-     <div id="goalBlocksBar" style="height:100%;background:#315efb;width:0;transition:width .25s;border-radius:99px"></div>
+
+    <!-- Unified Schedule Card -->
+    <div class="card">
+      <div class="section-head">
+        <h2>📅 ယနေ့ အချိန်ဇယား</h2>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button id="addTtBtn" class="small hidden" onclick="openAddTimetable()">＋ အချိန်ထည့်</button>
+          <button id="editModeBtn" class="icon-btn" onclick="toggleTtEditMode()" title="ဇယားပြင်ရန်">✏️</button>
+        </div>
+      </div>
+
+      <!-- Edit Mode Toolbar (Hidden by default) -->
+      <div id="ttEditBanner" class="hidden" style="background:var(--primary-soft);border-radius:10px;padding:9px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;font-weight:600;color:var(--primary)">✏️ ပြင်ဆင်မှု စနစ်ဖွင့်ထားသည်</span>
+        <button class="secondary small" onclick="resetTimetable()">↺ မူရင်းဇယား</button>
+      </div>
+
+      <div id="todaySchedule"></div>
     </div>
-   </div>
-   <div style="flex:1;min-width:0">
-    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
-     <span class="muted">မိနစ်</span>
-     <span id="goalMinutes" style="font-weight:750">0/120</span>
+
+    <!-- Clean Compact Subject Blocks -->
+    <div class="card">
+      <div class="section-head">
+        <h2>🏷️ ဘာသာရပ် Block များ</h2>
+        <button class="icon-btn" onclick="openAddBlock()" title="Block အသစ်ထည့်ရန်">＋</button>
+      </div>
+      <div id="blockList" class="chip-list"></div>
     </div>
-    <div style="height:7px;border-radius:99px;background:#e9edf5;overflow:hidden">
-     <div id="goalMinutesBar" style="height:100%;background:#7c3aed;width:0;transition:width .25s;border-radius:99px"></div>
+  </section>
+
+  <!-- 2. NOTES TAB -->
+  <section id="tab-notes" class="tab">
+    <div class="card">
+      <div class="section-head">
+        <h2 id="noteHeader">📁 ဘာသာရပ် Folder များ</h2>
+        <div style="display:flex;gap:6px">
+          <button class="secondary small" onclick="openAddFolder()">＋ Folder</button>
+          <button class="small" onclick="openAddNote()">＋ မှတ်စုရေး</button>
+        </div>
+      </div>
+      <div class="breadcrumb" id="noteBreadcrumb"></div>
+      <input id="noteSearch" placeholder="🔎 မှတ်စု သို့မဟုတ် Folder ရှာရန်..." oninput="renderNotes()" style="margin-bottom:10px">
+      <div id="noteContent"></div>
     </div>
-   </div>
-  </div>
- </div>
+  </section>
 
- <div class="card"><h2>⏰ အခုလုပ်ရမယ့်အရာ</h2><div class="now-box" style="text-align:center;padding:15px;background:#f7f9ff;border:1px solid #e0e7ff;border-radius:12px"><div class="muted">လက်ရှိအစီအစဉ်</div><div class="value" id="nowActivity" style="font-size:18px;font-weight:750;color:#284bc5">--</div><div class="muted" id="nowNext" style="margin-top:5px">နောက်တစ်ခု: --</div></div></div>
- <div class="card"><h2>📊 ဒီနေ့ တိုးတက်မှု</h2><div style="text-align:center;font-size:25px;font-weight:800" id="progressText">0%</div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p class="muted" style="text-align:center;margin-top:8px"><span id="doneCount">0</span> / <span id="totalCount">0</span> study block ပြီး</p></div>
- <div class="card"><h2>🎯 စာမေးပွဲ Countdown</h2><div class="countdown" id="homeExamCount" style="text-align:center;font-size:28px;font-weight:800;color:#315efb">--</div><p class="muted" id="homeExamName" style="text-align:center">စာမေးပွဲ မသတ်မှတ်ရသေး</p><div class="exam-message" id="homeExamMessage" style="margin-top:10px;padding:12px 13px;border:1px solid #f5d8e7;border-radius:12px;background:linear-gradient(135deg,#fff5fa,#fff9ee);color:#75465d;font-size:13px;line-height:1.65;text-align:center">🌷 စာမေးပွဲရက် သတ်မှတ်ပြီး စတင်ပြင်ဆင်လိုက်နော် 💗</div><button class="secondary" style="width:100%;margin-top:10px" onclick="switchTab('more',null);setTimeout(()=>document.getElementById('moreExam').scrollIntoView({behavior:'smooth'}),100)">စာမေးပွဲ ပြင်ဆင်ရန်</button></div>
- <div class="card"><h2>💡 ဒီနေ့ အားပေးစကား</h2><div class="quote" id="quoteBox" style="text-align:center;color:#566176;padding:9px;font-style:italic"></div></div>
-</section>
+  <!-- 3. FLASH MEMORY TAB -->
+  <section id="tab-flash" class="tab">
+    <div class="card">
+      <div class="section-head">
+        <h2>🧠 Flash Memory</h2>
+        <button class="small" onclick="openAddFlashcard()">＋ ကတ်အသစ်</button>
+      </div>
+      <div class="row" style="text-align:center;background:#f8fafc;padding:12px;border-radius:12px;border:1px solid var(--line)">
+        <div>
+          <div class="muted">လေ့ကျင့်ရန်</div>
+          <div id="fcDue" style="font-size:22px;font-weight:800;color:var(--purple)">0</div>
+        </div>
+        <div>
+          <div class="muted">စုစုပေါင်း</div>
+          <div id="fcTotal" style="font-size:22px;font-weight:800;color:var(--ink)">0</div>
+        </div>
+        <div>
+          <div class="muted">ကျွမ်းကျင်</div>
+          <div id="fcMastered" style="font-size:22px;font-weight:800;color:var(--green)">0</div>
+        </div>
+      </div>
+      <button class="purple" style="width:100%;margin-top:12px" onclick="startReview()">🎯 ယခု လေ့ကျင့်မည် (Review)</button>
+    </div>
 
-<section id="tab-timetable" class="tab">
- <div class="card"><h2>📅 ဒီနေ့ အချိန်ဇယား</h2><p class="hint">Block ကိုနှိပ်၍ ပြီး/မပြီး မှတ်နိုင်သည်။ ▶ နှိပ်ပြီး စာလုပ်ချိန် တိုင်းနိုင်သည်။</p><div id="todaySchedule"></div></div>
- <div class="card"><div class="section-title"><h2>📋 ဇယား အပြည့်အစုံ</h2><button class="small" onclick="openAddTimetable()">＋ အသစ်</button></div><div id="ttList"></div><button class="secondary" style="width:100%;margin-top:8px" onclick="resetTimetable()">မူရင်းဇယား ပြန်ထည့်</button></div>
- <div class="card"><div class="section-title"><h2>📚 Block များ သတ်မှတ်</h2><button class="small" onclick="openAddBlock()">＋ Block</button></div><div id="blockList"></div></div>
-</section>
+    <div class="card">
+      <div class="section-head">
+        <h2>📂 ကတ်များ စာရင်း</h2>
+      </div>
+      <select id="fcFolder" onchange="renderFlashcardList()"></select>
+      <div id="fcList"></div>
+    </div>
+  </section>
 
-<section id="tab-todo" class="tab">
- <div class="card"><div class="section-title"><h2>✅ To-Do List</h2><button class="small" onclick="openAddTodo()">＋ အသစ်</button></div>
-  <div class="row wrap" style="margin-bottom:10px">
-   <span class="pill active" data-filter="active" onclick="setTodoFilter('active',this)">လုပ်ရန်</span>
-   <span class="pill" data-filter="today" onclick="setTodoFilter('today',this)">ဒီနေ့</span>
-   <span class="pill" data-filter="all" onclick="setTodoFilter('all',this)">အားလုံး</span>
-   <span class="pill" data-filter="done" onclick="setTodoFilter('done',this)">ပြီးပြီ</span>
-  </div>
-  <div id="todoList"></div>
-  <p class="muted" id="todoStats" style="text-align:center"></p>
- </div>
-</section>
+  <!-- 4. EXAM DATE & BACKUP TAB -->
+  <section id="tab-exam" class="tab">
+    <div class="card" style="text-align:center;padding:24px 16px">
+      <div class="muted" id="examStatus" style="font-weight:600">စာမေးပွဲရက် မသတ်မှတ်ရသေးပါ</div>
+      <div id="examCount" style="font-size:44px;font-weight:900;color:var(--primary);margin:6px 0;letter-spacing:-1px">--</div>
+      <div id="examMessage" style="max-width:400px;margin:10px auto 0;padding:10px 14px;border-radius:12px;background:var(--primary-soft);color:var(--primary);font-size:12px;font-weight:600">
+        🌷 စာမေးပွဲရက် သတ်မှတ်ပြီး စတင်ပြင်ဆင်လိုက်နော်
+      </div>
+    </div>
 
-<section id="tab-learn" class="tab">
- <div class="card"><h2>🧠 Flashcards</h2>
-  <div class="row" style="text-align:center">
-   <div><div class="muted">ဒီနေ့ ပြန်လည်ရန်</div><div id="fcDue" style="font-size:26px;font-weight:850;color:var(--purple)">0</div></div>
-   <div><div class="muted">စုစုပေါင်း</div><div id="fcTotal" style="font-size:26px;font-weight:850">0</div></div>
-   <div><div class="muted">ကျွမ်းကျင်</div><div id="fcMastered" style="font-size:26px;font-weight:850;color:var(--green)">0</div></div>
-  </div>
-  <div class="row" style="margin-top:12px">
-   <button class="purple" onclick="startReview()">🎯 ပြန်လည်လေ့ကျင့်</button>
-   <button class="secondary" onclick="openAddFlashcard()">＋ Card အသစ်</button>
-  </div>
- </div>
- <div class="card"><div class="section-title"><h2>📂 Folder ရွေးရန်</h2></div>
-  <select id="fcFolder" onchange="renderFlashcardList()"></select>
-  <div id="fcList"></div>
- </div>
-</section>
+    <div class="card">
+      <div class="section-head"><h2>🎯 စာမေးပွဲရက် သတ်မှတ်ရန်</h2></div>
+      <label class="field-label">စာမေးပွဲ အမည်</label>
+      <input id="examName" placeholder="ဥပမာ - Final Exam / Matriculation" maxlength="120">
+      <label class="field-label">ကျင်းပမည့်ရက်</label>
+      <input id="examDate" type="date">
+      <div class="row">
+        <button onclick="saveExamData()">💾 သိမ်းမည်</button>
+        <button class="secondary" onclick="clearExam()">ဖယ်ရှားမည်</button>
+      </div>
+    </div>
 
-<section id="tab-stats" class="tab">
- <div class="card"><h2>📈 စာလုပ်ချိန် (၁၄ ရက်)</h2><p class="hint">နေ့စဉ် မိနစ်အလိုက်</p><div class="chart-wrap"><canvas id="chartStudy"></canvas></div></div>
- <div class="card"><h2>📊 ရမှတ် တိုးတက်မှု</h2><p class="hint">အချိန်နှင့်အမျှ ရမှတ်ပြောင်းလဲမှု</p><div class="chart-wrap"><canvas id="chartResults"></canvas></div></div>
- <div class="card">
-  <h2 id="heatmapTitle">🔥 စာလုပ်ရက် Heatmap</h2>
-  <p class="hint" id="heatmapSubtitle"></p>
-  <div class="heatmap" id="heatmap"></div>
-  <div class="heat-legend" style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);margin-top:6px;justify-content:flex-end;flex-wrap:wrap">
-   <span style="background:#ebedf0"></span>0
-   <span style="background:#c7d4ff"></span>&lt;30
-   <span style="background:#7c9bff"></span>&lt;60
-   <span style="background:#4a75f0"></span>&lt;120
-   <span style="background:#315efb"></span>120+
-   <span style="background:#c43d4b"></span>Exam
-   <span style="background:#eef1f7;border:1px solid #e5e9f2"></span>Future
-  </div>
- </div>
- <div class="card"><h2>⏱️ Study Sessions</h2><div id="studyLogsList"></div><button class="secondary small" style="margin-top:8px;width:100%" onclick="clearStudyLogs()">မှတ်တမ်း ရှင်းလင်း</button></div>
-</section>
-
-<section id="tab-notes" class="tab">
- <div class="card"><div class="section-title"><h2 id="noteHeader">📁 ဘာသာ Folder များ</h2><button class="small" onclick="openAddFolder()">＋ Folder</button></div><div class="breadcrumb" id="noteBreadcrumb"></div>
-  <input id="noteSearch" placeholder="🔎 မှတ်စု / Folder ရှာရန်..." oninput="renderNotes()" aria-label="မှတ်စုရှာရန်">
-  <div class="row" style="margin-bottom:10px"><button onclick="openAddNote()">📝 မှတ်စု အသစ်</button><button class="secondary" onclick="openFolder(null)">📁 ပင်မ Folder</button></div>
-  <div id="noteContent"><div class="empty">ခဏစောင့်ပါ...</div></div><div class="storage-info" id="storageInfo" style="font-size:12px;color:var(--muted);background:#f5f7fb;border-radius:9px;padding:8px;margin-top:10px;text-align:center">IndexedDB · Local-only</div>
- </div>
-</section>
-
-<section id="tab-more" class="tab">
- <div class="card"><h2>🏆 Achievements</h2><p class="hint" id="achProgress"></p><div class="ach-grid" id="achGrid"></div></div>
- <div class="card" id="moreExam"><h2>🎯 စာမေးပွဲ သတ်မှတ်</h2><input id="examName" placeholder="စာမေးပွဲ အမည်" maxlength="120"><label class="muted" for="examDate">စာမေးပွဲရက်</label><input id="examDate" type="date"><div class="row"><button onclick="saveExamData()">💾 သိမ်း</button><button class="secondary" onclick="clearExam()">ဖယ်ရှား</button></div><div class="countdown" id="examCount" style="margin-top:10px">--</div><p class="muted" id="examStatus" style="text-align:center"></p></div>
- <div class="card"><h2>📊 ရမှတ် စစ်</h2><input id="resSubject" placeholder="ဘာသာ" maxlength="100"><input id="resMark" type="number" min="0" max="100" step="0.5" placeholder="ရမှတ် (0–100)"><button style="width:100%" onclick="checkResult()">🔍 စစ်ပြီး သိမ်း</button><p id="resGrade" style="text-align:center;margin-top:10px;font-weight:750"></p><div id="resList" style="margin-top:8px"></div></div>
- <div class="card"><h2>⏱️ Focus Timer</h2><div class="timer-mode" id="timerMode">Focus · 25 မိနစ်</div><div class="timer-face" id="timerDisplay">25:00</div><div class="row"><button class="secondary" onclick="setTimerMode('focus')">Focus 25m</button><button class="secondary" onclick="setTimerMode('short')">Break 5m</button><button class="secondary" onclick="setTimerMode('long')">Break 15m</button></div><div class="row" style="margin-top:10px"><button id="timerStartBtn" onclick="toggleTimer()">▶ စမည်</button><button class="secondary" onclick="resetTimer()">↺ ပြန်စ</button></div><p class="muted" id="timerMessage" style="text-align:center;margin-top:10px">စတင်ရန် နှိပ်ပါ။</p></div>
- <div class="card"><h2>🔔 သတိပေးချက် အသံ</h2><div class="row" style="justify-content:space-between"><span>Alarm sound ဖွင့်</span><input type="checkbox" id="alarmToggle" style="width:auto;margin:0" onchange="toggleAlarm()"></div><div class="row" style="margin-top:8px"><button class="secondary small" onclick="playAlarm()">🔊 စမ်းသပ်</button></div></div>
- <div class="card"><h2>💾 Backup / Restore</h2><button style="width:100%" onclick="exportBackup()">⬇ Backup ဖိုင်ထုတ်မည်</button><div style="height:10px"></div><label class="muted" for="restoreFile">Backup JSON ဖိုင်မှ ပြန်သွင်းရန်</label><input id="restoreFile" type="file" accept=".json,application/json"><button class="secondary" style="width:100%" onclick="importBackup()">⬆ Restore ပြန်သွင်းမည်</button><div class="notice" style="background:#fff8e8;border:1px solid #f2dfb0;color:#775500;border-radius:10px;padding:10px;font-size:12px;margin-top:12px">Restore လုပ်လျှင် လက်ရှိဒေတာကို backup ထဲရှိဒေတာဖြင့် အစားထိုးမည်။</div><p class="muted" id="backupStatus"></p></div>
- <div class="card"><h2>🔎 အားလုံးထဲမှ ရှာရန်</h2><input id="globalSearch" placeholder="ဘာသာ၊ ဇယား၊ မှတ်စု၊ ရလဒ်..." oninput="renderGlobalSearch()"><div id="globalResults" class="search-results"><div class="empty">ရှာဖွေရန် စာရိုက်ပါ</div></div></div>
- <div class="card"><h2>🗃️ Storage</h2><p class="muted">ဒေတာကို IndexedDB ထဲတွင် local-only သိမ်းထားသည်။ Backup ကို ပုံမှန်ထုတ်ထားပါ။</p><div class="storage-info" id="toolsStorageInfo">Storage စစ်နေသည်...</div></div>
-</section>
+    <div class="card">
+      <div class="section-head"><h2>💾 ဒေတာ သိမ်းဆည်းရန် (Backup)</h2></div>
+      <p class="muted" style="margin:0 0 12px">အချိန်ဇယား၊ မှတ်စု၊ ပုံ၊ အသံနှင့် Flashcard အားလုံးကို ဖိုင်ထုတ်သိမ်းထားနိုင်ပါသည်။</p>
+      <div class="row">
+        <button class="secondary" onclick="exportBackup()">⬇ Backup ထုတ်မည်</button>
+        <button class="secondary" onclick="document.getElementById('restoreFile').click()">⬆ Restore သွင်းမည်</button>
+      </div>
+      <input id="restoreFile" type="file" accept=".json,application/json" class="hidden" onchange="importBackup()">
+      <p class="muted" id="backupStatus" style="margin:8px 0 0;text-align:center"></p>
+    </div>
+  </section>
 
 </main>
 
-<div class="session-bar" id="sessionBar">
- <div class="s-time" id="sessionTime">00:00</div>
- <div class="s-info" id="sessionInfo">--</div>
- <button onclick="endSession(true)">⏹ ပြီး</button>
- <button onclick="endSession(false)">✕</button>
+<!-- MODALS -->
+<!-- Timetable Modal -->
+<div class="modal-bg" id="modalTimetable">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTtTitle">📅 အချိန်ဇယား</h2>
+      <button class="icon-btn ghost" onclick="closeModal('modalTimetable')">✕</button>
+    </div>
+    <label class="field-label">လုပ်ဆောင်ချက်</label>
+    <input id="ttActivity" placeholder="ဥပမာ - Study Block 1 / အနားယူ">
+    <div class="row">
+      <div><label class="field-label">စချိန်</label><input id="ttStart" type="time"></div>
+      <div><label class="field-label">ပြီးချိန်</label><input id="ttEnd" type="time"></div>
+    </div>
+    <label class="field-label">ချိတ်ဆက်မည့် Block (မရှိလျှင် ဗလာထားပါ)</label>
+    <select id="ttBlock"></select>
+    <div class="actions">
+      <button class="secondary" onclick="closeModal('modalTimetable')">ပိတ်မည်</button>
+      <button class="success" onclick="saveTimetableItem()">သိမ်းမည်</button>
+    </div>
+  </div>
 </div>
 
-<div class="modal-bg" id="modalTimetable"><div class="modal"><h2 id="modalTtTitle">📅 ဇယား ထည့်</h2><input id="ttActivity" placeholder="လုပ်ဆောင်ချက်"><div class="row"><input id="ttStart" type="time"><input id="ttEnd" type="time"></div><input id="ttBlock" placeholder="Block နာမည် (မလိုလျှင် ဗလာထား)"><div class="actions"><button class="secondary" onclick="closeModal('modalTimetable')">မလုပ်တော့</button><button class="success" onclick="saveTimetableItem()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalBlock"><div class="modal"><h2 id="modalBlockTitle">📚 Block ထည့်</h2><input id="blockName" placeholder="Block နာမည်"><input id="blockSubject" placeholder="ဘာသာ"><div class="actions"><button class="secondary" onclick="closeModal('modalBlock')">မလုပ်တော့</button><button class="success" onclick="saveBlockItem()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalFolder"><div class="modal"><h2 id="modalFolderTitle">📁 Folder ထည့်</h2><input id="folderName" placeholder="Folder နာမည်"><div class="actions"><button class="secondary" onclick="closeModal('modalFolder')">မလုပ်တော့</button><button class="success" onclick="saveFolderItem()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalNote"><div class="modal"><h2 id="modalNoteTitle">📝 မှတ်စု ထည့်</h2><input id="noteTitle" placeholder="ခေါင်းစဉ်" maxlength="180"><textarea id="noteBody" placeholder="မှတ်စု ရေး... (Markdown: **bold**, *italic*, # heading, - list)"></textarea><label class="muted">📷 ပုံများ (compress လုပ်ပြီး သိမ်း)</label><input type="file" id="noteImages" accept="image/*" multiple><div class="thumb-grid" id="noteImagesPreview"></div><label class="muted" style="display:block;margin-top:8px">🎙️ အသံမှတ်စု</label><div class="row"><button type="button" id="voiceRecBtn" class="secondary small" onclick="toggleVoiceRecord()">🎙️ ဖမ်းမည်</button><span class="muted" id="voiceRecStatus"></span></div><div class="voice-list" id="voicePreview"></div><div class="actions"><button class="secondary" onclick="closeModal('modalNote')">မလုပ်တော့</button><button class="success" onclick="saveNoteItem()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalViewNote"><div class="modal"><h2 id="viewNoteTitle">📝</h2><div id="viewNoteBody" class="md-body" style="overflow-wrap:anywhere;color:#4b5563;margin-bottom:10px"></div><div class="thumb-grid" id="viewNoteImages"></div><div class="voice-list" id="viewNoteAudio"></div><div class="actions"><button class="secondary" onclick="closeModal('modalViewNote')">ပိတ်</button><button class="danger" onclick="deleteCurrentNote()">မှတ်စု ဖျက်</button></div></div></div>
-<div class="modal-bg" id="modalTodo"><div class="modal"><h2 id="modalTodoTitle">✅ To-Do ထည့်</h2><input id="todoText" placeholder="လုပ်ရမည့်အရာ" maxlength="200"><div class="row"><select id="todoPriority"><option value="low">🟢 သာမန်</option><option value="med">🟡 အလယ်</option><option value="high">🔴 အရေးကြီး</option></select><input id="todoDue" type="date"></div><div class="actions"><button class="secondary" onclick="closeModal('modalTodo')">မလုပ်တော့</button><button class="success" onclick="saveTodoItem()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalFlashcard"><div class="modal"><h2 id="modalFcTitle">🧠 Card အသစ်</h2><label class="muted">Folder</label><select id="fcCardFolder"></select><label class="muted">ရှေ့ (မေးခွန်း)</label><textarea id="fcFront" placeholder="မေးခွန်း / အကြောင်းအရာ"></textarea><label class="muted">နောက် (အဖြေ)</label><textarea id="fcBack" placeholder="အဖြေ"></textarea><div class="actions"><button class="secondary" onclick="closeModal('modalFlashcard')">မလုပ်တော့</button><button class="success" onclick="saveFlashcardItem()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalReview"><div class="modal"><h2>🎯 Review</h2><p class="muted" id="revProgress"></p><div class="fc-card" id="revCard" onclick="revealReview()" style="border:1px solid var(--line);border-radius:14px;padding:18px;margin:8px 0;background:linear-gradient(135deg,#f6f8ff,#fff);text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center;cursor:pointer"><div class="front" id="revFront" style="font-size:18px;font-weight:750;color:#213470;white-space:pre-wrap">--</div><div class="back hidden" id="revBack" style="font-size:16px;color:#16845b;white-space:pre-wrap;margin-top:12px;padding-top:12px;border-top:1px dashed #c7d4ff"></div></div><div class="actions" id="revActions"><button class="secondary" onclick="closeModal('modalReview')">ရပ်</button><button id="revRevealBtn" onclick="revealReview()">👁️ အဖြေကြည့်</button></div><div class="row hidden" id="revAnswerBtns" style="margin-top:10px"><button class="danger" onclick="gradeReview(0)">❌ မှားတယ်</button><button class="success" onclick="gradeReview(1)">✅ မှန်တယ်</button></div></div></div>
-<div class="modal-bg" id="modalGoal"><div class="modal"><h2>🎯 ဒီနေ့ ပန်းတိုင်</h2><label class="muted">Block ပန်းတိုင်</label><input id="goalBlocksInput" type="number" min="1" max="20" step="1"><label class="muted">မိနစ် ပန်းတိုင်</label><input id="goalMinutesInput" type="number" min="10" max="720" step="10"><div class="actions"><button class="secondary" onclick="closeModal('modalGoal')">မလုပ်တော့</button><button class="success" onclick="saveGoalSettings()">သိမ်း</button></div></div></div>
-<div class="modal-bg" id="modalStartSession"><div class="modal"><h2>▶ Session စတင်</h2><p class="muted" id="ssInfo"></p><label class="muted">မိနစ် (တိုင်းတာမည့်အချိန်)</label><input id="ssMinutes" type="number" min="1" max="240" step="5"><div class="actions"><button class="secondary" onclick="closeModal('modalStartSession')">မလုပ်တော့</button><button class="success" onclick="confirmStartSession()">▶ စမည်</button></div></div></div>
+<!-- Block Modal -->
+<div class="modal-bg" id="modalBlock">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalBlockTitle">🏷️ Block</h2>
+      <button class="icon-btn ghost" onclick="closeModal('modalBlock')">✕</button>
+    </div>
+    <label class="field-label">Block အမည်</label>
+    <input id="blockName" placeholder="ဥပမာ - Block 1">
+    <label class="field-label">ဘာသာရပ်</label>
+    <input id="blockSubject" placeholder="ဥပမာ - Mathematics">
+    <div class="actions">
+      <button id="delBlockBtn" class="danger hidden" onclick="delCurrentBlock()">ဖျက်မည်</button>
+      <button class="secondary" onclick="closeModal('modalBlock')">ပိတ်မည်</button>
+      <button class="success" onclick="saveBlockItem()">သိမ်းမည်</button>
+    </div>
+  </div>
+</div>
 
-<div class="fullscreen" id="fullscreenViewer"><button class="close" onclick="closeFullscreen()">✕</button><button class="prev" onclick="fsNav(-1)">‹</button><img id="fsImage" alt=""><button class="next" onclick="fsNav(1)">›</button><div class="counter" id="fsCounter">1 / 1</div></div>
+<!-- Folder Modal -->
+<div class="modal-bg" id="modalFolder">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalFolderTitle">📁 Folder</h2>
+      <button class="icon-btn ghost" onclick="closeModal('modalFolder')">✕</button>
+    </div>
+    <label class="field-label">Folder အမည်</label>
+    <input id="folderName" placeholder="ဥပမာ - Physics">
+    <div class="actions">
+      <button class="secondary" onclick="closeModal('modalFolder')">ပိတ်မည်</button>
+      <button class="success" onclick="saveFolderItem()">သိမ်းမည်</button>
+    </div>
+  </div>
+</div>
 
+<!-- Add/Edit Note Modal -->
+<div class="modal-bg" id="modalNote">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalNoteTitle">📝 မှတ်စု</h2>
+      <button class="icon-btn ghost" onclick="cancelNoteModal()">✕</button>
+    </div>
+    <label class="field-label">ခေါင်းစဉ်</label>
+    <input id="noteTitle" placeholder="မှတ်စု ခေါင်းစဉ်..." maxlength="180">
+    <label class="field-label">အကြောင်းအရာ</label>
+    <textarea id="noteBody" placeholder="မှတ်စု ရေးပါ..."></textarea>
+
+    <div class="row" style="margin-bottom:8px">
+      <button type="button" class="secondary small" onclick="document.getElementById('noteImages').click()">📷 ပုံထည့်ရန်</button>
+      <button type="button" id="voiceRecBtn" class="secondary small" onclick="toggleVoiceRecord()">🎙️ အသံဖမ်းမည်</button>
+    </div>
+    <input type="file" id="noteImages" accept="image/*" multiple class="hidden">
+    <div class="muted" id="voiceRecStatus" style="text-align:center;margin-bottom:6px"></div>
+
+    <div class="thumb-grid" id="noteImagesPreview"></div>
+    <div class="voice-list" id="voicePreview"></div>
+
+    <div class="actions">
+      <button class="secondary" onclick="cancelNoteModal()">မလုပ်တော့</button>
+      <button class="success" id="saveNoteBtn" onclick="saveNoteItem()">သိမ်းမည်</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Note Modal -->
+<div class="modal-bg" id="modalViewNote">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="viewNoteTitle" style="overflow-wrap:anywhere">📝</h2>
+      <button class="icon-btn ghost" onclick="closeViewNoteModal()">✕</button>
+    </div>
+    <div id="viewNoteBody" style="overflow-wrap:anywhere;color:#334155;font-size:14px;margin-bottom:14px;line-height:1.6;user-select:text;-webkit-user-select:text"></div>
+    <div class="thumb-grid" id="viewNoteImages"></div>
+    <div class="voice-list" id="viewNoteAudio"></div>
+    <div class="actions">
+      <button class="danger" onclick="deleteCurrentNote()">🗑 ဖျက်မည်</button>
+      <button class="secondary" onclick="editFromViewNote()">✏️ ပြင်မည်</button>
+      <button onclick="closeViewNoteModal()">ပိတ်မည်</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flashcard Modal -->
+<div class="modal-bg" id="modalFlashcard">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalFcTitle">🧠 Flashcard</h2>
+      <button class="icon-btn ghost" onclick="closeModal('modalFlashcard')">✕</button>
+    </div>
+    <label class="field-label">ဘာသာရပ် Folder</label>
+    <select id="fcCardFolder"></select>
+    <label class="field-label">မေးခွန်း (အရှေ့)</label>
+    <textarea id="fcFront" placeholder="မေးခွန်း သို့မဟုတ် ဝေါဟာရ..." style="min-height:80px"></textarea>
+    <label class="field-label">အဖြေ (အနောက်)</label>
+    <textarea id="fcBack" placeholder="အဖြေ သို့မဟုတ် အဓိပ္ပာယ်..." style="min-height:80px"></textarea>
+    <div class="actions">
+      <button class="secondary" onclick="closeModal('modalFlashcard')">ပိတ်မည်</button>
+      <button class="success" onclick="saveFlashcardItem()">သိမ်းမည်</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flashcard Review Modal -->
+<div class="modal-bg" id="modalReview">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>🎯 လေ့ကျင့်ခန်း</h2>
+      <span class="muted" id="revProgress">1 / 1</span>
+    </div>
+    <div id="revCard" onclick="revealReview()" style="border:1.5px solid #dbeafe;border-radius:16px;padding:24px 18px;margin:8px 0;background:linear-gradient(135deg,#eff6ff,#ffffff);text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;cursor:pointer">
+      <div id="revFront" style="font-size:17px;font-weight:700;color:var(--ink);white-space:pre-wrap">--</div>
+      <div id="revBack" class="hidden" style="font-size:15px;color:var(--green);white-space:pre-wrap;margin-top:14px;padding-top:14px;border-top:1px dashed #bfdbfe;font-weight:600"></div>
+    </div>
+    <div class="actions" id="revActions">
+      <button class="secondary" onclick="closeModal('modalReview')">ရပ်မည်</button>
+      <button onclick="revealReview()">👁️ အဖြေကြည့်မည်</button>
+    </div>
+    <div class="actions hidden" id="revAnswerBtns">
+      <button class="danger" onclick="gradeReview(0)">❌ မမှတ်မိသေး</button>
+      <button class="success" onclick="gradeReview(1)">✅ မှတ်မိတယ်</button>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN IMAGE VIEWER -->
+<div class="fullscreen" id="fullscreenViewer">
+  <button class="close" onclick="closeFullscreen()">✕</button>
+  <button class="prev" onclick="fsNav(-1)">‹</button>
+  <img id="fsImage" alt="">
+  <button class="next" onclick="fsNav(1)">›</button>
+  <div class="counter" id="fsCounter">1 / 1</div>
+</div>
+
+<!-- BOTTOM NAVIGATION -->
 <nav>
- <button class="active" onclick="switchTab('home',this)">🏠<br>ပင်မ</button>
- <button onclick="switchTab('timetable',this)">📅<br>ဇယား</button>
- <button onclick="switchTab('todo',this)">✅<br>To-Do</button>
- <button onclick="switchTab('learn',this)">🧠<br>Flash</button>
- <button onclick="switchTab('stats',this)">📈<br>Stats</button>
- <button onclick="switchTab('notes',this)">📝<br>မှတ်စု</button>
- <button onclick="switchTab('more',this)">🛠️<br>More</button>
+  <button class="active" onclick="switchTab('timetable',this)">
+    <span class="ico">📅</span>
+    <span>Time Table</span>
+  </button>
+  <button onclick="switchTab('notes',this)">
+    <span class="ico">📝</span>
+    <span>Note</span>
+  </button>
+  <button onclick="switchTab('flash',this)">
+    <span class="ico">🧠</span>
+    <span>Flash</span>
+  </button>
+  <button onclick="switchTab('exam',this)">
+    <span class="ico">🎯</span>
+    <span>Exam</span>
+  </button>
 </nav>
 
 <script>
 'use strict';
-const DB_NAME='StudyPlannerDB', DB_VERSION=2;
-let idb=null;
-const cache={timetable:[],blocks:[],folders:[],notes:[],results:[],studyLogs:[],flashcards:[],todos:[],examName:'',examDate:'',streak:0,lastDone:'',done_today:[],xp:0,achievements:[],dailyGoal:{blocks:3,minutes:120},settings:{alarmSound:true,alarmVolume:.35}};
+const DB_NAME = 'StudyPlannerDB', DB_VERSION = 2;
+let idb = null;
+let ttEditMode = false;
 
-const DEFAULT_TIMETABLE=[
-{id:1,start:'06:30',end:'07:00',activity:'ထ / မျက်နှာသစ်',block:''},{id:2,start:'07:00',end:'08:30',activity:'Study Block 1',block:'Block 1'},{id:3,start:'08:30',end:'09:00',activity:'Rest',block:''},{id:4,start:'09:00',end:'10:30',activity:'Study Block 2',block:'Block 2'},{id:5,start:'10:30',end:'11:00',activity:'Rest',block:''},{id:6,start:'11:00',end:'12:30',activity:'Study Block 3',block:'Block 3'},{id:7,start:'12:30',end:'14:00',activity:'နေ့လည်စာ + အိပ်',block:''},{id:8,start:'14:00',end:'15:30',activity:'Study Block 4',block:'Block 4'},{id:9,start:'15:30',end:'16:00',activity:'Rest',block:''},{id:10,start:'16:00',end:'17:30',activity:'Study Block 5',block:'Block 5'},{id:11,start:'17:30',end:'19:00',activity:'ရေချိုး + အနားယူ',block:''},{id:12,start:'19:00',end:'20:00',activity:'Active Recall',block:''},{id:13,start:'20:00',end:'20:30',activity:'Rest',block:''},{id:14,start:'20:30',end:'21:30',activity:'Active Recall',block:''},{id:15,start:'21:30',end:'22:30',activity:'Rest',block:''},{id:16,start:'22:30',end:'23:00',activity:'Recall',block:''},{id:17,start:'23:00',end:'23:59',activity:'အိပ်',block:''}];
-const DEFAULT_BLOCKS=[{id:1,name:'Block 1',subject:'ဘာသာစကား'},{id:2,name:'Block 2',subject:'English / Math'},{id:3,name:'Block 3',subject:'Chem / Phy'},{id:4,name:'Block 4',subject:'Math'},{id:5,name:'Block 5',subject:'Chem / Phy'}];
-const DEFAULT_FOLDERS=[{id:1,name:'Math',parentId:null,createdAt:Date.now()},{id:2,name:'English',parentId:null,createdAt:Date.now()},{id:3,name:'Chemistry',parentId:null,createdAt:Date.now()},{id:4,name:'Physics',parentId:null,createdAt:Date.now()}];
-const QUOTES=['ဒီနေ့ အနည်းဆုံး ၁ block လုပ်ပါ 💪','မင်း လုပ်နိုင်တယ်! 🔥','Active Recall က အရေးကြီးတယ် 🧠','တစ်ရက် ၁ block ဆိုလည်း ရက်ဆက်လုပ်ရင် အံ့သြဖွယ်ပဲ ✨','ဒီနေ့ မင်းရဲ့ အနာဂတ်ကို ရင်းနှီးမြှုပ်နှံနေတယ် 🌱','သေးငယ်တဲ့တိုးတက်မှုကို နေ့တိုင်းလုပ်ပါ 🚀'];
+const cache = {
+  timetable: [], blocks: [], folders: [], notes: [], flashcards: [],
+  examName: '', examDate: '', done_today: []
+};
 
-const ACHIEVEMENTS=[
-{id:'first_block',ico:'🌱',name:'First Block',desc:'ပထမ block ပြီး'},
-{id:'week_warrior',ico:'🔥',name:'Week Warrior',desc:'၇ ရက်ဆက်'},
-{id:'month_master',ico:'🏅',name:'Month Master',desc:'၃၀ ရက်ဆက်'},
-{id:'centurion',ico:'💯',name:'Centurion',desc:'Block ၁၀၀ ပြီး'},
-{id:'note_taker',ico:'📝',name:'Note Taker',desc:'မှတ်စု ၁၀ ခု'},
-{id:'flash_fan',ico:'🧠',name:'Flash Fan',desc:'Card ၅၀ ခု'},
-{id:'reviewer',ico:'🎯',name:'Reviewer',desc:'Card ပြန်လည် ၁၀၀ ကြိမ်'},
-{id:'goal_getter',ico:'🎪',name:'Goal Getter',desc:'ပန်းတိုင် ၇ ရက်ပြည့်'},
-{id:'timer_titan',ico:'⏱️',name:'Timer Titan',desc:'၁၀ နာရီ focus'},
-{id:'early_bird',ico:'🌅',name:'Early Bird',desc:'၇ နာရီမတိုင်င် စ'},
-{id:'night_owl',ico:'🦉',name:'Night Owl',desc:'၂၂ နာရီကျော် စ'},
-{id:'level5',ico:'⭐',name:'Level 5',desc:'Level 5 ရောက်'},
-{id:'level10',ico:'🌟',name:'Level 10',desc:'Level 10 ရောက်'},
-{id:'md_master',ico:'📖',name:'Markdown Master',desc:'Markdown မှတ်စု ၅ ခု'}
+const DEFAULT_TIMETABLE = [
+  {id:1, start:'06:30', end:'07:00', activity:'အိပ်ရာထ / ပြင်ဆင်', block:''},
+  {id:2, start:'07:00', end:'08:30', activity:'Study Session 1', block:'Block 1'},
+  {id:3, start:'08:30', end:'09:00', activity:'မနက်စာ + အနားယူ', block:''},
+  {id:4, start:'09:00', end:'10:30', activity:'Study Session 2', block:'Block 2'},
+  {id:5, start:'10:30', end:'11:00', activity:'အနားယူ', block:''},
+  {id:6, start:'11:00', end:'12:30', activity:'Study Session 3', block:'Block 3'},
+  {id:7, start:'12:30', end:'14:00', activity:'နေ့လည်စာ + အနားယူ', block:''},
+  {id:8, start:'14:00', end:'15:30', activity:'Study Session 4', block:'Block 4'},
+  {id:9, start:'15:30', end:'16:00', activity:'အနားယူ', block:''},
+  {id:10, start:'16:00', end:'17:30', activity:'Study Session 5', block:'Block 5'},
+  {id:11, start:'17:30', end:'19:00', activity:'ရေချိုး + ညစာ', block:''},
+  {id:12, start:'19:00', end:'20:30', activity:'Flash Memory လေ့ကျင့်ရန်', block:''},
+  {id:13, start:'20:30', end:'22:00', activity:'မှတ်စုပြန်ဖတ် / ပြန်လှန်လေ့ကျင့်', block:''},
+  {id:14, start:'22:00', end:'23:00', activity:'အိပ်ရာဝင်', block:''}
 ];
 
-function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window))return reject(new Error('IndexedDB မရနိုင်ပါ'));const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains('kv'))db.createObjectStore('kv',{keyPath:'key'});if(!db.objectStoreNames.contains('images')){const s=db.createObjectStore('images',{keyPath:'id'});s.createIndex('noteId','noteId',{unique:false});}if(!db.objectStoreNames.contains('audio')){const a=db.createObjectStore('audio',{keyPath:'id'});a.createIndex('noteId','noteId',{unique:false});}};req.onsuccess=e=>{idb=e.target.result;idb.onversionchange=()=>idb.close();resolve(idb)};req.onerror=()=>reject(req.error||new Error('Database ဖွင့်မရပါ'));});}
-function idbGet(key,fallback){return new Promise((resolve,reject)=>{try{const r=idb.transaction('kv','readonly').objectStore('kv').get(key);r.onsuccess=()=>resolve(r.result?r.result.value:fallback);r.onerror=()=>reject(r.error)}catch(e){reject(e)}})}
-function idbSet(key,value){return new Promise((resolve,reject)=>{try{const tx=idb.transaction('kv','readwrite');tx.objectStore('kv').put({key,value});tx.oncomplete=()=>resolve();tx.onerror=tx.onabort=()=>reject(tx.error||new Error('သိမ်းမရပါ'))}catch(e){reject(e)}})}
-function idbAllImages(){return new Promise((resolve,reject)=>{const r=idb.transaction('images','readonly').objectStore('images').getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
-function idbAddImage(img){return new Promise((resolve,reject)=>{try{const tx=idb.transaction('images','readwrite');tx.objectStore('images').put(img);tx.oncomplete=()=>resolve();tx.onerror=tx.onabort=()=>reject(tx.error)}catch(e){reject(e)}})}
-function idbGetImage(id){return new Promise((resolve,reject)=>{const r=idb.transaction('images','readonly').objectStore('images').get(id);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error)})}
-function idbDeleteImage(id){return new Promise((resolve,reject)=>{const tx=idb.transaction('images','readwrite');tx.objectStore('images').delete(id);tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error)})}
-function idbReplaceImages(images){return new Promise((resolve,reject)=>{const tx=idb.transaction('images','readwrite'),s=tx.objectStore('images');s.clear();images.forEach(x=>s.put(x));tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error)})}
-function idbCountImages(){return new Promise((resolve,reject)=>{const r=idb.transaction('images','readonly').objectStore('images').count();r.onsuccess=()=>resolve(r.result||0);r.onerror=()=>reject(r.error)})}
-function idbAllAudio(){return new Promise((resolve,reject)=>{const r=idb.transaction('audio','readonly').objectStore('audio').getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
-function idbAddAudio(a){return new Promise((resolve,reject)=>{try{const tx=idb.transaction('audio','readwrite');tx.objectStore('audio').put(a);tx.oncomplete=()=>resolve();tx.onerror=tx.onabort=()=>reject(tx.error)}catch(e){reject(e)}})}
-function idbGetAudio(id){return new Promise((resolve,reject)=>{const r=idb.transaction('audio','readonly').objectStore('audio').get(id);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error)})}
-function idbDeleteAudio(id){return new Promise((resolve,reject)=>{const tx=idb.transaction('audio','readwrite');tx.objectStore('audio').delete(id);tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error)})}
-function idbReplaceAudio(arr){return new Promise((resolve,reject)=>{const tx=idb.transaction('audio','readwrite'),s=tx.objectStore('audio');s.clear();arr.forEach(x=>s.put(x));tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error)})}
-function idbCountAudio(){return new Promise((resolve,reject)=>{const r=idb.transaction('audio','readonly').objectStore('audio').count();r.onsuccess=()=>resolve(r.result||0);r.onerror=()=>reject(r.error)})}
+const DEFAULT_BLOCKS = [
+  {id:1, name:'Block 1', subject:'ဘာသာစကား'},
+  {id:2, name:'Block 2', subject:'English'},
+  {id:3, name:'Block 3', subject:'Chemistry / Physics'},
+  {id:4, name:'Block 4', subject:'Mathematics'},
+  {id:5, name:'Block 5', subject:'Revision'}
+];
 
-function todayKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function toMin(t){const [h,m]=String(t||'0:0').split(':').map(Number);return h*60+m}
-function nowMin(){const n=new Date();return n.getHours()*60+n.getMinutes()}
-function uid(){return Date.now()+Math.floor(Math.random()*100000)}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function calendarDays(dateString){if(!dateString)return null;const [y,m,d]=dateString.split('-').map(Number);const target=new Date(y,m-1,d);const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());return Math.round((target-today)/86400000)}
-function safeDateLabel(){return new Date().toLocaleDateString('my-MM',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
-function mdToHtml(md){
- let s=esc(md||'');
- s=s.replace(/^### (.*)$/gm,'<h3>$1</h3>').replace(/^## (.*)$/gm,'<h2>$1</h2>').replace(/^# (.*)$/gm,'<h1>$1</h1>');
- s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)/g,'<em>$1</em>');
- s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
- s=s.replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
- s=s.replace(/^[-*] (.*)$/gm,'<li>$1</li>');
- s=s.replace(/(<li>[\s\S]*?<\/li>)(?!\s*<li>)/g,'<ul>$1</ul>');
- s=s.replace(/\n/g,'<br>');
- return s;
-}
-function hasMarkdown(t){return /\*\*|^#|^\- |`|\]\(/.test(t||'')}
+const DEFAULT_FOLDERS = [
+  {id:1, name:'Mathematics', parentId:null, createdAt:Date.now()},
+  {id:2, name:'English', parentId:null, createdAt:Date.now()},
+  {id:3, name:'Chemistry', parentId:null, createdAt:Date.now()},
+  {id:4, name:'Physics', parentId:null, createdAt:Date.now()}
+];
 
-async function loadAllData(){
- cache.timetable=await idbGet('timetable',null)||structuredClone(DEFAULT_TIMETABLE);
- cache.blocks=await idbGet('blocks',null)||structuredClone(DEFAULT_BLOCKS);
- cache.folders=await idbGet('folders',null)||structuredClone(DEFAULT_FOLDERS);
- cache.notes=await idbGet('notes',[]);
- cache.results=await idbGet('results',[]);
- cache.studyLogs=await idbGet('studyLogs',[]);
- cache.flashcards=await idbGet('flashcards',[]);
- cache.todos=await idbGet('todos',[]);
- cache.examName=await idbGet('examName','');
- cache.examDate=await idbGet('examDate','');
- cache.streak=await idbGet('streak',0);
- cache.lastDone=await idbGet('lastDone','');
- cache.done_today=await idbGet('done_'+todayKey(),[]);
- cache.xp=await idbGet('xp',0);
- cache.achievements=await idbGet('achievements',[]);
- cache.dailyGoal=await idbGet('dailyGoal',{blocks:3,minutes:120});
- cache.settings=await idbGet('settings',{alarmSound:true,alarmVolume:.35});
- for(const [k,v] of [['timetable',cache.timetable],['blocks',cache.blocks],['folders',cache.folders]])if(await idbGet(k,null)===null)await idbSet(k,v);
-}
-async function persist(key,value){try{await idbSet(key,value);return true}catch(e){alert('ဒေတာသိမ်းမရပါ။ '+(e.message||''));return false}}
-async function saveTimetable(){return persist('timetable',cache.timetable)}
-async function saveBlocks(){return persist('blocks',cache.blocks)}
-async function saveFolders(){return persist('folders',cache.folders)}
-async function saveNotes(){return persist('notes',cache.notes)}
-async function saveResults(){return persist('results',cache.results)}
-async function saveStudyLogs(){return persist('studyLogs',cache.studyLogs)}
-async function saveFlashcards(){return persist('flashcards',cache.flashcards)}
-async function saveTodos(){return persist('todos',cache.todos)}
-async function saveExam(){return (await persist('examName',cache.examName))&&(await persist('examDate',cache.examDate))}
-async function saveStreak(){return (await persist('streak',cache.streak))&&(await persist('lastDone',cache.lastDone))}
-async function saveDoneToday(){return persist('done_'+todayKey(),cache.done_today)}
-async function saveXp(){return persist('xp',cache.xp)}
-async function saveAch(){return persist('achievements',cache.achievements)}
-async function saveGoal(){return persist('dailyGoal',cache.dailyGoal)}
-async function saveSettings(){return persist('settings',cache.settings)}
-
-function levelFromXp(xp){return Math.floor(Math.sqrt(xp/50))+1}
-function xpForLevel(l){return 50*Math.pow(l-1,2)}
-function xpProgress(){const l=levelFromXp(cache.xp);const cur=xpForLevel(l),next=xpForLevel(l+1);return{level:l,cur:cache.xp-cur,need:next-cur,pct:Math.min(100,Math.round((cache.xp-cur)/(next-cur)*100))}}
-async function addXp(amount,reason){
- cache.xp+=amount;await saveXp();
- const before=levelFromXp(cache.xp-amount),after=levelFromXp(cache.xp);
- if(after>before)setTimeout(()=>alert(`🎉 Level ${after} ရောက်ပါပြီ!`),100);
- checkAchievements();renderHome();renderAchievements();
-}
-
-function totalStudyMinutes(){return cache.studyLogs.reduce((s,x)=>s+x.minutes,0)}
-function countBlockDone(){return cache.studyLogs.length}
-function reviewCount(){return cache.flashcards.reduce((s,c)=>s+(c.reviews||0),0)}
-function masteredCount(){return cache.flashcards.filter(c=>c.box>=4).length}
-async function checkAchievements(){
- const toUnlock=[];
- const totalMin=totalStudyMinutes();
- const noteCount=cache.notes.length;
- const mdCount=cache.notes.filter(n=>hasMarkdown(n.body)).length;
- const goalHitDays=await idbGet('goal_hits',0);
- if(countBlockDone()>=1)toUnlock.push('first_block');
- if(cache.streak>=7)toUnlock.push('week_warrior');
- if(cache.streak>=30)toUnlock.push('month_master');
- if(countBlockDone()>=100)toUnlock.push('centurion');
- if(noteCount>=10)toUnlock.push('note_taker');
- if(cache.flashcards.length>=50)toUnlock.push('flash_fan');
- if(reviewCount()>=100)toUnlock.push('reviewer');
- if(goalHitDays>=7)toUnlock.push('goal_getter');
- if(totalMin>=600)toUnlock.push('timer_titan');
- if(cache.studyLogs.some(l=>new Date(l.ts).getHours()<7))toUnlock.push('early_bird');
- if(cache.studyLogs.some(l=>new Date(l.ts).getHours()>=22))toUnlock.push('night_owl');
- if(levelFromXp(cache.xp)>=5)toUnlock.push('level5');
- if(levelFromXp(cache.xp)>=10)toUnlock.push('level10');
- if(mdCount>=5)toUnlock.push('md_master');
- let changed=false;
- for(const id of toUnlock){if(!cache.achievements.includes(id)){cache.achievements.push(id);changed=true;const a=ACHIEVEMENTS.find(x=>x.id===id);if(a)setTimeout(()=>alert(`🏆 ${a.ico} ${a.name} — ${a.desc}`),300)}}
- if(changed)await saveAch();
-}
-
-function playAlarm(){
- if(!cache.settings.alarmSound)return;
- try{
-  const ctx=new (window.AudioContext||window.webkitAudioContext)();
-  const now=ctx.currentTime;
-  for(let i=0;i<3;i++){
-   const o=ctx.createOscillator(),g=ctx.createGain();
-   o.connect(g);g.connect(ctx.destination);
-   o.type='sine';o.frequency.value=880;
-   const t=now+i*0.28;
-   g.gain.setValueAtTime(0.0001,t);
-   g.gain.exponentialRampToValueAtTime(cache.settings.alarmVolume||.35,t+0.04);
-   g.gain.exponentialRampToValueAtTime(0.0001,t+0.22);
-   o.start(t);o.stop(t+0.25);
-  }
-  setTimeout(()=>{try{ctx.close()}catch(e){}},2000);
- }catch(e){console.warn('alarm',e)}
-}
-
-function switchTab(name,btn){
- document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
- const el=document.getElementById('tab-'+name);if(el)el.classList.add('active');
- document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
- if(btn)btn.classList.add('active');
- else{const idx={home:0,timetable:1,todo:2,learn:3,stats:4,notes:5,more:6}[name];const b=document.querySelectorAll('nav button')[idx];if(b)b.classList.add('active')}
- if(name==='home')renderHome();
- if(name==='timetable'){renderTodaySchedule();renderTimetable();renderBlocks()}
- if(name==='todo')renderTodos();
- if(name==='learn'){renderFlashcardStats();renderFlashcardList()}
- if(name==='stats'){renderCharts();renderHeatmap();renderStudyLogs()}
- if(name==='notes')renderNotes();
- if(name==='more'){document.getElementById('examName').value=cache.examName;document.getElementById('examDate').value=cache.examDate;renderExam();renderResults();renderAchievements();updateStorageInfo();document.getElementById('alarmToggle').checked=cache.settings.alarmSound;}
-}
-
-function examEncouragement(days){
- if(days===null)return '🌷 စာမေးပွဲရက်လေး သတ်မှတ်ထားလိုက်နော် 💗';
- if(days<0)return '🌈 စာမေးပွဲရက် ကျော်သွားပါပြီ။ 💛';
- if(days===0)return '🎯 ဒီနေ့က စာမေးပွဲနေ့ပါ! 🍀💖';
- if(days===1)return '🐣 မနက်ဖြန် စာမေးပွဲနော်! 💪🌙';
- if(days<=3)return `⏳ ${days} ရက်ပဲ ကျန်တော့တယ်! 📚💗`;
- if(days<=7)return `🌟 ${days} ရက် ကျန်သေးတယ်! 🐻✨`;
- if(days<=14)return `🌷 ${days} ရက် ကျန်သေးတယ်နော် 📖💕`;
- if(days<=30)return `🧸 ${days} ရက် အချိန်ရှိသေးတယ်! 🌈`;
- return `☀️ ${days} ရက် ကျန်သေးတယ် 💗📚`;
-}
-function todayStudyMinutes(){const t=todayKey();return cache.studyLogs.filter(l=>l.date===t).reduce((s,x)=>s+x.minutes,0)}
-function renderHome(){
- const nm=nowMin(),tt=[...cache.timetable].sort((a,b)=>toMin(a.start)-toMin(b.start));let current=null,next=null;
- for(let i=0;i<tt.length;i++){if(nm>=toMin(tt[i].start)&&nm<toMin(tt[i].end)){current=tt[i];next=tt[i+1]||null;break}if(toMin(tt[i].start)>nm&&!next)next=tt[i]}
- document.getElementById('clockNow').textContent=new Date().toLocaleTimeString('my-MM',{hour:'2-digit',minute:'2-digit'});
- document.getElementById('streakDisplay').textContent='🔥 '+cache.streak;
- document.getElementById('nowActivity').textContent=current?`${current.activity} (${current.start}–${current.end})`:'အနားယူ / အိပ်ချိန်';
- document.getElementById('nowNext').textContent=next?`နောက်တစ်ခု: ${next.activity} (${next.start})`:'နောက်ထပ်အစီအစဉ် မရှိ';
- const blocks=tt.filter(x=>x.block),done=blocks.filter(x=>cache.done_today.includes(x.id)).length,pct=blocks.length?Math.round(done/blocks.length*100):0;
- document.getElementById('progressText').textContent=pct+'%';document.getElementById('progressMini').textContent=pct+'%';document.getElementById('progressFill').style.width=pct+'%';document.getElementById('doneCount').textContent=done;document.getElementById('totalCount').textContent=blocks.length;
- const days=calendarDays(cache.examDate);
- document.getElementById('homeExamCount').textContent=days===null?'--':days>0?days+' ရက်':days===0?'ဒီနေ့':'ကျော်သွားပြီ';
- document.getElementById('homeExamMini').textContent=days===null?'--':days>=0?days+' ရက်':'ပြီး';
- document.getElementById('homeExamName').textContent=cache.examDate?(cache.examName||'စာမေးပွဲ'):'စာမေးပွဲ မသတ်မှတ်ရသေး';
- document.getElementById('homeExamMessage').textContent=examEncouragement(days);
- const p=xpProgress();
- document.getElementById('homeLevel').textContent='Lv '+p.level;
- document.getElementById('xpText').textContent=`${cache.xp} / ${xpForLevel(p.level+1)} XP`;
- document.getElementById('xpFill').style.width=p.pct+'%';
- const gb=done,gm=todayStudyMinutes();
- const gbMax=cache.dailyGoal.blocks||1,gmMax=cache.dailyGoal.minutes||1;
- const gbEl=document.getElementById('goalBlocks');if(gbEl)gbEl.textContent=`${gb}/${gbMax}`;
- const gmEl=document.getElementById('goalMinutes');if(gmEl)gmEl.textContent=`${gm}/${gmMax}`;
- const gbb=document.getElementById('goalBlocksBar');if(gbb)gbb.style.width=Math.min(100,gb/gbMax*100)+'%';
- const gmb=document.getElementById('goalMinutesBar');if(gmb)gmb.style.width=Math.min(100,gm/gmMax*100)+'%';
- if(!document.getElementById('quoteBox').textContent)document.getElementById('quoteBox').textContent=QUOTES[Math.floor(Math.random()*QUOTES.length)];
-}
-async function markDone(){const t=todayKey();if(cache.lastDone===t){alert('ဒီနေ့ မှတ်သားပြီးသားပါ ✅');return}const y=new Date();y.setDate(y.getDate()-1);cache.streak=cache.lastDone===todayKey(y)?cache.streak+1:1;cache.lastDone=t;if(await saveStreak()){await addXp(15,'streak');alert('🎉 ရက် '+cache.streak+' ဆက် လုပ်ပြီးပြီ!');renderHome()}}
-
-function renderTodaySchedule(){const box=document.getElementById('todaySchedule'),nm=nowMin(),tt=[...cache.timetable].sort((a,b)=>toMin(a.start)-toMin(b.start));if(!tt.length){box.innerHTML='<div class="empty">ဇယား မရှိသေး</div>';return}box.innerHTML=tt.map(x=>{const done=cache.done_today.includes(x.id),now=nm>=toMin(x.start)&&nm<toMin(x.end);return `<div class="list-item ${done?'done':''} ${now?'active-now':''}"><div class="head"><span><span class="time">${esc(x.start)}–${esc(x.end)}</span><br><b>${esc(x.activity)}</b> ${x.block?`<span class="block-tag">${esc(x.block)}</span>`:''}</span><span>${x.block?`<button class="icon" title="စတင်" onclick="openStartSession(${Number(x.id)})">▶</button>`:''}${x.block?`<button class="icon" onclick="toggleDone(${Number(x.id)})">${done?'✅':'⬜'}</button>`:''}</span></div></div>`}).join('')}
-async function toggleDone(id){
- const was=cache.done_today.includes(id);
- cache.done_today=was?cache.done_today.filter(x=>x!==id):[...cache.done_today,id];
- if(await saveDoneToday()){if(!was)await addXp(10,'block');renderTodaySchedule();renderHome()}
-}
-let editingTtId=null;
-function openAddTimetable(){editingTtId=null;document.getElementById('modalTtTitle').textContent='📅 ဇယား ထည့်';['ttActivity','ttStart','ttEnd','ttBlock'].forEach(id=>document.getElementById(id).value='');document.getElementById('modalTimetable').classList.add('show')}
-function openEditTimetable(id){const x=cache.timetable.find(v=>v.id===id);if(!x)return;editingTtId=id;document.getElementById('modalTtTitle').textContent='✏️ ဇယား ပြင်';document.getElementById('ttActivity').value=x.activity;document.getElementById('ttStart').value=x.start;document.getElementById('ttEnd').value=x.end;document.getElementById('ttBlock').value=x.block||'';document.getElementById('modalTimetable').classList.add('show')}
-async function saveTimetableItem(){const activity=document.getElementById('ttActivity').value.trim(),start=document.getElementById('ttStart').value,end=document.getElementById('ttEnd').value,block=document.getElementById('ttBlock').value.trim();if(!activity||!start||!end){alert('လုပ်ဆောင်ချက်နဲ့ အချိန်နှစ်ခုလုံး ဖြည့်ပါ');return}if(toMin(end)<=toMin(start)){alert('ပြီးချိန်သည် စချိန်ထက် နောက်ကျရပါမည်။');return}const overlap=cache.timetable.find(x=>x.id!==editingTtId&&toMin(start)<toMin(x.end)&&toMin(end)>toMin(x.start));if(overlap&&!confirm(`အချိန်ထပ်နေပါတယ်။ ဆက်သိမ်းမလား?`))return;const old=cache.timetable.slice();if(editingTtId){const i=cache.timetable.findIndex(x=>x.id===editingTtId);if(i>=0)cache.timetable[i]={...cache.timetable[i],start,end,activity,block}}else cache.timetable.push({id:uid(),start,end,activity,block});cache.timetable.sort((a,b)=>toMin(a.start)-toMin(b.start));if(!await saveTimetable()){cache.timetable=old;return}closeModal('modalTimetable');renderTimetable();renderTodaySchedule();renderHome()}
-function renderTimetable(){const box=document.getElementById('ttList');box.innerHTML=cache.timetable.length?cache.timetable.map(x=>`<div class="list-item"><div class="head"><span><span class="time">${esc(x.start)}–${esc(x.end)}</span><br><b>${esc(x.activity)}</b>${x.block?` <span class="block-tag">${esc(x.block)}</span>`:''}</span><span><button class="icon" onclick="openEditTimetable(${Number(x.id)})">✏️</button><button class="icon danger" onclick="delTimetable(${Number(x.id)})">🗑</button></span></div></div>`).join(''):'<div class="empty">ဇယား မရှိသေး</div>'}
-async function delTimetable(id){if(!confirm('ဇယားကို ဖျက်မလား?'))return;const old=cache.timetable;cache.timetable=old.filter(x=>x.id!==id);cache.done_today=cache.done_today.filter(x=>x!==id);if(await saveTimetable()){await saveDoneToday();renderTimetable();renderTodaySchedule();renderHome()}else cache.timetable=old}
-async function resetTimetable(){if(!confirm('မူရင်းဇယားကို ပြန်ထည့်မလား?'))return;const old=cache.timetable;cache.timetable=structuredClone(DEFAULT_TIMETABLE);if(await saveTimetable()){cache.done_today=[];await saveDoneToday();renderTimetable();renderTodaySchedule();renderHome()}else cache.timetable=old}
-let editingBlockId=null;
-function openAddBlock(){editingBlockId=null;document.getElementById('modalBlockTitle').textContent='📚 Block ထည့်';document.getElementById('blockName').value='';document.getElementById('blockSubject').value='';document.getElementById('modalBlock').classList.add('show')}
-function openEditBlock(id){const x=cache.blocks.find(v=>v.id===id);if(!x)return;editingBlockId=id;document.getElementById('modalBlockTitle').textContent='✏️ Block ပြင်';document.getElementById('blockName').value=x.name;document.getElementById('blockSubject').value=x.subject;document.getElementById('modalBlock').classList.add('show')}
-async function saveBlockItem(){const name=document.getElementById('blockName').value.trim(),subject=document.getElementById('blockSubject').value.trim();if(!name||!subject){alert('Block နာမည်နဲ့ ဘာသာ ဖြည့်ပါ');return}const old=structuredClone(cache.blocks);if(editingBlockId){const i=cache.blocks.findIndex(x=>x.id===editingBlockId);if(i>=0)cache.blocks[i]={...cache.blocks[i],name,subject}}else cache.blocks.push({id:uid(),name,subject});if(!await saveBlocks()){cache.blocks=old;return}closeModal('modalBlock');renderBlocks()}
-function renderBlocks(){const box=document.getElementById('blockList');box.innerHTML=cache.blocks.length?cache.blocks.map(x=>`<div class="list-item"><div class="head"><span><span class="block-tag">${esc(x.name)}</span> ${esc(x.subject)}</span><span><button class="icon" onclick="openEditBlock(${Number(x.id)})">✏️</button><button class="icon danger" onclick="delBlock(${Number(x.id)})">🗑</button></span></div></div>`).join(''):'<div class="empty">Block မရှိသေး</div>'}
-async function delBlock(id){if(!confirm('Block ဖျက်မလား?'))return;const old=cache.blocks;cache.blocks=old.filter(x=>x.id!==id);if(await saveBlocks())renderBlocks();else cache.blocks=old}
-
-let session=null,sessionTimerId=null,pendingSessionId=null;
-function openStartSession(id){const x=cache.timetable.find(v=>v.id===id);if(!x)return;pendingSessionId=id;const mins=Math.max(1,toMin(x.end)-toMin(x.start));document.getElementById('ssInfo').textContent=`${x.activity} (${x.start}–${x.end}) — default ${mins} မိနစ်`;document.getElementById('ssMinutes').value=mins;document.getElementById('modalStartSession').classList.add('show')}
-function confirmStartSession(){const id=pendingSessionId,x=cache.timetable.find(v=>v.id===id);if(!x)return;const mins=Number(document.getElementById('ssMinutes').value)||25;closeModal('modalStartSession');startSession(x,mins)}
-function startSession(block,minutes){
- if(session){alert('Session တစ်ခု လုပ်နေဆဲပါ');return}
- session={blockId:block.id,activity:block.activity,blockName:block.block||'',subject:(cache.blocks.find(b=>b.name===block.block)||{}).subject||'',totalSec:minutes*60,remainSec:minutes*60,startedAt:Date.now()};
- document.getElementById('sessionBar').classList.add('show');
- updateSessionBar();
- sessionTimerId=setInterval(()=>{session.remainSec=Math.max(0,Math.ceil((session.startedAt+session.totalSec*1000-Date.now())/1000));updateSessionBar();if(session.remainSec<=0)endSession(true)},500);
-}
-function updateSessionBar(){if(!session)return;const m=Math.floor(session.remainSec/60),s=session.remainSec%60;document.getElementById('sessionTime').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('sessionInfo').textContent=`${session.activity}${session.subject?' · '+session.subject:''}`}
-async function endSession(complete){
- if(!session)return;
- if(sessionTimerId)clearInterval(sessionTimerId);sessionTimerId=null;
- const elapsedSec=Math.min(session.totalSec,session.totalSec-session.remainSec);
- const minutes=Math.max(1,Math.round(elapsedSec/60));
- const s=session;session=null;
- document.getElementById('sessionBar').classList.remove('show');
- if(!complete&&elapsedSec<30){return}
- const log={id:uid(),ts:s.startedAt,date:todayKey(new Date(s.startedAt)),blockId:s.blockId,activity:s.activity,blockName:s.blockName,subject:s.subject,minutes};
- cache.studyLogs.unshift(log);
- if(cache.studyLogs.length>2000)cache.studyLogs=cache.studyLogs.slice(0,2000);
- await saveStudyLogs();
- if(complete){
-  playAlarm();
-  if(navigator.vibrate)navigator.vibrate([180,80,180]);
-  sendNoti('⏱️ Focus session ပြီးပါပြီ',`${s.activity} · ${minutes} မိနစ်`);
-  if(s.blockId&&!cache.done_today.includes(s.blockId)){cache.done_today.push(s.blockId);await saveDoneToday()}
- }
- await addXp(Math.round(minutes/5)+5,'session');
- await checkDailyGoal();
- renderHome();renderTodaySchedule();renderStudyLogs();
- if(complete)alert(`✅ ${minutes} မိနစ် မှတ်တမ်းတင်ပြီးပါပြီ! +${Math.round(minutes/5)+5} XP`);
-}
-async function checkDailyGoal(){
- const g=cache.dailyGoal;
- const t=todayKey();
- const blocksDone=cache.timetable.filter(x=>x.block&&cache.done_today.includes(x.id)).length;
- const minDone=todayStudyMinutes();
- const hit=blocksDone>=g.blocks||minDone>=g.minutes;
- if(hit){const key='goal_'+t;const prev=await idbGet(key,false);if(!prev){await idbSet(key,true);const cnt=await idbGet('goal_hits',0);await idbSet('goal_hits',cnt+1);await checkAchievements()}}
-}
-function openGoalSettings(){document.getElementById('goalBlocksInput').value=cache.dailyGoal.blocks;document.getElementById('goalMinutesInput').value=cache.dailyGoal.minutes;document.getElementById('modalGoal').classList.add('show')}
-async function saveGoalSettings(){const b=Number(document.getElementById('goalBlocksInput').value)||3,m=Number(document.getElementById('goalMinutesInput').value)||120;cache.dailyGoal={blocks:b,minutes:m};if(await saveGoal()){closeModal('modalGoal');renderHome();alert('ပန်းတိုင် သိမ်းပြီးပါပြီ 🎯')}}
-
-let todoFilter='active',editingTodoId=null;
-function setTodoFilter(f,el){todoFilter=f;document.querySelectorAll('#tab-todo .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderTodos()}
-function renderTodos(){
- const box=document.getElementById('todoList');const t=todayKey();
- let list=[...cache.todos].sort((a,b)=>(a.done-b.done)||((a.due||'9')<(b.due||'9')?-1:1));
- if(todoFilter==='active')list=list.filter(x=>!x.done);
- else if(todoFilter==='done')list=list.filter(x=>x.done);
- else if(todoFilter==='today')list=list.filter(x=>x.due===t||(!x.done&&(!x.due||x.due<=t)));
- box.innerHTML=list.length?list.map(x=>{
-  const cls=x.done?'done':(x.priority==='high'?'pri-high':x.priority==='med'?'pri-med':'');
-  const due=x.due?new Date(x.due+'T00:00:00').toLocaleDateString('my-MM',{month:'short',day:'numeric'}):'';
-  const overdue=x.due&&x.due<t&&!x.done;
-  return `<div class="list-item ${cls}"><div class="head"><span style="flex:1"><input type="checkbox" style="width:auto;margin:0 8px 0 0;vertical-align:middle" ${x.done?'checked':''} onchange="toggleTodo(${Number(x.id)})"><b style="${x.done?'text-decoration:line-through;color:#8a93a5':''}">${esc(x.text)}</b>${due?`<div class="time" style="margin-top:3px">${overdue?'⚠️ ':''}📅 ${due}</div>`:''}</span><span><button class="icon" onclick="openEditTodo(${Number(x.id)})">✏️</button><button class="icon danger" onclick="delTodo(${Number(x.id)})">🗑</button></span></div></div>`
- }).join(''):'<div class="empty">To-Do မရှိသေးပါ</div>';
- const act=cache.todos.filter(x=>!x.done).length;
- document.getElementById('todoStats').textContent=`လုပ်ရန် ${act} / စုစုပေါင်း ${cache.todos.length}`;
-}
-function openAddTodo(){editingTodoId=null;document.getElementById('modalTodoTitle').textContent='✅ To-Do ထည့်';document.getElementById('todoText').value='';document.getElementById('todoPriority').value='med';document.getElementById('todoDue').value='';document.getElementById('modalTodo').classList.add('show')}
-function openEditTodo(id){const x=cache.todos.find(v=>v.id===id);if(!x)return;editingTodoId=id;document.getElementById('modalTodoTitle').textContent='✏️ To-Do ပြင်';document.getElementById('todoText').value=x.text;document.getElementById('todoPriority').value=x.priority||'med';document.getElementById('todoDue').value=x.due||'';document.getElementById('modalTodo').classList.add('show')}
-async function saveTodoItem(){const text=document.getElementById('todoText').value.trim();const priority=document.getElementById('todoPriority').value;const due=document.getElementById('todoDue').value;if(!text){alert('စာသား ဖြည့်ပါ');return}const old=structuredClone(cache.todos);if(editingTodoId){const i=cache.todos.findIndex(x=>x.id===editingTodoId);if(i>=0)cache.todos[i]={...cache.todos[i],text,priority,due}}else cache.todos.unshift({id:uid(),text,done:false,priority,due,createdAt:Date.now()});if(!await saveTodos()){cache.todos=old;return}closeModal('modalTodo');renderTodos()}
-async function toggleTodo(id){const t=cache.todos.find(x=>x.id===id);if(!t)return;const was=t.done;t.done=!t.done;if(await saveTodos()){if(!was)await addXp(5,'todo');renderTodos()}}
-async function delTodo(id){if(!confirm('ဖျက်မလား?'))return;const old=cache.todos;cache.todos=old.filter(x=>x.id!==id);if(await saveTodos())renderTodos();else cache.todos=old}
-
-function fcIntervals(){return[0,1,2,4,7,14]}
-function dueFlashcards(folderId){const now=Date.now();return cache.flashcards.filter(c=>(folderId==null||c.folderId===folderId)&&(c.nextAt||0)<=now)}
-function renderFlashcardStats(){
- const now=Date.now();
- const due=cache.flashcards.filter(c=>(c.nextAt||0)<=now).length;
- document.getElementById('fcDue').textContent=due;
- document.getElementById('fcTotal').textContent=cache.flashcards.length;
- document.getElementById('fcMastered').textContent=masteredCount();
- const fopt='<option value="">— Folder အားလုံး —</option>'+cache.folders.map(f=>`<option value="${Number(f.id)}">📁 ${esc(f.name)}</option>`).join('');
- const cur=document.getElementById('fcFolder').value;
- document.getElementById('fcFolder').innerHTML=fopt;
- document.getElementById('fcFolder').value=cur;
- document.getElementById('fcCardFolder').innerHTML=cache.folders.map(f=>`<option value="${Number(f.id)}">📁 ${esc(f.name)}</option>`).join('');
-}
-function renderFlashcardList(){
- const fid=document.getElementById('fcFolder').value?Number(document.getElementById('fcFolder').value):null;
- const list=cache.flashcards.filter(c=>fid==null||c.folderId===fid);
- const box=document.getElementById('fcList');
- box.innerHTML=list.length?list.map(c=>{
-  const due=new Date(c.nextAt||0);const ready=(c.nextAt||0)<=Date.now();
-  return `<div class="list-item ${ready?'active-now':''}"><div class="head"><span style="flex:1;min-width:0"><b>${esc(c.front.slice(0,80))}</b><span class="fc-box" style="display:inline-block;background:#eef3ff;color:#3151a7;border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700;margin-left:6px">Box ${c.box}</span><div class="muted" style="margin-top:3px">${ready?'✅ ယခု ပြန်လည်ရန်':'⏰ '+due.toLocaleDateString('my-MM')}</div></span><span><button class="icon" onclick="openEditFlashcard(${Number(c.id)})">✏️</button><button class="icon danger" onclick="delFlashcard(${Number(c.id)})">🗑</button></span></div></div>`
- }).join(''):'<div class="empty">Card မရှိသေးပါ</div>';
-}
-let editingFcId=null;
-function openAddFlashcard(){editingFcId=null;document.getElementById('modalFcTitle').textContent='🧠 Card အသစ်';document.getElementById('fcFront').value='';document.getElementById('fcBack').value='';if(currentFolderId!=null)document.getElementById('fcCardFolder').value=String(currentFolderId);document.getElementById('modalFlashcard').classList.add('show')}
-function openEditFlashcard(id){const c=cache.flashcards.find(x=>x.id===id);if(!c)return;editingFcId=id;document.getElementById('modalFcTitle').textContent='✏️ Card ပြင်';document.getElementById('fcFront').value=c.front;document.getElementById('fcBack').value=c.back;document.getElementById('fcCardFolder').value=String(c.folderId||'');document.getElementById('modalFlashcard').classList.add('show')}
-async function saveFlashcardItem(){const front=document.getElementById('fcFront').value.trim(),back=document.getElementById('fcBack').value.trim(),fid=Number(document.getElementById('fcCardFolder').value)||null;if(!front||!back){alert('မေးခွန်းနဲ့ အဖြေ ဖြည့်ပါ');return}const old=structuredClone(cache.flashcards);if(editingFcId){const i=cache.flashcards.findIndex(x=>x.id===editingFcId);if(i>=0)cache.flashcards[i]={...cache.flashcards[i],front,back,folderId:fid}}else cache.flashcards.push({id:uid(),front,back,folderId:fid,box:0,nextAt:Date.now(),reviews:0,createdAt:Date.now()});if(!await saveFlashcards()){cache.flashcards=old;return}closeModal('modalFlashcard');if(!editingFcId)await addXp(3,'flashcard');renderFlashcardStats();renderFlashcardList()}
-async function delFlashcard(id){if(!confirm('Card ဖျက်မလား?'))return;const old=cache.flashcards;cache.flashcards=old.filter(x=>x.id!==id);if(await saveFlashcards()){renderFlashcardStats();renderFlashcardList()}else cache.flashcards=old}
-let reviewQueue=[],reviewIdx=0,reviewRevealed=false;
-function startReview(){
- const fid=document.getElementById('fcFolder').value?Number(document.getElementById('fcFolder').value):null;
- reviewQueue=dueFlashcards(fid);
- if(!reviewQueue.length){alert('ယခု ပြန်လည်ရန် card မရှိပါ 🎉');return}
- reviewIdx=0;reviewRevealed=false;
- document.getElementById('modalReview').classList.add('show');
- showReviewCard();
-}
-function showReviewCard(){
- const c=reviewQueue[reviewIdx];if(!c){closeModal('modalReview');renderFlashcardStats();renderFlashcardList();return}
- document.getElementById('revProgress').textContent=`${reviewIdx+1} / ${reviewQueue.length}`;
- document.getElementById('revFront').textContent=c.front;
- document.getElementById('revBack').textContent=c.back;
- document.getElementById('revBack').classList.add('hidden');
- document.getElementById('revActions').classList.remove('hidden');
- document.getElementById('revAnswerBtns').classList.add('hidden');
- reviewRevealed=false;
-}
-function revealReview(){
- if(reviewRevealed)return;reviewRevealed=true;
- document.getElementById('revBack').classList.remove('hidden');
- document.getElementById('revActions').classList.add('hidden');
- document.getElementById('revAnswerBtns').classList.remove('hidden');
-}
-async function gradeReview(correct){
- const c=reviewQueue[reviewIdx];if(!c)return;
- const idx=cache.flashcards.findIndex(x=>x.id===c.id);if(idx<0){reviewIdx++;showReviewCard();return}
- const fc=cache.flashcards[idx];
- fc.reviews=(fc.reviews||0)+1;
- if(correct){fc.box=Math.min(5,fc.box+1)}else{fc.box=0}
- const days=fcIntervals()[fc.box];
- fc.nextAt=Date.now()+days*86400000;
- await saveFlashcards();
- await addXp(1,'review');
- reviewIdx++;
- if(reviewIdx>=reviewQueue.length){
-  closeModal('modalReview');
-  await checkAchievements();
-  renderFlashcardStats();renderFlashcardList();
-  alert('✅ Review ပြီးပါပြီ! 🎉');
- }else showReviewCard();
-}
-
-function drawBar(canvas,labels,values,color){
- const c=canvas.getContext('2d');const W=canvas.width=canvas.clientWidth*devicePixelRatio,H=canvas.height=canvas.clientHeight*devicePixelRatio;
- c.scale(1,1);c.clearRect(0,0,W,H);
- const pad={l:32,r:8,t:10,b:22};
- const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
- const max=Math.max(10,...values);
- c.strokeStyle='#e5e9f2';c.lineWidth=1;
- for(let i=0;i<=4;i++){const y=pad.t+ch*i/4;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();
-  c.fillStyle='#8894a8';c.font=`${10*devicePixelRatio}px system-ui`;c.textAlign='right';c.textBaseline='middle';c.fillText(Math.round(max*(1-i/4)),pad.l-4,y);}
- const bw=cw/values.length*0.6;
- values.forEach((v,i)=>{const x=pad.l+cw*(i+0.5)/values.length;const bh=(v/max)*ch;const y=pad.t+ch-bh;
-  c.fillStyle=color;c.beginPath();const r=Math.min(4*devicePixelRatio,bw/2);c.moveTo(x-bw/2,y+r);c.arcTo(x+bw/2,y,x+bw/2,y+r,0);c.lineTo(x+bw/2,pad.t+ch);c.lineTo(x-bw/2,pad.t+ch);c.closePath();c.fill();});
- c.fillStyle='#8894a8';c.font=`${9*devicePixelRatio}px system-ui`;c.textAlign='center';c.textBaseline='top';
- const step=Math.ceil(labels.length/8);
- labels.forEach((l,i)=>{if(i%step===0){const x=pad.l+cw*(i+0.5)/values.length;c.fillText(l,x,pad.t+ch+4)}});
-}
-function drawLine(canvas,series){
- const c=canvas.getContext('2d');const W=canvas.width=canvas.clientWidth*devicePixelRatio,H=canvas.height=canvas.clientHeight*devicePixelRatio;
- c.clearRect(0,0,W,H);
- const pad={l:32,r:8,t:10,b:22};const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
- c.strokeStyle='#e5e9f2';c.lineWidth=1;
- for(let i=0;i<=4;i++){const y=pad.t+ch*i/4;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();
-  c.fillStyle='#8894a8';c.font=`${10*devicePixelRatio}px system-ui`;c.textAlign='right';c.textBaseline='middle';c.fillText(Math.round(100*(1-i/4)),pad.l-4,y);}
- if(!series.length){c.fillStyle='#929bad';c.font=`${12*devicePixelRatio}px system-ui`;c.textAlign='center';c.fillText('ဒေတာ မရှိသေး',W/2,H/2);return}
- const all=series.flatMap(s=>s.points.map(p=>p.y));
- const minX=Math.min(...series.flatMap(s=>s.points.map(p=>p.x)));
- const maxX=Math.max(...series.flatMap(s=>s.points.map(p=>p.x)));
- const xr=maxX-minX||1;
- const colors=['#315efb','#16845b','#c43d4b','#a86500','#7c3aed'];
- series.forEach((s,si)=>{
-  c.strokeStyle=colors[si%colors.length];c.lineWidth=2*devicePixelRatio;c.beginPath();
-  s.points.forEach((p,i)=>{const x=pad.l+cw*((p.x-minX)/xr);const y=pad.t+ch*(1-p.y/100);if(i===0)c.moveTo(x,y);else c.lineTo(x,y)});
-  c.stroke();
-  c.fillStyle=colors[si%colors.length];
-  s.points.forEach(p=>{const x=pad.l+cw*((p.x-minX)/xr);const y=pad.t+ch*(1-p.y/100);c.beginPath();c.arc(x,y,3*devicePixelRatio,0,Math.PI*2);c.fill()});
- });
-}
-function renderCharts(){
- const labels=[],values=[];
- for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=todayKey(d);const m=cache.studyLogs.filter(l=>l.date===k).reduce((s,x)=>s+x.minutes,0);labels.push(`${d.getDate()}`);values.push(m)}
- drawBar(document.getElementById('chartStudy'),labels,values,'#315efb');
- const bySub={};
- cache.results.forEach(r=>{if(!bySub[r.s])bySub[r.s]=[];bySub[r.s].push({x:r.createdAt||0,y:Number(r.m)})});
- const series=Object.entries(bySub).map(([name,points])=>({name,points:points.sort((a,b)=>a.x-b.x)}));
- drawLine(document.getElementById('chartResults'),series);
-}
-
-function renderHeatmap(){
-  const box=document.getElementById('heatmap');
-  box.innerHTML='';
-
-  const today=new Date();today.setHours(0,0,0,0);
-  let hasExam=false;
-  let endDate=new Date(today);
-
-  if(cache.examDate){
-    const [y,m,d]=cache.examDate.split('-').map(Number);
-    endDate=new Date(y,m-1,d);
-    endDate.setHours(0,0,0,0);
-    hasExam=true;
-  }
-
-  const startDate=new Date(today);
-  const totalDays=Math.round((endDate-startDate)/86400000)+1;
-
-  const titleEl=document.getElementById('heatmapTitle');
-  const subEl=document.getElementById('heatmapSubtitle');
-  if(titleEl)titleEl.textContent=hasExam?'🔥 Final Exam အထိ လမ်းစဉ်':'🔥 စာလုပ်ရက် Heatmap';
-  if(subEl){
-    if(hasExam){
-      const examName=cache.examName||'Final Exam';
-      subEl.textContent=`${examName} · ဒီနေ့မှ ${cache.examDate} အထိ · စုစုပေါင်း ${totalDays} ရက်`;
-    }else{
-      subEl.textContent='စာမေးပွဲရက် မသတ်မှတ်ရသေးပါ — More tab မှာ သတ်မှတ်ပါ';
-    }
-  }
-
-  const map={};
-  cache.studyLogs.forEach(l=>{map[l.date]=(map[l.date]||0)+l.minutes});
-
-  box.style.gridTemplateRows='repeat(7,14px)';
-
-  const padStart=startDate.getDay();
-  for(let i=0;i<padStart;i++){
-    const el=document.createElement('div');
-    el.className='heat-cell';
-    el.style.background='transparent';
-    el.style.visibility='hidden';
-    box.appendChild(el);
-  }
-
-  for(let d=new Date(startDate);d<=endDate;d.setDate(d.getDate()+1)){
-    const dd=new Date(d);
-    const k=todayKey(dd);
-    const m=map[k]||0;
-    const isFuture=dd>today;
-    const isToday=(k===todayKey(today));
-    const isExam=(hasExam&&k===cache.examDate);
-
-    let color;
-    if(isExam)          color='#c43d4b';
-    else if(isFuture)   color='#eef1f7';
-    else if(m===0)      color='#ebedf0';
-    else if(m<30)       color='#c7d4ff';
-    else if(m<60)       color='#7c9bff';
-    else if(m<120)      color='#4a75f0';
-    else                color='#315efb';
-
-    const el=document.createElement('div');
-    el.className='heat-cell';
-    el.style.background=color;
-    if(isToday){el.style.outline='2px solid #e8a23b';el.style.outlineOffset='1px'}
-    if(isExam){el.style.outline='2px solid #c43d4b';el.style.outlineOffset='1px'}
-
-    if(isExam)         el.title=`🎯 Exam Day — ${k}`;
-    else if(isToday)   el.title=`⭐ ဒီနေ့ — ${k}: ${m} မိနစ်`;
-    else if(isFuture)  el.title=`${k} (${Math.round((dd-today)/86400000)} ရက် ကျန်)`;
-    else               el.title=`${k}: ${m} မိနစ်`;
-
-    box.appendChild(el);
-  }
-
-  const lastDate=new Date(endDate);
-  const padEnd=6-lastDate.getDay();
-  for(let i=0;i<padEnd;i++){
-    const el=document.createElement('div');
-    el.className='heat-cell';
-    el.style.background='transparent';
-    el.style.visibility='hidden';
-    box.appendChild(el);
-  }
-}
-
-function renderStudyLogs(){
- const box=document.getElementById('studyLogsList');
- const recent=cache.studyLogs.slice(0,30);
- box.innerHTML=recent.length?recent.map(l=>`<div class="list-item"><div class="head"><span><b>${esc(l.activity)}</b>${l.subject?` <span class="block-tag">${esc(l.subject)}</span>`:''}<div class="muted">${new Date(l.ts).toLocaleString('my-MM')}</div></span><span class="badge">${l.minutes}m</span></div></div>`).join(''):'<div class="empty">မှတ်တမ်း မရှိသေး</div>';
-}
-async function clearStudyLogs(){if(!confirm('Study sessions အားလုံး ရှင်းမလား?'))return;cache.studyLogs=[];await saveStudyLogs();renderStudyLogs();renderCharts();renderHeatmap();renderHome()}
-
-let currentFolderId=null,editingFolderId=null,editingNoteId=null,currentViewNoteId=null,fsImages=[],fsIndex=0;
-let editingNoteAudioIds=[];
-function getFolders(pid){return cache.folders.filter(f=>(f.parentId??null)===(pid??null))}
-function getNotes(fid){return cache.notes.filter(n=>(n.folderId??null)===(fid??null))}
-function openFolder(id){currentFolderId=id;renderNotes()}
-async function renderNotes(){
- const breadcrumb=document.getElementById('noteBreadcrumb'),header=document.getElementById('noteHeader'),content=document.getElementById('noteContent'),query=(document.getElementById('noteSearch').value||'').trim().toLowerCase();
- let path=[],pid=currentFolderId,guard=0;while(pid!==null&&pid!==undefined&&guard++<100){const f=cache.folders.find(x=>x.id===pid);if(!f)break;path.unshift(f);pid=f.parentId??null}
- breadcrumb.innerHTML='<a onclick="openFolder(null)">📁 ပင်မ</a>'+path.map(f=>` › <a onclick="openFolder(${Number(f.id)})">${esc(f.name)}</a>`).join('');
- header.textContent=currentFolderId==null?'📁 ဘာသာ Folder များ':'📁 '+esc((cache.folders.find(x=>x.id===currentFolderId)||{}).name||'Folder');
- let html='';const sub=getFolders(currentFolderId).filter(f=>!query||f.name.toLowerCase().includes(query));
- for(const f of sub){html+=`<div class="folder" onclick="openFolder(${Number(f.id)})"><div><div class="name">📁 ${esc(f.name)}</div><div class="count">${getNotes(f.id).length} မှတ်စု · ${getFolders(f.id).length} sub-folder</div></div><div><button class="icon" onclick="event.stopPropagation();openEditFolder(${Number(f.id)})">✏️</button><button class="icon danger" onclick="event.stopPropagation();delFolder(${Number(f.id)})">🗑</button></div></div>`}
- const notes=getNotes(currentFolderId).filter(n=>!query||(`${n.title} ${n.body||''}`).toLowerCase().includes(query));
- if(notes.length)html+='<h3 style="font-size:13px;margin:14px 0 7px;color:#687386">📝 မှတ်စုများ</h3>'+notes.map(n=>{const ico=[];if(n.imageIds?.length)ico.push('📷'+n.imageIds.length);if(n.audioIds?.length)ico.push('🎙️'+n.audioIds.length);return `<div class="note-card" onclick="viewNote(${Number(n.id)})"><div class="head"><span class="title">${esc(n.title)}${ico.length?' '+ico.join(' '):''}</span><span><button class="icon" onclick="event.stopPropagation();openEditNote(${Number(n.id)})">✏️</button><button class="icon danger" onclick="event.stopPropagation();delNote(${Number(n.id)})">🗑</button></span></div><div class="body">${esc((n.body||'').slice(0,140))}${(n.body||'').length>140?'…':''}</div></div>`}).join('');
- if(!html)html='<div class="empty">'+(query?'ကိုက်ညီသောရလဒ် မတွေ့ပါ':'ဒီ folder ထဲမှာ ဘာမှ မရှိသေးပါ')+'</div>';
- content.innerHTML=html;await updateStorageInfo();
-}
-function openAddFolder(){editingFolderId=null;document.getElementById('modalFolderTitle').textContent='📁 Folder ထည့်';document.getElementById('folderName').value='';document.getElementById('modalFolder').classList.add('show')}
-function openEditFolder(id){const f=cache.folders.find(x=>x.id===id);if(!f)return;editingFolderId=id;document.getElementById('modalFolderTitle').textContent='✏️ Folder ပြင်';document.getElementById('folderName').value=f.name;document.getElementById('modalFolder').classList.add('show')}
-async function saveFolderItem(){const name=document.getElementById('folderName').value.trim();if(!name){alert('Folder နာမည် ဖြည့်ပါ');return}const old=structuredClone(cache.folders);if(editingFolderId){const f=cache.folders.find(x=>x.id===editingFolderId);if(f)f.name=name}else cache.folders.push({id:uid(),name,parentId:currentFolderId,createdAt:Date.now()});if(!await saveFolders()){cache.folders=old;return}closeModal('modalFolder');renderNotes()}
-async function delFolder(id){if(!confirm('ဒီ Folder နှင့် အတွင်းရှိ အားလုံးကို ဖျက်မလား?'))return;const folderIds=new Set(),noteList=[];function collect(fid){folderIds.add(fid);cache.folders.filter(f=>f.parentId===fid).forEach(f=>collect(f.id));cache.notes.filter(n=>n.folderId===fid).forEach(n=>noteList.push(n))}collect(id);
- try{for(const n of noteList){for(const imgId of n.imageIds||[])await idbDeleteImage(imgId);for(const aId of n.audioIds||[])await idbDeleteAudio(aId)}
- cache.folders=cache.folders.filter(f=>!folderIds.has(f.id));cache.notes=cache.notes.filter(n=>!noteList.some(z=>z.id===n.id));await idbSet('folders',cache.folders);await idbSet('notes',cache.notes);if(folderIds.has(currentFolderId))currentFolderId=null;await renderNotes()}catch(e){alert('Folder ဖျက်ရာတွင် error: '+e.message)}}
-async function openAddNote(){editingNoteId=null;editingNoteAudioIds=[];document.getElementById('modalNoteTitle').textContent='📝 မှတ်စု ထည့်';document.getElementById('noteTitle').value='';document.getElementById('noteBody').value='';document.getElementById('noteImages').value='';document.getElementById('noteImagesPreview').innerHTML='';document.getElementById('voicePreview').innerHTML='';document.getElementById('modalNote').classList.add('show')}
-async function openEditNote(id){const n=cache.notes.find(x=>x.id===id);if(!n)return;editingNoteId=id;editingNoteAudioIds=[...(n.audioIds||[])];document.getElementById('modalNoteTitle').textContent='✏️ မှတ်စု ပြင်';document.getElementById('noteTitle').value=n.title||'';document.getElementById('noteBody').value=n.body||'';document.getElementById('noteImages').value='';const box=document.getElementById('noteImagesPreview');box.innerHTML='';for(const imgId of n.imageIds||[]){const img=await idbGetImage(imgId);if(img){const el=document.createElement('img');el.className='thumb';el.src=img.data;box.appendChild(el)}}
- const vbox=document.getElementById('voicePreview');vbox.innerHTML='';
- for(const aId of n.audioIds||[]){const a=await idbGetAudio(aId);if(a){vbox.appendChild(makeVoiceItem(aId,a.blob))}}
- document.getElementById('modalNote').classList.add('show')}
-function makeVoiceItem(id,blob){
- const wrap=document.createElement('div');wrap.className='voice-item';
- const url=URL.createObjectURL(blob);
- const audio=document.createElement('audio');
- audio.controls=true;
- audio.preload='metadata'; 
- audio.style.width='100%'; 
- // ဖုန်း Browser တွေအတွက် အရေးကြီးတဲ့ attribute များ ထည့်ခြင်း
- audio.setAttribute('playsinline','true');
- audio.setAttribute('webkit-playsinline','true');
- audio.src=url;
- const del=document.createElement('button');del.type='button';del.className='icon danger';del.textContent='🗑';del.onclick=()=>{wrap.remove();editingNoteAudioIds=editingNoteAudioIds.filter(x=>x!==id);URL.revokeObjectURL(url)};
- wrap.appendChild(audio);wrap.appendChild(del);return wrap;
-}
-function compressImage(file,maxSize=1200,quality=.75){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(reader.error);reader.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('ပုံဖွင့်မရပါ'));img.onload=()=>{let w=img.width,h=img.height;if(w>maxSize||h>maxSize){const r=Math.min(maxSize/w,maxSize/h);w=Math.round(w*r);h=Math.round(h*r)}const cv=document.createElement('canvas');cv.width=Math.max(1,w);cv.height=Math.max(1,h);const ctx=cv.getContext('2d');if(!ctx)return reject(new Error('Canvas မရပါ'));ctx.drawImage(img,0,0,cv.width,cv.height);resolve(cv.toDataURL('image/jpeg',quality))};img.src=reader.result};reader.readAsDataURL(file)})}
-document.getElementById('noteImages').addEventListener('change',async e=>{const box=document.getElementById('noteImagesPreview');box.innerHTML='';for(const file of Array.from(e.target.files||[])){if(!file.type.startsWith('image/'))continue;try{const data=await compressImage(file,300,.6),img=document.createElement('img');img.src=data;img.className='thumb';box.appendChild(img)}catch(err){console.warn(err)}}});
-let mediaRecorder=null,recordedChunks=[];
-async function toggleVoiceRecord(){
- const btn=document.getElementById('voiceRecBtn'),st=document.getElementById('voiceRecStatus');
- if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();btn.textContent='🎙️ ဖမ်းမည်';btn.classList.remove('recording');st.textContent='';return}
- if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert('ဒီ browser က mic မထောက်ပံ့ပါ');return}
- try{
-  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-  
-  let mimeType = '';
-  if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4'; 
-  else if (MediaRecorder.isTypeSupported('audio/webm')) mimeType = 'audio/webm'; 
-  else if (MediaRecorder.isTypeSupported('audio/ogg')) mimeType = 'audio/ogg';
-  
-  const options = mimeType ? { mimeType } : {};
-  mediaRecorder = new MediaRecorder(stream, options);
-  recordedChunks=[];
-  
-  mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)recordedChunks.push(e.data)};
-  mediaRecorder.onstop=async()=>{
-   stream.getTracks().forEach(t=>t.stop());
-   if(!recordedChunks.length)return;
-   
-   // MIME type ကို တိကျစွာ ထည့်သွင်း၍ Blob ဖန်တီးခြင်း (အရေးကြီးဆုံးအချက်)
-   const actualMime = mediaRecorder.mimeType || mimeType || 'audio/webm';
-   const blob = new Blob(recordedChunks, { type: actualMime });
-   
-   if(blob.size>5*1024*1024){if(!confirm('အသံဖိုင် ကြီးနေပါတယ် ('+(blob.size/1024/1024).toFixed(1)+'MB)။ သိမ်းမလား?'))return}
-   const id='aud_'+uid();
-   await idbAddAudio({id,noteId:editingNoteId||'temp_'+uid(),blob,createdAt:Date.now()});
-   editingNoteAudioIds.push(id);
-   document.getElementById('voicePreview').appendChild(makeVoiceItem(id,blob));
-  };
-  mediaRecorder.start();
-  btn.textContent='⏹ ရပ်';btn.classList.add('recording');st.textContent='🔴 Recording...';
- }catch(e){alert('Mic ဖွင့်မရပါ: '+e.message)}
-}
-async function saveNoteItem(){
- const title=document.getElementById('noteTitle').value.trim(),body=document.getElementById('noteBody').value.trim(),files=Array.from(document.getElementById('noteImages').files||[]);
- if(!title){alert('မှတ်စုခေါင်းစဉ် ဖြည့်ပါ');return}
- const btn=document.querySelector('#modalNote .actions .success');btn.disabled=true;
- try{
-  const dataList=[];for(const f of files){if(!f.type.startsWith('image/'))continue;dataList.push(await compressImage(f))}
-  let note;
-  if(editingNoteId){
-    note=cache.notes.find(x=>x.id===editingNoteId);
-    if(!note)throw new Error('မှတ်စု မတွေ့ပါ');
-    note.title=title;note.body=body;
-    note.imageIds=note.imageIds||[];
-    note.audioIds=[...editingNoteAudioIds]; // <--- အသံဖိုင် ID များကို သိမ်းဆည်းခြင်း
-  } else {
-    // မှတ်စုအသစ် ဖန်တီးတဲ့အခါ အသံဖိုင် ID များကို ပါ တစ်ခါတည်း ထည့်သိမ်းခြင်း (ဒီနေရာမှာ ပြင်လိုက်တာပါ)
-    note={id:uid(),folderId:currentFolderId,title,body,imageIds:[],audioIds:[...editingNoteAudioIds],createdAt:Date.now()};
-    cache.notes.unshift(note);
-  }
-  
-  // အသံဖိုင်များကို မှတ်စု ID နှင့် ချိတ်ဆက်ခြင်း
-  for(const aId of editingNoteAudioIds||[]){
-    const a=await idbGetAudio(aId);
-    if(a&&a.noteId&&a.noteId.startsWith('temp_')){
-      a.noteId=note.id;
-      await idbAddAudio(a);
-    }
-  }
-  
-  for(const data of dataList){const imgId='img_'+uid();await idbAddImage({id:imgId,noteId:note.id,data,createdAt:Date.now()});note.imageIds.push(imgId)}
-  if(!await saveNotes())return;
-  if(!editingNoteId)await addXp(3,'note');
-  await checkAchievements();
-  closeModal('modalNote');await renderNotes();
- }catch(e){alert('မှတ်စု သိမ်းမရပါ: '+e.message)}finally{btn.disabled=false}
-}
-async function delNote(id){if(!confirm('မှတ်စုနဲ့ ပူးတွဲဖိုင်များ ဖျက်မလား?'))return;const n=cache.notes.find(x=>x.id===id);try{for(const imgId of n?.imageIds||[])await idbDeleteImage(imgId);for(const aId of n?.audioIds||[])await idbDeleteAudio(aId);cache.notes=cache.notes.filter(x=>x.id!==id);await idbSet('notes',cache.notes);await renderNotes()}catch(e){alert('ဖျက်မရပါ: '+e.message)}}
-async function viewNote(id){
- const n=cache.notes.find(x=>x.id===id);if(!n)return;currentViewNoteId=id;
- document.getElementById('viewNoteTitle').textContent='📝 '+n.title;
- document.getElementById('viewNoteBody').innerHTML=mdToHtml(n.body||'');
- 
- // ပုံများ ပြသခြင်း
- const box=document.getElementById('viewNoteImages');box.innerHTML='';
- for(const imgId of n.imageIds||[]){
-   const im=await idbGetImage(imgId);
-   if(im){const el=document.createElement('img');el.className='thumb';el.src=im.data;el.onclick=()=>openFullscreen(imgId,n.imageIds);box.appendChild(el)}
- }
- 
- // 🎙️ အသံဖိုင်များ ပြသခြင်း (အဓိက ပြင်ဆင်ထားသော အပိုင်း)
- const abox=document.getElementById('viewNoteAudio');
- abox.innerHTML='';
- if(n.audioIds && n.audioIds.length > 0){
-   for(const aId of n.audioIds){
-     const a = await idbGetAudio(aId);
-     if(a && a.blob){
-       const wrap = document.createElement('div');
-       wrap.className = 'voice-item';
-       wrap.style.marginTop = '10px';
-       wrap.style.padding = '10px';
-       wrap.style.background = '#f1f5f9';
-       wrap.style.borderRadius = '10px';
-       
-       const audio = document.createElement('audio');
-       audio.controls = true;
-       audio.preload = 'auto'; // Metadata အစား auto ပြောင်းထားပါတယ်
-       audio.style.width = '100%';
-       // ဖုန်း Browser တွေမှာ အသံဖွင့်လို့ရအောင် ဒီနှစ်ခု ထည့်ရပါတယ်
-       audio.setAttribute('playsinline', 'true');
-       audio.setAttribute('webkit-playsinline', 'true');
-       
-       const audioUrl = URL.createObjectURL(a.blob);
-       audio.src = audioUrl;
-       
-       wrap.appendChild(audio);
-       abox.appendChild(wrap);
-     }
-   }
- }
- 
- document.getElementById('modalViewNote').classList.add('show');
-}
-async function deleteCurrentNote(){if(currentViewNoteId==null)return;const id=currentViewNoteId;closeModal('modalViewNote');await delNote(id);currentViewNoteId=null}
-async function openFullscreen(imageId,ids){fsImages=ids||[imageId];fsIndex=Math.max(0,fsImages.indexOf(imageId));await showFsImage();document.getElementById('fullscreenViewer').classList.add('show')}
-async function showFsImage(){if(!fsImages.length)return;const img=await idbGetImage(fsImages[fsIndex]);document.getElementById('fsImage').src=img?.data||'';document.getElementById('fsCounter').textContent=`${fsIndex+1} / ${fsImages.length}`}
-async function fsNav(d){if(!fsImages.length)return;fsIndex=(fsIndex+d+fsImages.length)%fsImages.length;await showFsImage()}
-function closeFullscreen(){document.getElementById('fullscreenViewer').classList.remove('show');document.getElementById('fsImage').src=''}
-document.addEventListener('keydown',e=>{if(!document.getElementById('fullscreenViewer').classList.contains('show'))return;if(e.key==='Escape')closeFullscreen();if(e.key==='ArrowLeft')fsNav(-1);if(e.key==='ArrowRight')fsNav(1)});
-let touchX=0;document.getElementById('fullscreenViewer').addEventListener('touchstart',e=>touchX=e.touches[0].clientX,{passive:true});document.getElementById('fullscreenViewer').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>50)fsNav(dx>0?-1:1)},{passive:true});
-
-async function saveExamData(){const name=document.getElementById('examName').value.trim(),date=document.getElementById('examDate').value;if(!name||!date){alert('စာမေးပွဲအမည်နဲ့ ရက် ဖြည့်ပါ');return}const old=[cache.examName,cache.examDate];cache.examName=name;cache.examDate=date;if(!await saveExam()){[cache.examName,cache.examDate]=old;return}renderExam();renderHome();renderHeatmap();alert('စာမေးပွဲ သိမ်းပြီးပါပြီ 💾')}
-async function clearExam(){if(!confirm('ဖယ်ရှားမလား?'))return;const old=[cache.examName,cache.examDate];cache.examName='';cache.examDate='';if(await saveExam()){renderExam();renderHome();renderHeatmap()}else [cache.examName,cache.examDate]=old}
-function renderExam(){const n=document.getElementById('examName'),d=document.getElementById('examDate');if(n)n.value=cache.examName;if(d)d.value=cache.examDate;const days=calendarDays(cache.examDate);const ec=document.getElementById('examCount');if(ec)ec.textContent=days===null?'--':days>0?days+' ရက်':days===0?'ဒီနေ့':'ကျော်သွားပြီ';const es=document.getElementById('examStatus');if(es)es.textContent=cache.examDate?`${cache.examName||'စာမေးပွဲ'} · ${cache.examDate}`:'မသတ်မှတ်ရသေး'}
-async function checkResult(){const s=document.getElementById('resSubject').value.trim(),raw=document.getElementById('resMark').value;if(!s||raw.trim()===''){alert('ဘာသာနဲ့ ရမှတ် ဖြည့်ပါ');return}const m=Number(raw);if(!Number.isFinite(m)||m<0||m>100){alert('0–100 အတွင်း ထည့်ပါ');return}let grade,cls;if(m>=40){grade='Pass ✅';cls='pass'}else if(m>=25){grade='Half Pass ⚠️';cls='half'}else{grade='Fail ❌';cls='fail'}const old=cache.results;cache.results.unshift({id:uid(),s,m,grade,cls,createdAt:Date.now()});if(!await saveResults()){cache.results=old;return}document.getElementById('resGrade').innerHTML=`${esc(s)}: <span class="badge ${cls}">${grade}</span>`;document.getElementById('resSubject').value='';document.getElementById('resMark').value='';renderResults();renderCharts()}
-function renderResults(){const box=document.getElementById('resList');box.innerHTML=cache.results.length?cache.results.map(x=>`<div class="list-item"><div class="head"><span><b>${esc(x.s)}</b> — ${Number(x.m)}</span><span><span class="badge ${['pass','half','fail'].includes(x.cls)?x.cls:'fail'}">${esc(x.grade)}</span><button class="icon danger" onclick="delResult(${Number(x.id)})">✕</button></span></div><div class="muted">${x.createdAt?new Date(x.createdAt).toLocaleDateString('my-MM'):''}</div></div>`).join(''):'<div class="empty">ရလဒ် မရှိသေးပါ</div>'}
-async function delResult(id){const old=cache.results;cache.results=old.filter(x=>x.id!==id);if(await saveResults()){renderResults();renderCharts()}else cache.results=old}
-
-function renderAchievements(){
- const grid=document.getElementById('achGrid');
- grid.innerHTML=ACHIEVEMENTS.map(a=>`<div class="ach ${cache.achievements.includes(a.id)?'unlocked':''}" title="${esc(a.desc)}"><span class="ico">${a.ico}</span><div class="name">${esc(a.name)}</div></div>`).join('');
- document.getElementById('achProgress').textContent=`${cache.achievements.length} / ${ACHIEVEMENTS.length} ရရှိပြီး`;
-}
-
-let timerMode='focus',timerSeconds=1500,timerRemaining=1500,timerRunning=false,timerInterval=null,timerEndAt=null;
-const timerDurations={focus:1500,short:300,long:900},timerLabels={focus:'Focus · 25 မိနစ်',short:'Short Break · 5 မိနစ်',long:'Long Break · 15 မိနစ်'};
-function formatTime(s){s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function drawTimer(){const d=document.getElementById('timerDisplay');if(!d)return;d.textContent=formatTime(timerRemaining);document.getElementById('timerMode').textContent=timerLabels[timerMode];document.getElementById('timerStartBtn').textContent=timerRunning?'⏸ ခဏရပ်':'▶ '+(timerRemaining<timerDurations[timerMode]?'ဆက်မည်':'စမည်')}
-function setTimerMode(mode){pauseTimer();timerMode=mode;timerSeconds=timerDurations[mode];timerRemaining=timerSeconds;document.getElementById('timerMessage').textContent='စတင်ရန် နှိပ်ပါ။';drawTimer()}
-function toggleTimer(){if(timerRunning){pauseTimer();return}if(timerRemaining<=0)timerRemaining=timerSeconds;timerRunning=true;timerEndAt=Date.now()+timerRemaining*1000;timerInterval=setInterval(tickTimer,250);drawTimer()}
-function pauseTimer(){timerRunning=false;if(timerInterval)clearInterval(timerInterval);timerInterval=null;drawTimer()}
-function tickTimer(){timerRemaining=Math.max(0,Math.ceil((timerEndAt-Date.now())/1000));drawTimer();if(timerRemaining<=0){pauseTimer();document.getElementById('timerMessage').textContent='ပြီးပါပြီ! 🎉';playAlarm();sendNoti('Focus Timer','Timer ပြီးပါပြီ!');if(navigator.vibrate)navigator.vibrate([180,80,180])}}
-function resetTimer(){pauseTimer();timerRemaining=timerSeconds;document.getElementById('timerMessage').textContent='ပြန်စထားပါပြီ။';drawTimer()}
-function toggleAlarm(){cache.settings.alarmSound=document.getElementById('alarmToggle').checked;saveSettings()}
-
-function closeModal(id){const m=document.getElementById(id);if(m)m.classList.remove('show')}
-document.querySelectorAll('.modal-bg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('show')}));
-function checkNotification(){const c=document.getElementById('notiCard');if(!c)return;c.style.display=('Notification'in window&&Notification.permission!=='granted')?'block':'none'}
-async function enableNotification(){if(!('Notification'in window)){alert('မထောက်ပံ့ပါ');return}try{const p=await Notification.requestPermission();checkNotification();if(p==='granted')sendNoti('Daily Time System','Notification ဖွင့်ပြီးပါပြီ ✅');else alert('Settings ထဲမှာ ခွင့်ပြုပါ')}catch(e){alert('မရပါ: '+e.message)}}
-function sendNoti(title,body){if(!('Notification'in window)||Notification.permission!=='granted')return;try{new Notification(title,{body})}catch(e){}}
-const notified=new Set();let lastMinuteKey='';
-function checkReminders(){if(!idb)return;const now=new Date(),nm=nowMin(),minuteKey=todayKey()+':'+now.getHours()+':'+now.getMinutes();if(minuteKey===lastMinuteKey)return;lastMinuteKey=minuteKey;for(const x of cache.timetable){const s=toMin(x.start),day=todayKey();if(nm===s||nm===s-5){const key=`${day}:${x.id}:${nm===s?'start':'pre'}`;if(notified.has(key))continue;notified.add(key);let body=`${x.start}–${x.end}: ${x.activity}`;if(nm===s&&x.block){const b=cache.blocks.find(b=>b.name===x.block);if(b)body+=` (${b.subject})`}if(nm===s)playAlarm();sendNoti(nm===s?'⏰ အချိန်ရောက်ပြီ':'⏳ ၅ မိနစ်အတွင်း စမယ်',body)}}}
-
-async function updateStorageInfo(){try{const ni=await idbCountImages(),na=await idbCountAudio();let usage='';if(navigator.storage?.estimate){const e=await navigator.storage.estimate();if(e.usage)usage=' · '+(e.usage/1024/1024).toFixed(1)+' MB'}const text=`📷 ${ni} · 🎙️ ${na} · IndexedDB${usage}`;const s=document.getElementById('storageInfo');if(s)s.textContent=text;const t=document.getElementById('toolsStorageInfo');if(t)t.textContent=text}catch(e){}}
-async function exportBackup(){const btn=event?.currentTarget;if(btn)btn.disabled=true;try{
- const keys=['timetable','blocks','folders','notes','results','studyLogs','flashcards','todos','examName','examDate','streak','lastDone','xp','achievements','dailyGoal','settings'];
- const data={app:'Daily Time System',formatVersion:2,exportedAt:new Date().toISOString(),data:{},images:await idbAllImages(),audio:[]};
- for(const k of keys)data.data[k]=await idbGet(k,null);
- const allAudio=await idbAllAudio();
- for(const a of allAudio){const buf=await a.blob.arrayBuffer();const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));data.audio.push({id:a.id,noteId:a.noteId,createdAt:a.createdAt,mime:a.blob.type,b64})}
- const doneKeys=await new Promise((resolve,reject)=>{const r=idb.transaction('kv','readonly').objectStore('kv').getAll();r.onsuccess=()=>resolve((r.result||[]).filter(x=>x.key.startsWith('done_')||x.key.startsWith('goal_')||x.key==='goal_hits').map(x=>({key:x.key,value:x.value})));r.onerror=()=>reject(r.error)});
- data.data.extra=doneKeys;
- const blob=new Blob([JSON.stringify(data)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='daily-time-backup-'+todayKey()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
- document.getElementById('backupStatus').textContent='Backup ထုတ်ပြီးပါပြီ။';
-}catch(e){alert('Backup မထုတ်နိုင်ပါ: '+e.message)}finally{if(btn)btn.disabled=false}}
-async function importBackup(){const input=document.getElementById('restoreFile'),file=input.files?.[0];if(!file){alert('JSON ဖိုင် ရွေးပါ');return}if(!confirm('လက်ရှိဒေတာကို backup ဖြင့် အစားထိုးမည်။ ဆက်မလား?'))return;
- try{
-  const obj=JSON.parse(await file.text());
-  if(obj.app!=='Daily Time System'||!obj.data)throw new Error('Backup format မမှန်ပါ');
-  const d=obj.data;
-  for(const k of ['timetable','blocks','folders','notes','results'])if(d[k]&&!Array.isArray(d[k]))throw new Error(k+' မမှန်ပါ');
-  const keys=['timetable','blocks','folders','notes','results','studyLogs','flashcards','todos','examName','examDate','streak','lastDone','xp','achievements','dailyGoal','settings'];
-  for(const k of keys)if(k in d&&d[k]!=null)await idbSet(k,d[k]);
-  if(Array.isArray(obj.images))await idbReplaceImages(obj.images);
-  if(Array.isArray(obj.audio)){
-   const arr=obj.audio.map(a=>{const bin=atob(a.b64);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return{id:a.id,noteId:a.noteId,createdAt:a.createdAt,blob:new Blob([bytes],{type:a.mime||'audio/webm'})}});
-   await idbReplaceAudio(arr);
-  }
-  const tx=idb.transaction('kv','readwrite'),store=tx.objectStore('kv'),req=store.getAll();
-  await new Promise((resolve,reject)=>{req.onsuccess=()=>{for(const x of req.result)if(x.key.startsWith('done_')||x.key.startsWith('goal_')||x.key==='goal_hits')store.delete(x.key);(d.extra||[]).forEach(x=>store.put(x));tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error)};req.onerror=()=>reject(req.error)});
-  await loadAllData();
-  renderHome();renderTimetable();renderTodaySchedule();renderBlocks();renderExam();renderResults();renderTodos();renderFlashcardStats();renderFlashcardList();renderCharts();renderHeatmap();renderStudyLogs();renderAchievements();
-  currentFolderId=null;document.getElementById('noteSearch').value='';await renderNotes();
-  document.getElementById('backupStatus').textContent='Restore ပြီးပါပြီ။';input.value='';
-  alert('Restore ပြီးပါပြီ ✅');
- }catch(e){alert('Restore မအောင်မြင်ပါ: '+e.message)}}
-
-function renderGlobalSearch(){const q=document.getElementById('globalSearch').value.trim().toLowerCase(),box=document.getElementById('globalResults');if(!q){box.innerHTML='<div class="empty">ရှာဖွေရန် စာရိုက်ပါ</div>';return}const r=[];
- cache.timetable.forEach(x=>{if(`${x.activity} ${x.block}`.toLowerCase().includes(q))r.push({type:'📅 ဇယား',title:x.activity,sub:`${x.start}–${x.end}`,action:`switchTab('timetable',null)`})});
- cache.blocks.forEach(x=>{if(`${x.name} ${x.subject}`.toLowerCase().includes(q))r.push({type:'📚 Block',title:x.name,sub:x.subject,action:`switchTab('timetable',null)`})});
- cache.folders.forEach(x=>{if(x.name.toLowerCase().includes(q))r.push({type:'📁 Folder',title:x.name,sub:'Notes',action:`switchTab('notes',null);openFolder(${Number(x.id)})`})});
- cache.notes.forEach(x=>{if(`${x.title} ${x.body||''}`.toLowerCase().includes(q))r.push({type:'📝 မှတ်စု',title:x.title,sub:(x.body||'').slice(0,90),action:`switchTab('notes',null);openFolder(${x.folderId==null?'null':Number(x.folderId)});setTimeout(()=>viewNote(${Number(x.id)}),100)`})});
- cache.results.forEach(x=>{if(`${x.s} ${x.grade} ${x.m}`.toLowerCase().includes(q))r.push({type:'📊 ရမှတ်',title:x.s,sub:`${x.m} · ${x.grade}`,action:`switchTab('more',null)`})});
- cache.todos.forEach(x=>{if(x.text.toLowerCase().includes(q))r.push({type:'✅ To-Do',title:x.text,sub:x.done?'ပြီးပြီ':'လုပ်ရန်',action:`switchTab('todo',null)`})});
- cache.flashcards.forEach(x=>{if(`${x.front} ${x.back}`.toLowerCase().includes(q))r.push({type:'🧠 Card',title:x.front.slice(0,80),sub:x.back.slice(0,80),action:`switchTab('learn',null)`})});
- box.innerHTML=r.length?r.slice(0,80).map(x=>`<div class="list-item"><div class="muted">${x.type}</div><div class="head"><span><b>${esc(x.title)}</b><div class="muted">${esc(x.sub)}</div></span><button class="small secondary" onclick="${x.action}">ဖွင့်</button></div></div>`).join(''):'<div class="empty">ကိုက်ညီသောရလဒ် မတွေ့ပါ'}
-
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderHome();checkReminders()}});
-window.addEventListener('resize',()=>{if(document.getElementById('tab-stats').classList.contains('active'))renderCharts()});
-(async function init(){
- try{
-  await openDB();await loadAllData();
-  document.getElementById('todayDate').textContent=safeDateLabel();
-  renderHome();renderTimetable();renderTodaySchedule();renderBlocks();
-  renderTodos();renderFlashcardStats();renderFlashcardList();
-  renderCharts();renderHeatmap();renderStudyLogs();
-  renderExam();renderResults();renderAchievements();
-  document.getElementById('alarmToggle').checked=cache.settings.alarmSound;
-  await renderNotes();checkNotification();drawTimer();
-  await checkAchievements();
-  setInterval(()=>{renderHome();renderTodaySchedule();checkReminders()},10000);
-  setInterval(checkReminders,10000);
-  if(!('Notification'in window)){const c=document.getElementById('notiCard');if(c)c.style.display='none'}
- }catch(e){console.error(e);document.body.innerHTML=`<div style="max-width:600px;margin:30px auto;padding:20px;font-family:sans-serif"><h2>App ဖွင့်မရပါ</h2><p>${esc(e.message||e)}</p></div>`}
-})();
-</script>
-
-<!-- Service Worker Registration (Safe Mode - No Auto Reload) -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').then(reg => {
-      console.log('[PWA] Service Worker registered successfully.');
-      // Auto reload လုပ်တဲ့စနစ်ကို လုံးဝဖြုတ်ထားပါတယ်။ 
-      // Update ရှိရင် User ကိုယ်တိုင် Refresh လုပ်မှ အသစ်ရမှာပါ။
-    }).catch(err => console.warn('[PWA] SW failed:', err));
+/* ================= INDEXED-DB HELPERS ================= */
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) return reject(new Error('IndexedDB မရနိုင်ပါ'));
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('kv')) db.createObjectStore('kv', {keyPath: 'key'});
+      if (!db.objectStoreNames.contains('images')) {
+        const s = db.createObjectStore('images', {keyPath: 'id'});
+        s.createIndex('noteId', 'noteId', {unique: false});
+      }
+      if (!db.objectStoreNames.contains('audio')) {
+        const a = db.createObjectStore('audio', {keyPath: 'id'});
+        a.createIndex('noteId', 'noteId', {unique: false});
+      }
+    };
+    req.onsuccess = e => { idb = e.target.result; idb.onversionchange = () => idb.close(); resolve(idb); };
+    req.onerror = () => reject(req.error || new Error('Database ဖွင့်မရပါ'));
   });
 }
+
+function idbGet(key, fallback) {
+  return new Promise((resolve, reject) => {
+    try {
+      const r = idb.transaction('kv', 'readonly').objectStore('kv').get(key);
+      r.onsuccess = () => resolve(r.result ? r.result.value : fallback);
+      r.onerror = () => reject(r.error);
+    } catch(e) { reject(e); }
+  });
+}
+
+function idbSet(key, value) {
+  return new Promise((resolve, reject) => {
+    try {
+      const tx = idb.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put({key, value});
+      tx.oncomplete = () => resolve();
+      tx.onerror = tx.onabort = () => reject(tx.error || new Error('သိမ်းမရပါ'));
+    } catch(e) { reject(e); }
+  });
+}
+
+function idbAllImages() { return new Promise((res, rej) => { const r = idb.transaction('images','readonly').objectStore('images').getAll(); r.onsuccess = () => res(r.result||[]); r.onerror = () => rej(r.error); }); }
+function idbAddImage(img) { return new Promise((res, rej) => { const tx = idb.transaction('images','readwrite'); tx.objectStore('images').put(img); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+function idbGetImage(id) { return new Promise((res, rej) => { const r = idb.transaction('images','readonly').objectStore('images').get(id); r.onsuccess = () => res(r.result||null); r.onerror = () => rej(r.error); }); }
+function idbDeleteImage(id) { return new Promise((res, rej) => { const tx = idb.transaction('images','readwrite'); tx.objectStore('images').delete(id); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+function idbReplaceImages(arr) { return new Promise((res, rej) => { const tx = idb.transaction('images','readwrite'), s = tx.objectStore('images'); s.clear(); arr.forEach(x => s.put(x)); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+
+function idbAllAudio() { return new Promise((res, rej) => { const r = idb.transaction('audio','readonly').objectStore('audio').getAll(); r.onsuccess = () => res(r.result||[]); r.onerror = () => rej(r.error); }); }
+function idbAddAudio(a) { return new Promise((res, rej) => { const tx = idb.transaction('audio','readwrite'); tx.objectStore('audio').put(a); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+function idbGetAudio(id) { return new Promise((res, rej) => { const r = idb.transaction('audio','readonly').objectStore('audio').get(id); r.onsuccess = () => res(r.result||null); r.onerror = () => rej(r.error); }); }
+function idbDeleteAudio(id) { return new Promise((res, rej) => { const tx = idb.transaction('audio','readwrite'); tx.objectStore('audio').delete(id); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+function idbReplaceAudio(arr) { return new Promise((res, rej) => { const tx = idb.transaction('audio','readwrite'), s = tx.objectStore('audio'); s.clear(); arr.forEach(x => s.put(x)); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+
+/* ================= UTILITIES ================= */
+function todayKey(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function toMin(t) {
+  const [h, m] = String(t || '0:0').split(':').map(Number);
+  return h * 60 + m;
+}
+function nowMin() {
+  const n = new Date();
+  return n.getHours() * 60 + n.getMinutes();
+}
+function isTimeActive(nm, startStr, endStr) {
+  const s = toMin(startStr), e = toMin(endStr);
+  return e > s ? (nm >= s && nm < e) : (nm >= s || nm < e);
+}
+function uid() { return Date.now() + Math.floor(Math.random() * 100000); }
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function calendarDays(dateString) {
+  if (!dateString) return null;
+  const [y, m, d] = dateString.split('-').map(Number);
+  const target = new Date(y, m - 1, d);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((target - today) / 86400000);
+}
+function safeDateLabel() {
+  return new Date().toLocaleDateString('my-MM', {year:'numeric', month:'short', day:'numeric', weekday:'short'});
+}
+function mdToHtml(md) {
+  let s = esc(md || '');
+  s = s.replace(/^### (.*)$/gm, '<h3>$1</h3>').replace(/^## (.*)$/gm, '<h2>$1</h2>').replace(/^# (.*)$/gm, '<h1>$1</h1>');
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+  s = s.replace(/\n/g, '<br>');
+  return s;
+}
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const res = String(reader.result || '');
+      resolve(res.includes(',') ? res.split(',')[1] : res);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+/* ================= LOAD & PERSIST ================= */
+let lastLoadedDateKey = todayKey();
+async function loadAllData() {
+  lastLoadedDateKey = todayKey();
+  cache.timetable = await idbGet('timetable', null) || structuredClone(DEFAULT_TIMETABLE);
+  cache.blocks = await idbGet('blocks', null) || structuredClone(DEFAULT_BLOCKS);
+  cache.folders = await idbGet('folders', null) || structuredClone(DEFAULT_FOLDERS);
+  cache.notes = await idbGet('notes', []);
+  cache.flashcards = await idbGet('flashcards', []);
+  cache.examName = await idbGet('examName', '');
+  cache.examDate = await idbGet('examDate', '');
+  cache.done_today = await idbGet('done_' + lastLoadedDateKey, []);
+  for (const [k, v] of [['timetable', cache.timetable], ['blocks', cache.blocks], ['folders', cache.folders]]) {
+    if (await idbGet(k, null) === null) await idbSet(k, v);
+  }
+}
+
+async function persist(key, value) {
+  try { await idbSet(key, value); return true; }
+  catch(e) { alert('သိမ်းမရပါ: ' + e.message); return false; }
+}
+const saveTimetable = () => persist('timetable', cache.timetable);
+const saveBlocks = () => persist('blocks', cache.blocks);
+const saveFolders = () => persist('folders', cache.folders);
+const saveNotes = () => persist('notes', cache.notes);
+const saveFlashcards = () => persist('flashcards', cache.flashcards);
+const saveExam = async () => (await persist('examName', cache.examName)) && (await persist('examDate', cache.examDate));
+const saveDoneToday = () => persist('done_' + todayKey(), cache.done_today);
+
+/* ================= TAB NAVIGATION ================= */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('tab-' + name);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (name === 'timetable') { renderTodaySchedule(); renderBlocks(); }
+  if (name === 'notes') renderNotes();
+  if (name === 'flash') { renderFlashcardStats(); renderFlashcardList(); }
+  if (name === 'exam') renderExam();
+}
+
+/* ================= 1. UNIFIED TIME TABLE ================= */
+function toggleTtEditMode() {
+  ttEditMode = !ttEditMode;
+  document.getElementById('editModeBtn').classList.toggle('active', ttEditMode);
+  document.getElementById('addTtBtn').classList.toggle('hidden', !ttEditMode);
+  document.getElementById('ttEditBanner').classList.toggle('hidden', !ttEditMode);
+  renderTodaySchedule();
+}
+
+async function renderTodaySchedule() {
+  if (todayKey() !== lastLoadedDateKey) {
+    lastLoadedDateKey = todayKey();
+    cache.done_today = await idbGet('done_' + lastLoadedDateKey, []);
+    document.getElementById('todayDate').textContent = safeDateLabel();
+  }
+
+  const nm = nowMin();
+  const tt = [...cache.timetable].sort((a, b) => toMin(a.start) - toMin(b.start));
+  let current = null, next = null;
+
+  for (let i = 0; i < tt.length; i++) {
+    if (isTimeActive(nm, tt[i].start, tt[i].end)) {
+      current = tt[i];
+      next = tt[i + 1] || null;
+      break;
+    }
+    if (toMin(tt[i].start) > nm && !next) next = tt[i];
+  }
+
+  document.getElementById('clockNow').textContent = new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', hour12:true});
+  document.getElementById('nowActivity').textContent = current ? `${current.activity}` : 'အနားယူချိန်';
+  document.getElementById('nowNext').textContent = next ? `⏰ နောက်တစ်ခု: ${next.activity} (${next.start})` : '✨ ယနေ့အစီအစဉ် ပြီးဆုံးပါပြီ';
+
+  const totalItems = tt.length;
+  const doneItems = tt.filter(x => cache.done_today.includes(x.id)).length;
+  const pct = totalItems ? Math.round((doneItems / totalItems) * 100) : 0;
+  document.getElementById('progressText').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('doneCount').textContent = doneItems;
+  document.getElementById('totalCount').textContent = totalItems;
+
+  const box = document.getElementById('todaySchedule');
+  if (!tt.length) {
+    box.innerHTML = '<div class="empty">အချိန်ဇယား မရှိသေးပါ (✏️ ကိုနှိပ်၍ ထည့်ပါ)</div>';
+    return;
+  }
+
+  box.innerHTML = tt.map(x => {
+    const isDone = cache.done_today.includes(x.id);
+    const isNow = isTimeActive(nm, x.start, x.end);
+    const subj = (cache.blocks.find(b => b.name === x.block) || {}).subject || '';
+
+    if (ttEditMode) {
+      return `<div class="tt-item" onclick="openEditTimetable(${Number(x.id)})">
+        <div style="min-width:0;flex:1">
+          <span class="tt-time">${esc(x.start)} – ${esc(x.end)}</span>
+          <span class="tt-act">${esc(x.activity)}</span>
+          ${x.block ? `<span class="badge">${esc(x.block)}${subj ? ' · ' + esc(subj) : ''}</span>` : ''}
+        </div>
+        <div style="display:flex;gap:4px">
+          <button class="icon-btn ghost" onclick="event.stopPropagation();openEditTimetable(${Number(x.id)})">✏️</button>
+          <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delTimetable(${Number(x.id)})">🗑</button>
+        </div>
+      </div>`;
+    }
+
+    return `<div class="tt-item ${isDone ? 'done' : ''} ${isNow ? 'active-now' : ''}" onclick="toggleDone(${Number(x.id)})">
+      <div style="min-width:0;flex:1">
+        <span class="tt-time">${esc(x.start)} – ${esc(x.end)} ${isNow ? '🔥' : ''}</span>
+        <span class="tt-act">${esc(x.activity)}</span>
+        ${x.block ? `<span class="badge">${esc(x.block)}${subj ? ' · ' + esc(subj) : ''}</span>` : ''}
+      </div>
+      <div class="check-circle">✓</div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleDone(id) {
+  const was = cache.done_today.includes(id);
+  cache.done_today = was ? cache.done_today.filter(x => x !== id) : [...cache.done_today, id];
+  if (await saveDoneToday()) renderTodaySchedule();
+}
+
+function populateBlockSelect(selectedValue = '') {
+  const sel = document.getElementById('ttBlock');
+  sel.innerHTML = '<option value="">— Block မချိတ်ဆက်ပါ —</option>' +
+    cache.blocks.map(b => `<option value="${esc(b.name)}">${esc(b.name)} (${esc(b.subject)})</option>`).join('');
+  sel.value = selectedValue;
+}
+
+let editingTtId = null;
+function openAddTimetable() {
+  editingTtId = null;
+  document.getElementById('modalTtTitle').textContent = '📅 အချိန်အသစ် ထည့်ရန်';
+  ['ttActivity', 'ttStart', 'ttEnd'].forEach(id => document.getElementById(id).value = '');
+  populateBlockSelect('');
+  document.getElementById('modalTimetable').classList.add('show');
+}
+
+function openEditTimetable(id) {
+  const x = cache.timetable.find(v => v.id === id);
+  if (!x) return;
+  editingTtId = id;
+  document.getElementById('modalTtTitle').textContent = '✏️ အချိန်ဇယား ပြင်ရန်';
+  document.getElementById('ttActivity').value = x.activity;
+  document.getElementById('ttStart').value = x.start;
+  document.getElementById('ttEnd').value = x.end;
+  populateBlockSelect(x.block || '');
+  document.getElementById('modalTimetable').classList.add('show');
+}
+
+async function saveTimetableItem() {
+  const activity = document.getElementById('ttActivity').value.trim(),
+        start = document.getElementById('ttStart').value,
+        end = document.getElementById('ttEnd').value,
+        block = document.getElementById('ttBlock').value.trim();
+  if (!activity || !start || !end) { alert('လုပ်ဆောင်ချက်နှင့် အချိန် ပြည့်စုံစွာ ဖြည့်ပါ'); return; }
+  if (start === end) { alert('စချိန်နှင့် ပြီးချိန် တူနေပါသည်'); return; }
+
+  if (editingTtId) {
+    const i = cache.timetable.findIndex(x => x.id === editingTtId);
+    if (i >= 0) cache.timetable[i] = {...cache.timetable[i], start, end, activity, block};
+  } else {
+    cache.timetable.push({id: uid(), start, end, activity, block});
+  }
+  cache.timetable.sort((a, b) => toMin(a.start) - toMin(b.start));
+  if (await saveTimetable()) {
+    closeModal('modalTimetable');
+    renderTodaySchedule();
+  }
+}
+
+async function delTimetable(id) {
+  if (!confirm('ဒီအချိန်ဇယားကို ဖျက်မလား?')) return;
+  cache.timetable = cache.timetable.filter(x => x.id !== id);
+  cache.done_today = cache.done_today.filter(x => x !== id);
+  await saveTimetable();
+  await saveDoneToday();
+  renderTodaySchedule();
+}
+
+async function resetTimetable() {
+  if (!confirm('မူရင်းအချိန်ဇယားအတိုင်း ပြန်ထားမလား?')) return;
+  cache.timetable = structuredClone(DEFAULT_TIMETABLE);
+  cache.done_today = [];
+  await saveTimetable();
+  await saveDoneToday();
+  renderTodaySchedule();
+}
+
+/* Subject Blocks */
+let editingBlockId = null;
+function renderBlocks() {
+  const box = document.getElementById('blockList');
+  if (!cache.blocks.length) {
+    box.innerHTML = '<div class="muted">Block မရှိသေးပါ (＋ နှိပ်၍ ထည့်ပါ)</div>';
+    return;
+  }
+  box.innerHTML = cache.blocks.map(x => `
+    <div class="chip" onclick="openEditBlock(${Number(x.id)})">
+      <b>${esc(x.name)}</b>
+      <span>${esc(x.subject)}</span>
+      <span style="opacity:0.45;font-size:10px">✏️</span>
+    </div>
+  `).join('');
+}
+
+function openAddBlock() {
+  editingBlockId = null;
+  document.getElementById('modalBlockTitle').textContent = '🏷️ Block အသစ်ထည့်ရန်';
+  document.getElementById('blockName').value = '';
+  document.getElementById('blockSubject').value = '';
+  document.getElementById('delBlockBtn').classList.add('hidden');
+  document.getElementById('modalBlock').classList.add('show');
+}
+
+function openEditBlock(id) {
+  const x = cache.blocks.find(v => v.id === id);
+  if (!x) return;
+  editingBlockId = id;
+  document.getElementById('modalBlockTitle').textContent = '✏️ Block ပြင်ရန်';
+  document.getElementById('blockName').value = x.name;
+  document.getElementById('blockSubject').value = x.subject;
+  document.getElementById('delBlockBtn').classList.remove('hidden');
+  document.getElementById('modalBlock').classList.add('show');
+}
+
+async function saveBlockItem() {
+  const name = document.getElementById('blockName').value.trim(),
+        subject = document.getElementById('blockSubject').value.trim();
+  if (!name || !subject) { alert('Block အမည်နှင့် ဘာသာရပ် ဖြည့်ပါ'); return; }
+  if (editingBlockId) {
+    const i = cache.blocks.findIndex(x => x.id === editingBlockId);
+    if (i >= 0) {
+      const oldName = cache.blocks[i].name;
+      cache.blocks[i] = {...cache.blocks[i], name, subject};
+      if (oldName !== name) {
+        cache.timetable.forEach(t => { if (t.block === oldName) t.block = name; });
+        await saveTimetable();
+      }
+    }
+  } else {
+    cache.blocks.push({id: uid(), name, subject});
+  }
+  if (await saveBlocks()) {
+    closeModal('modalBlock');
+    renderBlocks();
+    renderTodaySchedule();
+  }
+}
+
+async function delCurrentBlock() {
+  if (!editingBlockId || !confirm('ဒီ Block ကို ဖျက်မလား?')) return;
+  cache.blocks = cache.blocks.filter(x => x.id !== editingBlockId);
+  await saveBlocks();
+  closeModal('modalBlock');
+  renderBlocks();
+  renderTodaySchedule();
+}
+
+/* ================= 2. NOTES SYSTEM ================= */
+let currentFolderId = null, editingFolderId = null, editingNoteId = null, currentViewNoteId = null;
+let editingNoteImageIds = [], editingNoteAudioIds = [], tempAudioIds = [], newCompressedImages = [];
+let activeViewAudioUrls = [], activeEditAudioUrls = [];
+let fsImages = [], fsIndex = 0;
+
+function getFolders(pid) { return cache.folders.filter(f => (f.parentId ?? null) === (pid ?? null)); }
+function getNotes(fid) { return cache.notes.filter(n => (n.folderId ?? null) === (fid ?? null)); }
+function openFolder(id) { currentFolderId = id; renderNotes(); }
+
+async function renderNotes() {
+  const breadcrumb = document.getElementById('noteBreadcrumb'),
+        header = document.getElementById('noteHeader'),
+        content = document.getElementById('noteContent'),
+        query = (document.getElementById('noteSearch').value || '').trim().toLowerCase();
+
+  let path = [], pid = currentFolderId, guard = 0;
+  while (pid !== null && pid !== undefined && guard++ < 100) {
+    const f = cache.folders.find(x => x.id === pid);
+    if (!f) break;
+    path.unshift(f);
+    pid = f.parentId ?? null;
+  }
+
+  breadcrumb.innerHTML = `<span onclick="openFolder(null)">🏠 ပင်မ</span>` +
+    path.map(f => ` › <span onclick="openFolder(${Number(f.id)})">${esc(f.name)}</span>`).join('');
+  header.textContent = currentFolderId == null ? '📁 ဘာသာရပ် Folder များ' : '📁 ' + ((cache.folders.find(x => x.id === currentFolderId) || {}).name || 'Folder');
+
+  let html = '';
+  const sub = (query ? cache.folders : getFolders(currentFolderId)).filter(f => !query || f.name.toLowerCase().includes(query));
+  for (const f of sub) {
+    html += `<div class="folder-item" onclick="openFolder(${Number(f.id)})">
+      <div>
+        <div style="font-weight:700;font-size:14px">📁 ${esc(f.name)}</div>
+        <div class="muted">${getNotes(f.id).length} မှတ်စု · ${getFolders(f.id).length} folder</div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="icon-btn ghost" onclick="event.stopPropagation();openEditFolder(${Number(f.id)})">✏️</button>
+        <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delFolder(${Number(f.id)})">🗑</button>
+      </div>
+    </div>`;
+  }
+
+  const notes = (query ? cache.notes : getNotes(currentFolderId)).filter(n => !query || (`${n.title} ${n.body || ''}`).toLowerCase().includes(query));
+  if (notes.length) {
+    html += `<div class="muted" style="font-weight:700;margin:12px 0 6px">📝 မှတ်စုများ (${notes.length})</div>` + notes.map(n => {
+      const ico = [];
+      if (n.imageIds?.length) ico.push('📷 ' + n.imageIds.length);
+      if (n.audioIds?.length) ico.push('🎙️ ' + n.audioIds.length);
+      return `<div class="note-card" onclick="viewNote(${Number(n.id)})">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div class="title">${esc(n.title)}${ico.length ? ' <span class="badge">' + ico.join(' · ') + '</span>' : ''}</div>
+          <div style="display:flex;gap:2px;flex-shrink:0">
+            <button class="icon-btn ghost" onclick="event.stopPropagation();openEditNote(${Number(n.id)})">✏️</button>
+            <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delNote(${Number(n.id)})">🗑</button>
+          </div>
+        </div>
+        <div class="body">${esc(n.body || 'စာသားမပါဝင်ပါ')}</div>
+      </div>`;
+    }).join('');
+  }
+
+  if (!html) html = `<div class="empty">${query ? 'ရှာဖွေမှု မတွေ့ပါ' : 'ဒီနေရာတွင် မှတ်စု မရှိသေးပါ'}</div>`;
+  content.innerHTML = html;
+}
+
+function openAddFolder() {
+  editingFolderId = null;
+  document.getElementById('modalFolderTitle').textContent = '📁 Folder အသစ်';
+  document.getElementById('folderName').value = '';
+  document.getElementById('modalFolder').classList.add('show');
+}
+
+function openEditFolder(id) {
+  const f = cache.folders.find(x => x.id === id);
+  if (!f) return;
+  editingFolderId = id;
+  document.getElementById('modalFolderTitle').textContent = '✏️ Folder အမည်ပြင်ရန်';
+  document.getElementById('folderName').value = f.name;
+  document.getElementById('modalFolder').classList.add('show');
+}
+
+async function saveFolderItem() {
+  const name = document.getElementById('folderName').value.trim();
+  if (!name) { alert('Folder အမည် ဖြည့်ပါ'); return; }
+  if (editingFolderId) {
+    const f = cache.folders.find(x => x.id === editingFolderId);
+    if (f) f.name = name;
+  } else {
+    cache.folders.push({id: uid(), name, parentId: currentFolderId, createdAt: Date.now()});
+  }
+  if (await saveFolders()) {
+    closeModal('modalFolder');
+    renderNotes();
+    renderFlashcardStats();
+  }
+}
+
+async function delFolder(id) {
+  if (!confirm('ဒီ Folder နှင့် အတွင်းရှိ မှတ်စုအားလုံးကို ဖျက်မလား?')) return;
+  const folderIds = new Set(), noteList = [];
+  function collect(fid) {
+    folderIds.add(fid);
+    cache.folders.filter(f => f.parentId === fid).forEach(f => collect(f.id));
+    cache.notes.filter(n => n.folderId === fid).forEach(n => noteList.push(n));
+  }
+  collect(id);
+  for (const n of noteList) {
+    for (const imgId of n.imageIds || []) await idbDeleteImage(imgId);
+    for (const aId of n.audioIds || []) await idbDeleteAudio(aId);
+  }
+  cache.folders = cache.folders.filter(f => !folderIds.has(f.id));
+  cache.notes = cache.notes.filter(n => !noteList.some(z => z.id === n.id));
+  cache.flashcards.forEach(c => { if (folderIds.has(c.folderId)) c.folderId = null; });
+  await saveFolders();
+  await saveNotes();
+  await saveFlashcards();
+  if (folderIds.has(currentFolderId)) currentFolderId = null;
+  renderNotes();
+  renderFlashcardStats();
+}
+
+/* Note Modal & Media Handling */
+function clearEditAudioUrls() {
+  activeEditAudioUrls.forEach(u => URL.revokeObjectURL(u));
+  activeEditAudioUrls = [];
+}
+
+function openAddNote() {
+  editingNoteId = null;
+  editingNoteImageIds = [];
+  editingNoteAudioIds = [];
+  tempAudioIds = [];
+  newCompressedImages = [];
+  clearEditAudioUrls();
+
+  document.getElementById('modalNoteTitle').textContent = '📝 မှတ်စု အသစ်';
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteBody').value = '';
+  document.getElementById('noteImages').value = '';
+  document.getElementById('noteImagesPreview').innerHTML = '';
+  document.getElementById('voicePreview').innerHTML = '';
+  document.getElementById('modalNote').classList.add('show');
+}
+
+async function openEditNote(id) {
+  const n = cache.notes.find(x => x.id === id);
+  if (!n) return;
+  editingNoteId = id;
+  editingNoteImageIds = [...(n.imageIds || [])];
+  editingNoteAudioIds = [...(n.audioIds || [])];
+  tempAudioIds = [];
+  newCompressedImages = [];
+  clearEditAudioUrls();
+
+  document.getElementById('modalNoteTitle').textContent = '✏️ မှတ်စု ပြင်ရန်';
+  document.getElementById('noteTitle').value = n.title || '';
+  document.getElementById('noteBody').value = n.body || '';
+  document.getElementById('noteImages').value = '';
+
+  await renderEditImagesPreview();
+
+  const vbox = document.getElementById('voicePreview');
+  vbox.innerHTML = '';
+  for (const aId of editingNoteAudioIds) {
+    const a = await idbGetAudio(aId);
+    if (a && a.blob) vbox.appendChild(makeVoiceItem(aId, a.blob));
+  }
+  document.getElementById('modalNote').classList.add('show');
+}
+
+async function renderEditImagesPreview() {
+  const box = document.getElementById('noteImagesPreview');
+  box.innerHTML = '';
+
+  for (const imgId of editingNoteImageIds) {
+    const img = await idbGetImage(imgId);
+    if (!img) continue;
+    const wrap = document.createElement('div');
+    wrap.className = 'thumb-wrap';
+    wrap.innerHTML = `<img class="thumb" src="${img.data}"><button type="button" class="thumb-del">✕</button>`;
+    wrap.querySelector('.thumb-del').onclick = () => {
+      editingNoteImageIds = editingNoteImageIds.filter(x => x !== imgId);
+      renderEditImagesPreview();
+    };
+    box.appendChild(wrap);
+  }
+
+  newCompressedImages.forEach((data, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'thumb-wrap';
+    wrap.innerHTML = `<img class="thumb" src="${data}"><button type="button" class="thumb-del">✕</button>`;
+    wrap.querySelector('.thumb-del').onclick = () => {
+      newCompressedImages.splice(idx, 1);
+      renderEditImagesPreview();
+    };
+    box.appendChild(wrap);
+  });
+}
+
+function makeVoiceItem(id, blob) {
+  const wrap = document.createElement('div');
+  wrap.className = 'voice-item';
+  const url = URL.createObjectURL(blob);
+  activeEditAudioUrls.push(url);
+  const audio = document.createElement('audio');
+  audio.controls = true;
+  audio.preload = 'metadata';
+  audio.src = url;
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'icon-btn danger-ghost';
+  del.textContent = '🗑';
+  del.onclick = () => {
+    wrap.remove();
+    editingNoteAudioIds = editingNoteAudioIds.filter(x => x !== id);
+  };
+  wrap.appendChild(audio);
+  wrap.appendChild(del);
+  return wrap;
+}
+
+function compressImage(file, maxSize = 1200, quality = 0.78) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('ပုံဖွင့်မရပါ'));
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxSize || h > maxSize) {
+          const r = Math.min(maxSize / w, maxSize / h);
+          w = Math.round(w * r);
+          h = Math.round(h * r);
+        }
+        const cv = document.createElement('canvas');
+        cv.width = Math.max(1, w);
+        cv.height = Math.max(1, h);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        resolve(cv.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('noteImages').addEventListener('change', async e => {
+  for (const file of Array.from(e.target.files || [])) {
+    if (!file.type.startsWith('image/')) continue;
+    try {
+      const data = await compressImage(file);
+      newCompressedImages.push(data);
+    } catch(err) {}
+  }
+  e.target.value = '';
+  await renderEditImagesPreview();
+});
+
+let mediaRecorder = null, recordedChunks = [];
+async function toggleVoiceRecord() {
+  const btn = document.getElementById('voiceRecBtn'),
+        st = document.getElementById('voiceRecStatus');
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    mediaRecorder.stop();
+    btn.textContent = '🎙️ အသံဖမ်းမည်';
+    btn.classList.remove('recording');
+    st.textContent = '';
+    return;
+  }
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    alert('ဒီ Browser တွင် အသံဖမ်းမရပါ');
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    let mimeType = '';
+    if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
+    else if (MediaRecorder.isTypeSupported('audio/webm')) mimeType = 'audio/webm';
+    else if (MediaRecorder.isTypeSupported('audio/ogg')) mimeType = 'audio/ogg';
+    mediaRecorder = new MediaRecorder(stream, mimeType ? {mimeType} : {});
+    recordedChunks = [];
+    mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = async () => {
+      stream.getTracks().forEach(t => t.stop());
+      if (!recordedChunks.length) return;
+      const actualMime = mediaRecorder.mimeType || mimeType || 'audio/webm';
+      const blob = new Blob(recordedChunks, {type: actualMime});
+      const id = 'aud_' + uid();
+      await idbAddAudio({id, noteId: 'temp', blob, createdAt: Date.now()});
+      tempAudioIds.push(id);
+      editingNoteAudioIds.push(id);
+      document.getElementById('voicePreview').appendChild(makeVoiceItem(id, blob));
+    };
+    mediaRecorder.start();
+    btn.textContent = '⏹ ရပ်မည်';
+    btn.classList.add('recording');
+    st.textContent = '🔴 အသံဖမ်းနေသည်...';
+  } catch(e) {
+    alert('Mic ဖွင့်မရပါ: ' + e.message);
+  }
+}
+
+async function cancelNoteModal() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    mediaRecorder.stop();
+    document.getElementById('voiceRecBtn').textContent = '🎙️ အသံဖမ်းမည်';
+    document.getElementById('voiceRecBtn').classList.remove('recording');
+    document.getElementById('voiceRecStatus').textContent = '';
+  }
+  for (const id of tempAudioIds) await idbDeleteAudio(id);
+  tempAudioIds = [];
+  newCompressedImages = [];
+  clearEditAudioUrls();
+  closeModal('modalNote');
+}
+
+async function saveNoteItem() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    alert('ကျေးဇူးပြု၍ အသံဖမ်းခြင်းကို အရင်ရပ်ပါ');
+    return;
+  }
+  const title = document.getElementById('noteTitle').value.trim(),
+        body = document.getElementById('noteBody').value.trim();
+  if (!title) { alert('မှတ်စုခေါင်းစဉ် ဖြည့်ပါ'); return; }
+
+  const btn = document.getElementById('saveNoteBtn');
+  btn.disabled = true;
+  try {
+    let note;
+    if (editingNoteId) {
+      note = cache.notes.find(x => x.id === editingNoteId);
+      const removedImgs = (note.imageIds || []).filter(id => !editingNoteImageIds.includes(id));
+      for (const id of removedImgs) await idbDeleteImage(id);
+
+      const removedAuds = (note.audioIds || []).filter(id => !editingNoteAudioIds.includes(id));
+      for (const id of removedAuds) await idbDeleteAudio(id);
+
+      note.title = title;
+      note.body = body;
+      note.imageIds = [...editingNoteImageIds];
+      note.audioIds = [...editingNoteAudioIds];
+    } else {
+      note = {
+        id: uid(),
+        folderId: currentFolderId,
+        title,
+        body,
+        imageIds: [],
+        audioIds: [...editingNoteAudioIds],
+        createdAt: Date.now()
+      };
+      cache.notes.unshift(note);
+    }
+
+    for (const id of tempAudioIds) {
+      if (!editingNoteAudioIds.includes(id)) {
+        await idbDeleteAudio(id);
+      } else {
+        const a = await idbGetAudio(id);
+        if (a) { a.noteId = note.id; await idbAddAudio(a); }
+      }
+    }
+
+    for (const data of newCompressedImages) {
+      const imgId = 'img_' + uid();
+      await idbAddImage({id: imgId, noteId: note.id, data, createdAt: Date.now()});
+      note.imageIds.push(imgId);
+    }
+
+    tempAudioIds = [];
+    newCompressedImages = [];
+    clearEditAudioUrls();
+    await saveNotes();
+    closeModal('modalNote');
+    renderNotes();
+  } catch(e) {
+    alert('သိမ်းမရပါ: ' + e.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function delNote(id) {
+  if (!confirm('ဒီမှတ်စုကို ဖျက်မလား?')) return;
+  const n = cache.notes.find(x => x.id === id);
+  for (const imgId of n?.imageIds || []) await idbDeleteImage(imgId);
+  for (const aId of n?.audioIds || []) await idbDeleteAudio(aId);
+  cache.notes = cache.notes.filter(x => x.id !== id);
+  await saveNotes();
+  renderNotes();
+}
+
+function closeViewNoteModal() {
+  activeViewAudioUrls.forEach(u => URL.revokeObjectURL(u));
+  activeViewAudioUrls = [];
+  closeModal('modalViewNote');
+}
+
+async function viewNote(id) {
+  const n = cache.notes.find(x => x.id === id);
+  if (!n) return;
+  currentViewNoteId = id;
+  activeViewAudioUrls.forEach(u => URL.revokeObjectURL(u));
+  activeViewAudioUrls = [];
+
+  document.getElementById('viewNoteTitle').textContent = '📝 ' + n.title;
+  document.getElementById('viewNoteBody').innerHTML = mdToHtml(n.body || '');
+
+  const box = document.getElementById('viewNoteImages');
+  box.innerHTML = '';
+  for (const imgId of n.imageIds || []) {
+    const im = await idbGetImage(imgId);
+    if (im) {
+      const el = document.createElement('img');
+      el.className = 'thumb';
+      el.src = im.data;
+      el.onclick = () => openFullscreen(imgId, n.imageIds);
+      box.appendChild(el);
+    }
+  }
+
+  const abox = document.getElementById('viewNoteAudio');
+  abox.innerHTML = '';
+  for (const aId of n.audioIds || []) {
+    const a = await idbGetAudio(aId);
+    if (a && a.blob) {
+      const wrap = document.createElement('div');
+      wrap.className = 'voice-item';
+      const url = URL.createObjectURL(a.blob);
+      activeViewAudioUrls.push(url);
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.src = url;
+      wrap.appendChild(audio);
+      abox.appendChild(wrap);
+    }
+  }
+  document.getElementById('modalViewNote').classList.add('show');
+}
+
+function editFromViewNote() {
+  const id = currentViewNoteId;
+  closeViewNoteModal();
+  if (id != null) openEditNote(id);
+}
+
+async function deleteCurrentNote() {
+  if (currentViewNoteId == null) return;
+  const id = currentViewNoteId;
+  closeViewNoteModal();
+  await delNote(id);
+  currentViewNoteId = null;
+}
+
+/* Fullscreen Image Viewer */
+async function openFullscreen(imageId, ids) {
+  fsImages = ids || [imageId];
+  fsIndex = Math.max(0, fsImages.indexOf(imageId));
+  await showFsImage();
+  document.getElementById('fullscreenViewer').classList.add('show');
+}
+async function showFsImage() {
+  if (!fsImages.length) return;
+  const img = await idbGetImage(fsImages[fsIndex]);
+  document.getElementById('fsImage').src = img?.data || '';
+  document.getElementById('fsCounter').textContent = `${fsIndex + 1} / ${fsImages.length}`;
+}
+async function fsNav(d) {
+  if (!fsImages.length) return;
+  fsIndex = (fsIndex + d + fsImages.length) % fsImages.length;
+  await showFsImage();
+}
+function closeFullscreen() {
+  document.getElementById('fullscreenViewer').classList.remove('show');
+  document.getElementById('fsImage').src = '';
+}
+
+/* ================= 3. FLASH MEMORY ================= */
+function fcIntervals() { return [0, 1, 2, 4, 7, 14]; }
+function dueFlashcards(folderId) {
+  const now = Date.now();
+  return cache.flashcards.filter(c => (folderId == null || c.folderId === folderId) && (c.nextAt || 0) <= now);
+}
+
+function renderFlashcardStats() {
+  const now = Date.now();
+  const due = cache.flashcards.filter(c => (c.nextAt || 0) <= now).length;
+  const mastered = cache.flashcards.filter(c => (c.box || 0) >= 4).length;
+  document.getElementById('fcDue').textContent = due;
+  document.getElementById('fcTotal').textContent = cache.flashcards.length;
+  document.getElementById('fcMastered').textContent = mastered;
+
+  const cur = document.getElementById('fcFolder').value;
+  document.getElementById('fcFolder').innerHTML = '<option value="">— Folder အားလုံး —</option>' +
+    cache.folders.map(f => `<option value="${Number(f.id)}">📁 ${esc(f.name)}</option>`).join('');
+  document.getElementById('fcFolder').value = cur;
+
+  document.getElementById('fcCardFolder').innerHTML = '<option value="">— မသတ်မှတ်ပါ —</option>' +
+    cache.folders.map(f => `<option value="${Number(f.id)}">📁 ${esc(f.name)}</option>`).join('');
+}
+
+function renderFlashcardList() {
+  const fid = document.getElementById('fcFolder').value ? Number(document.getElementById('fcFolder').value) : null;
+  const list = cache.flashcards.filter(c => fid == null || c.folderId === fid);
+  const box = document.getElementById('fcList');
+  if (!list.length) {
+    box.innerHTML = '<div class="empty">Flashcard မရှိသေးပါ</div>';
+    return;
+  }
+  box.innerHTML = list.map(c => {
+    const ready = (c.nextAt || 0) <= Date.now();
+    const folderName = (cache.folders.find(f => f.id === c.folderId) || {}).name || '';
+    return `<div class="tt-item ${ready ? 'active-now' : ''}" onclick="openEditFlashcard(${Number(c.id)})">
+      <div style="min-width:0;flex:1">
+        <div class="tt-act">${esc(c.front.slice(0, 80))}</div>
+        <div class="muted" style="margin-top:3px">
+          <span class="badge" style="margin-left:0">Box ${c.box || 0}</span>
+          ${folderName ? `<span class="badge">${esc(folderName)}</span>` : ''}
+          <span style="margin-left:6px">${ready ? '✅ လေ့ကျင့်ရန်အသင့်' : '⏰ ' + new Date(c.nextAt).toLocaleDateString('my-MM')}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="icon-btn ghost" onclick="event.stopPropagation();openEditFlashcard(${Number(c.id)})">✏️</button>
+        <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delFlashcard(${Number(c.id)})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let editingFcId = null;
+function openAddFlashcard() {
+  editingFcId = null;
+  renderFlashcardStats();
+  document.getElementById('modalFcTitle').textContent = '🧠 Flashcard အသစ်';
+  document.getElementById('fcFront').value = '';
+  document.getElementById('fcBack').value = '';
+  document.getElementById('fcCardFolder').value = document.getElementById('fcFolder').value || '';
+  document.getElementById('modalFlashcard').classList.add('show');
+}
+
+function openEditFlashcard(id) {
+  const c = cache.flashcards.find(x => x.id === id);
+  if (!c) return;
+  editingFcId = id;
+  renderFlashcardStats();
+  document.getElementById('modalFcTitle').textContent = '✏️ Flashcard ပြင်ရန်';
+  document.getElementById('fcFront').value = c.front;
+  document.getElementById('fcBack').value = c.back;
+  document.getElementById('fcCardFolder').value = String(c.folderId || '');
+  document.getElementById('modalFlashcard').classList.add('show');
+}
+
+async function saveFlashcardItem() {
+  const front = document.getElementById('fcFront').value.trim(),
+        back = document.getElementById('fcBack').value.trim(),
+        fid = Number(document.getElementById('fcCardFolder').value) || null;
+  if (!front || !back) { alert('မေးခွန်းနှင့် အဖြေ နှစ်ခုလုံး ဖြည့်ပါ'); return; }
+  if (editingFcId) {
+    const i = cache.flashcards.findIndex(x => x.id === editingFcId);
+    if (i >= 0) cache.flashcards[i] = {...cache.flashcards[i], front, back, folderId: fid};
+  } else {
+    cache.flashcards.push({id: uid(), front, back, folderId: fid, box: 0, nextAt: Date.now(), reviews: 0, createdAt: Date.now()});
+  }
+  if (await saveFlashcards()) {
+    closeModal('modalFlashcard');
+    renderFlashcardStats();
+    renderFlashcardList();
+  }
+}
+
+async function delFlashcard(id) {
+  if (!confirm('ဒီ Flashcard ကို ဖျက်မလား?')) return;
+  cache.flashcards = cache.flashcards.filter(x => x.id !== id);
+  await saveFlashcards();
+  renderFlashcardStats();
+  renderFlashcardList();
+}
+
+let reviewQueue = [], reviewIdx = 0, reviewRevealed = false;
+function startReview() {
+  const fid = document.getElementById('fcFolder').value ? Number(document.getElementById('fcFolder').value) : null;
+  reviewQueue = dueFlashcards(fid);
+  if (!reviewQueue.length) {
+    const allInFolder = cache.flashcards.filter(c => fid == null || c.folderId === fid);
+    if (!allInFolder.length) { alert('လေ့ကျင့်ရန် Flashcard မရှိသေးပါ။ ကတ်အသစ် အရင်ထည့်ပါ။'); return; }
+    if (!confirm('ယနေ့ လေ့ကျင့်ရန်ကတ် မရှိသေးပါ။ ရှိပြီးသားကတ်အားလုံးကို ပြန်လေ့ကျင့်မလား?')) return;
+    reviewQueue = [...allInFolder];
+  }
+  reviewIdx = 0;
+  reviewRevealed = false;
+  document.getElementById('modalReview').classList.add('show');
+  showReviewCard();
+}
+
+function showReviewCard() {
+  const c = reviewQueue[reviewIdx];
+  if (!c) { closeModal('modalReview'); renderFlashcardStats(); renderFlashcardList(); return; }
+  document.getElementById('revProgress').textContent = `${reviewIdx + 1} / ${reviewQueue.length}`;
+  document.getElementById('revFront').textContent = c.front;
+  document.getElementById('revBack').textContent = c.back;
+  document.getElementById('revBack').classList.add('hidden');
+  document.getElementById('revActions').classList.remove('hidden');
+  document.getElementById('revAnswerBtns').classList.add('hidden');
+  reviewRevealed = false;
+}
+
+function revealReview() {
+  if (reviewRevealed) return;
+  reviewRevealed = true;
+  document.getElementById('revBack').classList.remove('hidden');
+  document.getElementById('revActions').classList.add('hidden');
+  document.getElementById('revAnswerBtns').classList.remove('hidden');
+}
+
+async function gradeReview(correct) {
+  const c = reviewQueue[reviewIdx];
+  if (!c) return;
+  const idx = cache.flashcards.findIndex(x => x.id === c.id);
+  if (idx >= 0) {
+    const fc = cache.flashcards[idx];
+    fc.reviews = (fc.reviews || 0) + 1;
+    fc.box = correct ? Math.min(5, (fc.box || 0) + 1) : 0;
+    fc.nextAt = Date.now() + fcIntervals()[fc.box] * 86400000;
+    await saveFlashcards();
+  }
+  reviewIdx++;
+  if (reviewIdx >= reviewQueue.length) {
+    closeModal('modalReview');
+    renderFlashcardStats();
+    renderFlashcardList();
+    alert('🎉 လေ့ကျင့်မှု ပြီးဆုံးပါပြီ!');
+  } else {
+    showReviewCard();
+  }
+}
+
+/* ================= 4. EXAM DATE & BACKUP ================= */
+function examEncouragement(days) {
+  if (days === null) return '🌷 စာမေးပွဲရက် သတ်မှတ်ပြီး စတင်ပြင်ဆင်လိုက်နော်';
+  if (days < 0) return '🌈 စာမေးပွဲရက် ကျော်လွန်သွားပါပြီ';
+  if (days === 0) return '🎯 ဒီနေ့ စာမေးပွဲနေ့ပါ! အကောင်းဆုံး ဖြေနိုင်ပါစေ 🍀';
+  if (days === 1) return '🐣 မနက်ဖြန် စာမေးပွဲနော်! စိတ်အေးအေးထားပြီး အိပ်ရေးဝအောင်အိပ်ပါ';
+  if (days <= 7) return `🌟 စာမေးပွဲရောက်ဖို့ ${days} ရက်ပဲ လိုတော့တယ်! အဓိကအချက်တွေ ပြန်နွှေးပါ`;
+  return `☀️ စာမေးပွဲအတွက် ${days} ရက် အချိန်ရှိသေးတယ်၊ နေ့တိုင်း ပုံမှန်လေး စာလုပ်သွားရအောင်`;
+}
+
+function renderExam() {
+  document.getElementById('examName').value = cache.examName || '';
+  document.getElementById('examDate').value = cache.examDate || '';
+  const days = calendarDays(cache.examDate);
+  document.getElementById('examCount').textContent = days === null ? '--' : days > 0 ? `${days} ရက်` : days === 0 ? 'ဒီနေ့!' : 'ပြီးဆုံး';
+  document.getElementById('examStatus').textContent = cache.examDate ? `${cache.examName || 'စာမေးပွဲ'} · ${cache.examDate}` : 'စာမေးပွဲရက် မသတ်မှတ်ရသေးပါ';
+  document.getElementById('examMessage').textContent = examEncouragement(days);
+}
+
+async function saveExamData() {
+  const name = document.getElementById('examName').value.trim(),
+        date = document.getElementById('examDate').value;
+  if (!name || !date) { alert('စာမေးပွဲအမည်နှင့် ရက်စွဲ ဖြည့်ပါ'); return; }
+  cache.examName = name;
+  cache.examDate = date;
+  if (await saveExam()) { renderExam(); alert('စာမေးပွဲရက် သိမ်းဆည်းပြီးပါပြီ 🎯'); }
+}
+
+async function clearExam() {
+  if (!confirm('စာမေးပွဲရက်ကို ဖယ်ရှားမလား?')) return;
+  cache.examName = '';
+  cache.examDate = '';
+  if (await saveExam()) renderExam();
+}
+
+async function exportBackup() {
+  const st = document.getElementById('backupStatus');
+  st.textContent = '⏳ Backup ဖိုင်ပြင်ဆင်နေပါသည်...';
+  try {
+    const keys = ['timetable', 'blocks', 'folders', 'notes', 'flashcards', 'examName', 'examDate'];
+    const data = {app: 'Study System', formatVersion: 2, exportedAt: new Date().toISOString(), data: {}, images: await idbAllImages(), audio: []};
+    for (const k of keys) data.data[k] = await idbGet(k, null);
+
+    const allAudio = await idbAllAudio();
+    for (const a of allAudio) {
+      if (!a.blob) continue;
+      const b64 = await blobToBase64(a.blob);
+      data.audio.push({id: a.id, noteId: a.noteId, createdAt: a.createdAt, mime: a.blob.type, b64});
+    }
+
+    const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'study-backup-' + todayKey() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    st.textContent = '✅ Backup ဖိုင် ထုတ်ပြီးပါပြီ';
+  } catch(e) {
+    st.textContent = '';
+    alert('Backup မထုတ်နိုင်ပါ: ' + e.message);
+  }
+}
+
+async function importBackup() {
+  const input = document.getElementById('restoreFile'), file = input.files?.[0];
+  if (!file) return;
+  if (!confirm('လက်ရှိဒေတာများကို Backup ဖိုင်ဖြင့် အစားထိုးမည်။ ဆက်လုပ်မလား?')) { input.value = ''; return; }
+  try {
+    const obj = JSON.parse(await file.text());
+    if (!obj.data) throw new Error('Backup ဖိုင် မမှန်ကန်ပါ');
+    const d = obj.data;
+    const keys = ['timetable', 'blocks', 'folders', 'notes', 'flashcards', 'examName', 'examDate'];
+    for (const k of keys) if (k in d && d[k] != null) await idbSet(k, d[k]);
+    if (Array.isArray(obj.images)) await idbReplaceImages(obj.images);
+    if (Array.isArray(obj.audio)) {
+      const arr = obj.audio.map(a => {
+        const bin = atob(a.b64), bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return {id: a.id, noteId: a.noteId, createdAt: a.createdAt, blob: new Blob([bytes], {type: a.mime || 'audio/webm'})};
+      });
+      await idbReplaceAudio(arr);
+    }
+    await loadAllData();
+    renderTodaySchedule(); renderBlocks(); renderNotes(); renderFlashcardStats(); renderFlashcardList(); renderExam();
+    document.getElementById('backupStatus').textContent = '✅ Restore သွင်းပြီးပါပြီ';
+    input.value = '';
+  } catch(e) {
+    alert('Restore မအောင်မြင်ပါ: ' + e.message);
+  }
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('show');
+}
+
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => {
+    if (e.target !== bg) return;
+    if (bg.id === 'modalNote') cancelNoteModal();
+    else if (bg.id === 'modalViewNote') closeViewNoteModal();
+    else bg.classList.remove('show');
+  });
+});
+
+(async function init() {
+  try {
+    await openDB();
+    await loadAllData();
+    document.getElementById('todayDate').textContent = safeDateLabel();
+    renderTodaySchedule();
+    renderBlocks();
+    await renderNotes();
+    renderFlashcardStats();
+    renderFlashcardList();
+    renderExam();
+    setInterval(renderTodaySchedule, 15000);
+  } catch(e) {
+    document.body.innerHTML = `<div style="max-width:480px;margin:40px auto;padding:20px;text-align:center"><h2>App ဖွင့်မရပါ</h2><p>${esc(e.message || e)}</p></div>`;
+  }
+})();
 </script>
 </body>
 </html>
