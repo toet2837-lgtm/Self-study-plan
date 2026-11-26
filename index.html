@@ -390,6 +390,54 @@ label.field-label {
   color: var(--ink);
 }
 
+.note-card.pinned {
+  border-left: 4px solid var(--amber);
+  background: #fffdf5;
+}
+
+.note-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.badge-folder {
+  background: #f1f5f9;
+  color: #334155;
+  margin-left: 0;
+}
+
+.badge-pin {
+  background: var(--amber-soft);
+  color: #b45309;
+  margin-left: 0;
+}
+
+.note-tools {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.note-tools input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.note-tools select {
+  width: auto;
+  min-width: 118px;
+  max-width: 150px;
+  margin-bottom: 0;
+  padding: 11px 10px;
+  font-size: 12px;
+}
+
 .note-card .body {
   font-size: 13px;
   color: var(--muted);
@@ -600,6 +648,178 @@ nav button.active { color: var(--primary); }
   font-size: 12px;
 }
 
+/* Calculator-style Textbook Math Display */
+.math-inline {
+  font-family: "Cambria Math", "Times New Roman", Georgia, serif;
+  font-size: 1.08em;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  gap: 2px;
+  padding: 0 2px;
+}
+
+.math-block {
+  font-family: "Cambria Math", "Times New Roman", Georgia, serif;
+  font-size: 1.24em;
+  color: #0f172a;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.math-frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 3px;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.math-num {
+  padding: 0 4px 2px;
+  border-bottom: 1.5px solid currentColor;
+  font-size: 0.92em;
+}
+
+.math-den {
+  padding: 2px 4px 0;
+  font-size: 0.92em;
+}
+
+.math-sqrt {
+  display: inline-flex;
+  align-items: stretch;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.math-rad {
+  font-size: 1.12em;
+  line-height: 1;
+  margin-right: 1px;
+}
+
+.math-radicand {
+  border-top: 1.4px solid currentColor;
+  padding: 1px 3px 0;
+}
+
+.math-vec {
+  position: relative;
+  display: inline-block;
+  padding-top: 2px;
+}
+
+.math-vec::before {
+  content: "→";
+  position: absolute;
+  top: -0.62em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.68em;
+  line-height: 1;
+}
+
+.math-inline sup, .math-block sup,
+.math-inline sub, .math-block sub {
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+/* Formula Quick-Insert Pad */
+.math-pad {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px;
+  background: #f1f5f9;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.math-key {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 34px;
+  font-family: "Cambria Math", "Times New Roman", system-ui, sans-serif;
+}
+
+.math-key.accent {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: #bfdbfe;
+}
+
+.math-preview {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 9px 11px;
+  margin: -6px 0 12px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.math-preview-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* Flashcard Enhancements */
+.fc-img-preview {
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  object-fit: contain;
+  margin: 6px auto 10px;
+  display: block;
+  cursor: pointer;
+}
+
+.toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.toggle-pill input {
+  width: auto;
+  margin: 0;
+  accent-color: var(--purple);
+}
+
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 .recording { background: var(--red) !important; color: #fff !important; animation: pulse 1s infinite; }
 </style>
@@ -678,7 +898,14 @@ nav button.active { color: var(--primary); }
         </div>
       </div>
       <div class="breadcrumb" id="noteBreadcrumb"></div>
-      <input id="noteSearch" placeholder="🔎 မှတ်စု သို့မဟုတ် Folder ရှာရန်..." oninput="renderNotes()" style="margin-bottom:10px">
+      <div class="note-tools">
+        <input id="noteSearch" placeholder="🔎 မှတ်စု သို့မဟုတ် Folder ရှာရန်..." oninput="renderNotes()">
+        <select id="noteSort" onchange="renderNotes()" title="စီစဉ်ပုံ">
+          <option value="newest">🕒 အသစ်ဆုံး</option>
+          <option value="oldest">📅 အဟောင်းဆုံး</option>
+          <option value="az">🔤 အမည် A-Z</option>
+        </select>
+      </div>
       <div id="noteContent"></div>
     </div>
   </section>
@@ -704,7 +931,11 @@ nav button.active { color: var(--primary); }
           <div id="fcMastered" style="font-size:22px;font-weight:800;color:var(--green)">0</div>
         </div>
       </div>
-      <button class="purple" style="width:100%;margin-top:12px" onclick="startReview()">🎯 ယခု လေ့ကျင့်မည် (Review)</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <label class="toggle-pill"><input type="checkbox" id="fcShuffleToggle" checked> 🔀 ကတ်ရောမွှေမည်</label>
+        <span class="muted" style="font-size:11px">မမှတ်မိသောကတ်ကို အဆုံးတွင် ပြန်မေးမည်</span>
+      </div>
+      <button class="purple" style="width:100%;margin-top:10px" onclick="startReview()">🎯 ယခု လေ့ကျင့်မည် (Review)</button>
     </div>
 
     <div class="card">
@@ -817,10 +1048,17 @@ nav button.active { color: var(--primary); }
       <h2 id="modalNoteTitle">📝 မှတ်စု</h2>
       <button class="icon-btn ghost" onclick="cancelNoteModal()">✕</button>
     </div>
+    <label class="field-label">သိမ်းဆည်းမည့် Folder</label>
+    <select id="noteFolderSelect"></select>
     <label class="field-label">ခေါင်းစဉ်</label>
     <input id="noteTitle" placeholder="မှတ်စု ခေါင်းစဉ်..." maxlength="180">
-    <label class="field-label">အကြောင်းအရာ</label>
-    <textarea id="noteBody" placeholder="မှတ်စု ရေးပါ..."></textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <label class="field-label" style="margin:0">အကြောင်းအရာ</label>
+      <button type="button" class="secondary small" onclick="toggleMathPad('noteMathPad')" style="padding:4px 9px;font-size:11px">🧮 Math ခလုတ်</button>
+    </div>
+    <div id="noteMathPad" class="math-pad hidden"></div>
+    <textarea id="noteBody" placeholder="မှတ်စု ရေးပါ... (Formula အတွက် $Q/P = T$ လိုမျိုး ရေးနိုင်ပါသည်)" oninput="updateMathPreview('noteBody','noteMathPreview')"></textarea>
+    <div id="noteMathPreview" class="math-preview hidden"></div>
 
     <div class="row" style="margin-bottom:8px">
       <button type="button" class="secondary small" onclick="document.getElementById('noteImages').click()">📷 ပုံထည့်ရန်</button>
@@ -844,8 +1082,12 @@ nav button.active { color: var(--primary); }
   <div class="modal">
     <div class="modal-head">
       <h2 id="viewNoteTitle" style="overflow-wrap:anywhere">📝</h2>
-      <button class="icon-btn ghost" onclick="closeViewNoteModal()">✕</button>
+      <div style="display:flex;gap:4px;align-items:center">
+        <button id="viewPinBtn" class="icon-btn ghost" onclick="togglePinFromView()" title="Pin ကပ်ရန်/ဖြုတ်ရန်">📌</button>
+        <button class="icon-btn ghost" onclick="closeViewNoteModal()">✕</button>
+      </div>
     </div>
+    <div id="viewNoteMeta" class="note-meta" style="margin-top:-6px;margin-bottom:12px"></div>
     <div id="viewNoteBody" style="overflow-wrap:anywhere;color:#334155;font-size:14px;margin-bottom:14px;line-height:1.6;user-select:text;-webkit-user-select:text"></div>
     <div class="thumb-grid" id="viewNoteImages"></div>
     <div class="voice-list" id="viewNoteAudio"></div>
@@ -866,13 +1108,36 @@ nav button.active { color: var(--primary); }
     </div>
     <label class="field-label">ဘာသာရပ် Folder</label>
     <select id="fcCardFolder"></select>
-    <label class="field-label">မေးခွန်း (အရှေ့)</label>
-    <textarea id="fcFront" placeholder="မေးခွန်း သို့မဟုတ် ဝေါဟာရ..." style="min-height:80px"></textarea>
-    <label class="field-label">အဖြေ (အနောက်)</label>
-    <textarea id="fcBack" placeholder="အဖြေ သို့မဟုတ် အဓိပ္ပာယ်..." style="min-height:80px"></textarea>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <label class="field-label" style="margin:0">မေးခွန်း (အရှေ့)</label>
+      <div style="display:flex;gap:5px">
+        <button type="button" class="secondary small" onclick="toggleMathPad('fcFrontPad')" style="padding:4px 8px;font-size:11px">🧮 Math</button>
+        <button type="button" class="secondary small" onclick="document.getElementById('fcFrontImgInput').click()" style="padding:4px 8px;font-size:11px">📷 ပုံ</button>
+      </div>
+    </div>
+    <div id="fcFrontPad" class="math-pad hidden"></div>
+    <textarea id="fcFront" placeholder="မေးခွန်း သို့မဟုတ် Formula (ဥပမာ $Q/P = T$)..." style="min-height:76px" oninput="updateMathPreview('fcFront','fcFrontPreview')"></textarea>
+    <div id="fcFrontPreview" class="math-preview hidden"></div>
+    <input type="file" id="fcFrontImgInput" accept="image/*" class="hidden">
+    <div id="fcFrontImgBox"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <label class="field-label" style="margin:0">အဖြေ (အနောက်)</label>
+      <div style="display:flex;gap:5px">
+        <button type="button" class="secondary small" onclick="toggleMathPad('fcBackPad')" style="padding:4px 8px;font-size:11px">🧮 Math</button>
+        <button type="button" class="secondary small" onclick="document.getElementById('fcBackImgInput').click()" style="padding:4px 8px;font-size:11px">📷 ပုံ</button>
+      </div>
+    </div>
+    <div id="fcBackPad" class="math-pad hidden"></div>
+    <textarea id="fcBack" placeholder="အဖြေ သို့မဟုတ် အဓိပ္ပာယ်..." style="min-height:76px" oninput="updateMathPreview('fcBack','fcBackPreview')"></textarea>
+    <div id="fcBackPreview" class="math-preview hidden"></div>
+    <input type="file" id="fcBackImgInput" accept="image/*" class="hidden">
+    <div id="fcBackImgBox"></div>
+
     <div class="actions">
       <button class="secondary" onclick="closeModal('modalFlashcard')">ပိတ်မည်</button>
-      <button class="success" onclick="saveFlashcardItem()">သိမ်းမည်</button>
+      <button class="success" id="saveFcBtn" onclick="saveFlashcardItem()">သိမ်းမည်</button>
     </div>
   </div>
 </div>
@@ -881,12 +1146,16 @@ nav button.active { color: var(--primary); }
 <div class="modal-bg" id="modalReview">
   <div class="modal">
     <div class="modal-head">
-      <h2>🎯 လေ့ကျင့်ခန်း</h2>
+      <h2>🎯 လေ့ကျင့်ခန်း <span id="revRetryBadge" class="badge badge-pin hidden">🔁 ပြန်လေ့ကျင့်</span></h2>
       <span class="muted" id="revProgress">1 / 1</span>
     </div>
-    <div id="revCard" onclick="revealReview()" style="border:1.5px solid #dbeafe;border-radius:16px;padding:24px 18px;margin:8px 0;background:linear-gradient(135deg,#eff6ff,#ffffff);text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;cursor:pointer">
-      <div id="revFront" style="font-size:17px;font-weight:700;color:var(--ink);white-space:pre-wrap">--</div>
-      <div id="revBack" class="hidden" style="font-size:15px;color:var(--green);white-space:pre-wrap;margin-top:14px;padding-top:14px;border-top:1px dashed #bfdbfe;font-weight:600"></div>
+    <div id="revCard" onclick="revealReview()" style="border:1.5px solid #dbeafe;border-radius:16px;padding:22px 16px;margin:8px 0;background:linear-gradient(135deg,#eff6ff,#ffffff);text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;cursor:pointer">
+      <div id="revFront" style="font-size:17px;font-weight:700;color:var(--ink);line-height:1.6">--</div>
+      <div id="revFrontImg"></div>
+      <div id="revBackWrap" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px dashed #bfdbfe">
+        <div id="revBack" style="font-size:15px;color:var(--green);font-weight:600;line-height:1.6"></div>
+        <div id="revBackImg"></div>
+      </div>
     </div>
     <div class="actions" id="revActions">
       <button class="secondary" onclick="closeModal('modalReview')">ရပ်မည်</button>
@@ -1055,13 +1324,274 @@ function calendarDays(dateString) {
 function safeDateLabel() {
   return new Date().toLocaleDateString('my-MM', {year:'numeric', month:'short', day:'numeric', weekday:'short'});
 }
-function mdToHtml(md) {
-  let s = esc(md || '');
+/* ================= CALCULATOR-STYLE MATH ENGINE ================= */
+function replaceBalancedCmd(str, cmd, wrapFn) {
+  let out = str;
+  const openToken = cmd + '{';
+  let guard = 0;
+  while (out.includes(openToken) && guard++ < 40) {
+    const idx = out.indexOf(openToken);
+    let i = idx + openToken.length, depth = 1;
+    while (i < out.length && depth > 0) {
+      if (out[i] === '{') depth++;
+      else if (out[i] === '}') depth--;
+      i++;
+    }
+    if (depth !== 0) break;
+    const inner = out.slice(idx + openToken.length, i - 1);
+    out = out.slice(0, idx) + wrapFn(inner) + out.slice(i);
+  }
+  return out;
+}
+
+function replaceLatexFrac(str) {
+  let out = str;
+  const token = '\\frac{';
+  let guard = 0;
+  while (out.includes(token) && guard++ < 40) {
+    const idx = out.indexOf(token);
+    let i = idx + token.length, depth = 1;
+    while (i < out.length && depth > 0) {
+      if (out[i] === '{') depth++;
+      else if (out[i] === '}') depth--;
+      i++;
+    }
+    if (depth !== 0 || out[i] !== '{') break;
+    const num = out.slice(idx + token.length, i - 1);
+    let j = i + 1;
+    depth = 1;
+    while (j < out.length && depth > 0) {
+      if (out[j] === '{') depth++;
+      else if (out[j] === '}') depth--;
+      j++;
+    }
+    if (depth !== 0) break;
+    const den = out.slice(i + 1, j - 1);
+    out = out.slice(0, idx) + `<span class="math-frac"><span class="math-num">${formatMathCore(num)}</span><span class="math-den">${formatMathCore(den)}</span></span>` + out.slice(j);
+  }
+  return out;
+}
+
+function replaceParenFunc(str, fnName, wrapFn) {
+  let out = str;
+  const re = new RegExp('(?:\\\\)?' + fnName + '\\(', 'g');
+  let guard = 0, m;
+  while ((m = re.exec(out)) !== null && guard++ < 40) {
+    const start = m.index;
+    let i = start + m[0].length, depth = 1;
+    while (i < out.length && depth > 0) {
+      if (out[i] === '(') depth++;
+      else if (out[i] === ')') depth--;
+      i++;
+    }
+    if (depth !== 0) break;
+    const inner = out.slice(start + m[0].length, i - 1);
+    out = out.slice(0, start) + wrapFn(inner) + out.slice(i);
+    re.lastIndex = 0;
+  }
+  return out;
+}
+
+function replaceSlashFractions(str) {
+  // Converts calculator-style Q/P, (a+b)/(c+d), (m_1 m_2)/(r^2) into stacked fractions
+  // Protects existing HTML tags by temporarily tokenizing them
+  const tags = [];
+  let s = str.replace(/<[^>]+>/g, m => { tags.push(m); return '\uE000' + (tags.length - 1) + '\uE001'; });
+
+  const atomChars = /[A-Za-z0-9_^{}.πθΔδΩωλαβγμσ∞°·\uE000-\uE001]/;
+  let guard = 0;
+  while (s.includes('/') && guard++ < 40) {
+    const slash = s.indexOf('/');
+    // Find left operand
+    let lEnd = slash;
+    while (lEnd > 0 && s[lEnd - 1] === ' ') lEnd--;
+    let lStart = lEnd;
+    if (lEnd > 0 && s[lEnd - 1] === ')') {
+      let d = 1;
+      lStart = lEnd - 1;
+      while (lStart > 0 && d > 0) {
+        lStart--;
+        if (s[lStart] === ')') d++;
+        else if (s[lStart] === '(') d--;
+      }
+    } else {
+      while (lStart > 0 && atomChars.test(s[lStart - 1])) lStart--;
+    }
+
+    // Find right operand
+    let rStart = slash + 1;
+    while (rStart < s.length && s[rStart] === ' ') rStart++;
+    let rEnd = rStart;
+    if (rStart < s.length && s[rStart] === '(') {
+      let d = 1;
+      rEnd = rStart + 1;
+      while (rEnd < s.length && d > 0) {
+        if (s[rEnd] === '(') d++;
+        else if (s[rEnd] === ')') d--;
+        rEnd++;
+      }
+    } else {
+      while (rEnd < s.length && atomChars.test(s[rEnd])) rEnd++;
+    }
+
+    if (lStart === lEnd || rStart === rEnd) {
+      s = s.slice(0, slash) + '∕' + s.slice(slash + 1);
+      continue;
+    }
+
+    let num = s.slice(lStart, lEnd).trim();
+    let den = s.slice(rStart, rEnd).trim();
+    if (num.startsWith('(') && num.endsWith(')')) num = num.slice(1, -1);
+    if (den.startsWith('(') && den.endsWith(')')) den = den.slice(1, -1);
+
+    const openIdx = tags.push('<span class="math-frac"><span class="math-num">') - 1;
+    const midIdx = tags.push('</span><span class="math-den">') - 1;
+    const closeIdx = tags.push('</span></span>') - 1;
+    const rep = `\uE000${openIdx}\uE001${num}\uE000${midIdx}\uE001${den}\uE000${closeIdx}\uE001`;
+    s = s.slice(0, lStart) + rep + s.slice(rEnd);
+  }
+
+  return s.replace(/\uE000(\d+)\uE001/g, (_, idx) => tags[Number(idx)]);
+}
+
+function formatMathCore(rawEscaped) {
+  let s = rawEscaped;
+  // Operators & Greek symbols
+  s = s.replace(/&lt;=/g, '≤').replace(/&gt;=/g, '≥').replace(/!=/g, '≠').replace(/-&gt;/g, '→').replace(/\+-/g, '±');
+  s = s.replace(/\\times/g, '×').replace(/\\cdot/g, '·').replace(/\\div/g, '÷').replace(/\\degree/g, '°');
+  s = s.replace(/\\pi|\bpi\b/g, 'π')
+       .replace(/\\theta|\btheta\b/g, 'θ')
+       .replace(/\\Delta|\bDelta\b/g, 'Δ')
+       .replace(/\\delta|\bdelta\b/g, 'δ')
+       .replace(/\\Omega|\bOmega\b/g, 'Ω')
+       .replace(/\\omega|\bomega\b/g, 'ω')
+       .replace(/\\lambda|\blambda\b/g, 'λ')
+       .replace(/\\alpha|\balpha\b/g, 'α')
+       .replace(/\\beta|\bbeta\b/g, 'β')
+       .replace(/\\gamma|\bgamma\b/g, 'γ')
+       .replace(/\\mu|\bmu\b/g, 'μ')
+       .replace(/\\sigma|\bsigma\b/g, 'σ')
+       .replace(/\\infty|\binfty\b/g, '∞');
+
+  // Structured LaTeX & function commands
+  s = replaceLatexFrac(s);
+  s = replaceBalancedCmd(s, '\\sqrt', inner => `<span class="math-sqrt"><span class="math-rad">√</span><span class="math-radicand">${formatMathCore(inner)}</span></span>`);
+  s = replaceParenFunc(s, 'sqrt', inner => `<span class="math-sqrt"><span class="math-rad">√</span><span class="math-radicand">${formatMathCore(inner)}</span></span>`);
+  s = replaceBalancedCmd(s, '\\vec', inner => `<span class="math-vec">${formatMathCore(inner)}</span>`);
+  s = replaceParenFunc(s, 'vec', inner => `<span class="math-vec">${formatMathCore(inner)}</span>`);
+
+  // Superscripts & Subscripts
+  s = replaceBalancedCmd(s, '^', inner => `<sup>${formatMathCore(inner)}</sup>`);
+  s = replaceBalancedCmd(s, '_', inner => `<sub>${formatMathCore(inner)}</sub>`);
+  s = s.replace(/\^([A-Za-z0-9+\-])/g, '<sup>$1</sup>');
+  s = s.replace(/_([A-Za-z0-9+\-])/g, '<sub>$1</sub>');
+
+  // Calculator-style stacked fractions (e.g. Q/P, (a+b)/(c+d))
+  s = replaceSlashFractions(s);
+
+  // Multiplication star
+  s = s.replace(/\*/g, '×');
+  return s;
+}
+
+function renderRichText(text) {
+  let s = esc(text || '');
+  const mathTokens = [];
+  // Block math $$ ... $$
+  s = s.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => {
+    const id = mathTokens.push(`<div class="math-block">${formatMathCore(expr.trim())}</div>`) - 1;
+    return `\uE010${id}\uE011`;
+  });
+  // Inline math $ ... $
+  s = s.replace(/\$([^$\n]+?)\$/g, (_, expr) => {
+    const id = mathTokens.push(`<span class="math-inline">${formatMathCore(expr.trim())}</span>`) - 1;
+    return `\uE010${id}\uE011`;
+  });
   s = s.replace(/^### (.*)$/gm, '<h3>$1</h3>').replace(/^## (.*)$/gm, '<h2>$1</h2>').replace(/^# (.*)$/gm, '<h1>$1</h1>');
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
   s = s.replace(/\n/g, '<br>');
+  s = s.replace(/\uE010(\d+)\uE011/g, (_, idx) => mathTokens[Number(idx)]);
   return s;
+}
+
+function mdToHtml(md) {
+  return renderRichText(md);
+}
+
+const MATH_KEYS = [
+  {label: 'a/b', insert: '()/()', cursorOffset: 1, wrapMath: true, accent: true, title: 'အပိုင်းကိန်း (Fraction)'},
+  {label: 'x²', insert: '^2', cursorOffset: 2, wrapMath: true, title: 'နှစ်ထပ်ကိန်း'},
+  {label: 'xⁿ', insert: '^{}', cursorOffset: 2, wrapMath: true, title: 'ထပ်ညွှန်း'},
+  {label: 'xₙ', insert: '_{}', cursorOffset: 2, wrapMath: true, title: 'အောက်ခြေညွှန်း'},
+  {label: '√□', insert: 'sqrt()', cursorOffset: 5, wrapMath: true, accent: true, title: 'နှစ်ထပ်ကိန်းရင်း'},
+  {label: 'A⃗', insert: 'vec()', cursorOffset: 4, wrapMath: true, title: 'Vector'},
+  {label: '$$', insert: '\n$$  $$\n', cursorOffset: 4, wrapMath: false, accent: true, title: 'Formula အကြီး (Center)'},
+  {label: '×', insert: ' × ', cursorOffset: 3, wrapMath: false},
+  {label: '±', insert: ' ± ', cursorOffset: 3, wrapMath: false},
+  {label: 'π', insert: 'π', cursorOffset: 1, wrapMath: false},
+  {label: 'θ', insert: 'θ', cursorOffset: 1, wrapMath: false},
+  {label: 'Δ', insert: 'Δ', cursorOffset: 1, wrapMath: false},
+  {label: 'Ω', insert: 'Ω', cursorOffset: 1, wrapMath: false},
+  {label: 'λ', insert: 'λ', cursorOffset: 1, wrapMath: false},
+  {label: '→', insert: ' → ', cursorOffset: 3, wrapMath: false},
+  {label: '°', insert: '°', cursorOffset: 1, wrapMath: false},
+  {label: '∞', insert: '∞', cursorOffset: 1, wrapMath: false}
+];
+
+function isCursorInsideMath(val, pos) {
+  const before = val.slice(0, pos);
+  const count = (before.match(/\$/g) || []).length;
+  return count % 2 === 1;
+}
+
+function insertMathKey(textareaId, previewId, keyIdx) {
+  const ta = document.getElementById(textareaId);
+  const key = MATH_KEYS[keyIdx];
+  if (!ta || !key) return;
+  const start = ta.selectionStart ?? ta.value.length;
+  const end = ta.selectionEnd ?? ta.value.length;
+  const val = ta.value;
+  let snippet = key.insert;
+  let offset = key.cursorOffset;
+
+  if (key.wrapMath && !isCursorInsideMath(val, start)) {
+    snippet = '$' + snippet + '$';
+    offset += 1;
+  }
+
+  ta.value = val.slice(0, start) + snippet + val.slice(end);
+  const newPos = start + offset;
+  ta.focus();
+  ta.setSelectionRange(newPos, newPos);
+  updateMathPreview(textareaId, previewId);
+}
+
+function buildMathPad(padId, textareaId, previewId) {
+  const pad = document.getElementById(padId);
+  if (!pad) return;
+  pad.innerHTML = MATH_KEYS.map((k, idx) =>
+    `<button type="button" class="math-key ${k.accent ? 'accent' : ''}" title="${esc(k.title || k.label)}" onclick="insertMathKey('${textareaId}','${previewId}',${idx})">${esc(k.label)}</button>`
+  ).join('');
+}
+
+function toggleMathPad(padId) {
+  const pad = document.getElementById(padId);
+  if (pad) pad.classList.toggle('hidden');
+}
+
+function updateMathPreview(textareaId, previewId) {
+  const ta = document.getElementById(textareaId);
+  const box = document.getElementById(previewId);
+  if (!ta || !box) return;
+  const val = ta.value || '';
+  if (!val.includes('$')) {
+    box.classList.add('hidden');
+    box.innerHTML = '';
+    return;
+  }
+  box.classList.remove('hidden');
+  box.innerHTML = `<div class="math-preview-label">🧮 Formula အမြင် (Preview)</div>${renderRichText(val)}`;
 }
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -1245,6 +1775,9 @@ async function saveTimetableItem() {
   cache.timetable.sort((a, b) => toMin(a.start) - toMin(b.start));
   if (await saveTimetable()) {
     closeModal('modalTimetable');
+    buildMathPad('noteMathPad', 'noteBody', 'noteMathPreview');
+    buildMathPad('fcFrontPad', 'fcFront', 'fcFrontPreview');
+    buildMathPad('fcBackPad', 'fcBack', 'fcBackPreview');
     renderTodaySchedule();
   }
 }
@@ -1347,11 +1880,58 @@ function getFolders(pid) { return cache.folders.filter(f => (f.parentId ?? null)
 function getNotes(fid) { return cache.notes.filter(n => (n.folderId ?? null) === (fid ?? null)); }
 function openFolder(id) { currentFolderId = id; renderNotes(); }
 
+function getFolderPath(folderId) {
+  if (folderId == null) return '🏠 ပင်မ';
+  const parts = [];
+  let pid = folderId, guard = 0;
+  while (pid !== null && pid !== undefined && guard++ < 100) {
+    const f = cache.folders.find(x => x.id === pid);
+    if (!f) break;
+    parts.unshift(f.name);
+    pid = f.parentId ?? null;
+  }
+  return parts.length ? parts.join(' › ') : '🏠 ပင်မ';
+}
+
+function getSortedFolderOptions() {
+  return [...cache.folders]
+    .map(f => ({id: f.id, path: getFolderPath(f.id)}))
+    .sort((a, b) => a.path.localeCompare(b.path));
+}
+
+function populateNoteFolderSelect(selectedFolderId) {
+  const sel = document.getElementById('noteFolderSelect');
+  if (!sel) return;
+  const opts = getSortedFolderOptions();
+  sel.innerHTML = '<option value="">🏠 ပင်မ (Folder အပြင်)</option>' +
+    opts.map(o => `<option value="${Number(o.id)}">📁 ${esc(o.path)}</option>`).join('');
+  sel.value = selectedFolderId != null ? String(selectedFolderId) : '';
+}
+
+function formatNoteDate(ts) {
+  if (!ts) return '';
+  try {
+    return new Date(ts).toLocaleDateString('my-MM', {year:'numeric', month:'short', day:'numeric'});
+  } catch(e) {
+    return '';
+  }
+}
+
+async function toggleNotePin(id) {
+  const n = cache.notes.find(x => x.id === id);
+  if (!n) return;
+  n.pinned = !n.pinned;
+  if (await saveNotes()) {
+    renderNotes();
+  }
+}
+
 async function renderNotes() {
   const breadcrumb = document.getElementById('noteBreadcrumb'),
         header = document.getElementById('noteHeader'),
         content = document.getElementById('noteContent'),
-        query = (document.getElementById('noteSearch').value || '').trim().toLowerCase();
+        query = (document.getElementById('noteSearch').value || '').trim().toLowerCase(),
+        sortBy = (document.getElementById('noteSort')?.value || 'newest');
 
   let path = [], pid = currentFolderId, guard = 0;
   while (pid !== null && pid !== undefined && guard++ < 100) {
@@ -1366,11 +1946,14 @@ async function renderNotes() {
   header.textContent = currentFolderId == null ? '📁 ဘာသာရပ် Folder များ' : '📁 ' + ((cache.folders.find(x => x.id === currentFolderId) || {}).name || 'Folder');
 
   let html = '';
-  const sub = (query ? cache.folders : getFolders(currentFolderId)).filter(f => !query || f.name.toLowerCase().includes(query));
+  const sub = (query ? cache.folders : getFolders(currentFolderId))
+    .filter(f => !query || f.name.toLowerCase().includes(query) || getFolderPath(f.id).toLowerCase().includes(query));
   for (const f of sub) {
+    const parentHint = query && f.parentId != null ? `<div class="muted" style="font-size:11px;color:var(--primary)">${esc(getFolderPath(f.parentId))}</div>` : '';
     html += `<div class="folder-item" onclick="openFolder(${Number(f.id)})">
-      <div>
+      <div style="min-width:0;flex:1">
         <div style="font-weight:700;font-size:14px">📁 ${esc(f.name)}</div>
+        ${parentHint}
         <div class="muted">${getNotes(f.id).length} မှတ်စု · ${getFolders(f.id).length} folder</div>
       </div>
       <div style="display:flex;gap:4px">
@@ -1380,21 +1963,39 @@ async function renderNotes() {
     </div>`;
   }
 
-  const notes = (query ? cache.notes : getNotes(currentFolderId)).filter(n => !query || (`${n.title} ${n.body || ''}`).toLowerCase().includes(query));
+  const notes = (query ? cache.notes : getNotes(currentFolderId))
+    .filter(n => !query || (`${n.title} ${n.body || ''} ${getFolderPath(n.folderId)}`).toLowerCase().includes(query))
+    .sort((a, b) => {
+      const pinDiff = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
+      if (pinDiff !== 0) return pinDiff;
+      const ta = a.updatedAt || a.createdAt || 0;
+      const tb = b.updatedAt || b.createdAt || 0;
+      if (sortBy === 'oldest') return ta - tb;
+      if (sortBy === 'az') return String(a.title || '').localeCompare(String(b.title || ''));
+      return tb - ta;
+    });
+
   if (notes.length) {
     html += `<div class="muted" style="font-weight:700;margin:12px 0 6px">📝 မှတ်စုများ (${notes.length})</div>` + notes.map(n => {
       const ico = [];
       if (n.imageIds?.length) ico.push('📷 ' + n.imageIds.length);
       if (n.audioIds?.length) ico.push('🎙️ ' + n.audioIds.length);
-      return `<div class="note-card" onclick="viewNote(${Number(n.id)})">
+      const dateStr = formatNoteDate(n.updatedAt || n.createdAt);
+      const folderBadge = query ? `<span class="badge badge-folder">📁 ${esc(getFolderPath(n.folderId))}</span>` : '';
+      return `<div class="note-card ${n.pinned ? 'pinned' : ''}" onclick="viewNote(${Number(n.id)})">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-          <div class="title">${esc(n.title)}${ico.length ? ' <span class="badge">' + ico.join(' · ') + '</span>' : ''}</div>
+          <div class="title">${n.pinned ? '📌 ' : ''}${esc(n.title)}${ico.length ? ' <span class="badge">' + ico.join(' · ') + '</span>' : ''}</div>
           <div style="display:flex;gap:2px;flex-shrink:0">
+            <button class="icon-btn ghost" onclick="event.stopPropagation();toggleNotePin(${Number(n.id)})" title="${n.pinned ? 'Pin ဖြုတ်ရန်' : 'Pin ကပ်ရန်'}" style="opacity:${n.pinned ? '1' : '0.45'}">📌</button>
             <button class="icon-btn ghost" onclick="event.stopPropagation();openEditNote(${Number(n.id)})">✏️</button>
             <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delNote(${Number(n.id)})">🗑</button>
           </div>
         </div>
         <div class="body">${esc(n.body || 'စာသားမပါဝင်ပါ')}</div>
+        <div class="note-meta">
+          ${folderBadge}
+          ${dateStr ? `<span>🕒 ${esc(dateStr)}</span>` : ''}
+        </div>
       </div>`;
     }).join('');
   }
@@ -1474,8 +2075,10 @@ function openAddNote() {
   clearEditAudioUrls();
 
   document.getElementById('modalNoteTitle').textContent = '📝 မှတ်စု အသစ်';
+  populateNoteFolderSelect(currentFolderId);
   document.getElementById('noteTitle').value = '';
   document.getElementById('noteBody').value = '';
+  updateMathPreview('noteBody','noteMathPreview');
   document.getElementById('noteImages').value = '';
   document.getElementById('noteImagesPreview').innerHTML = '';
   document.getElementById('voicePreview').innerHTML = '';
@@ -1493,8 +2096,10 @@ async function openEditNote(id) {
   clearEditAudioUrls();
 
   document.getElementById('modalNoteTitle').textContent = '✏️ မှတ်စု ပြင်ရန်';
+  populateNoteFolderSelect(n.folderId ?? null);
   document.getElementById('noteTitle').value = n.title || '';
   document.getElementById('noteBody').value = n.body || '';
+  updateMathPreview('noteBody','noteMathPreview');
   document.getElementById('noteImages').value = '';
 
   await renderEditImagesPreview();
@@ -1661,13 +2266,16 @@ async function saveNoteItem() {
     return;
   }
   const title = document.getElementById('noteTitle').value.trim(),
-        body = document.getElementById('noteBody').value.trim();
+        body = document.getElementById('noteBody').value.trim(),
+        selFolderVal = document.getElementById('noteFolderSelect')?.value || '',
+        selectedFolderId = selFolderVal ? Number(selFolderVal) : null;
   if (!title) { alert('မှတ်စုခေါင်းစဉ် ဖြည့်ပါ'); return; }
 
   const btn = document.getElementById('saveNoteBtn');
   btn.disabled = true;
   try {
     let note;
+    const nowTs = Date.now();
     if (editingNoteId) {
       note = cache.notes.find(x => x.id === editingNoteId);
       const removedImgs = (note.imageIds || []).filter(id => !editingNoteImageIds.includes(id));
@@ -1678,17 +2286,21 @@ async function saveNoteItem() {
 
       note.title = title;
       note.body = body;
+      note.folderId = selectedFolderId;
       note.imageIds = [...editingNoteImageIds];
       note.audioIds = [...editingNoteAudioIds];
+      note.updatedAt = nowTs;
     } else {
       note = {
         id: uid(),
-        folderId: currentFolderId,
+        folderId: selectedFolderId,
         title,
         body,
+        pinned: false,
         imageIds: [],
         audioIds: [...editingNoteAudioIds],
-        createdAt: Date.now()
+        createdAt: nowTs,
+        updatedAt: nowTs
       };
       cache.notes.unshift(note);
     }
@@ -1744,7 +2356,16 @@ async function viewNote(id) {
   activeViewAudioUrls.forEach(u => URL.revokeObjectURL(u));
   activeViewAudioUrls = [];
 
-  document.getElementById('viewNoteTitle').textContent = '📝 ' + n.title;
+  document.getElementById('viewNoteTitle').textContent = (n.pinned ? '📌 ' : '📝 ') + n.title;
+  const viewPinBtn = document.getElementById('viewPinBtn');
+  if (viewPinBtn) viewPinBtn.style.opacity = n.pinned ? '1' : '0.45';
+  const viewMeta = document.getElementById('viewNoteMeta');
+  if (viewMeta) {
+    const dStr = formatNoteDate(n.updatedAt || n.createdAt);
+    viewMeta.innerHTML = `<span class="badge badge-folder">📁 ${esc(getFolderPath(n.folderId))}</span>` +
+      (n.pinned ? `<span class="badge badge-pin">📌 Pinned</span>` : '') +
+      (dStr ? `<span>🕒 ${esc(dStr)}</span>` : '');
+  }
   document.getElementById('viewNoteBody').innerHTML = mdToHtml(n.body || '');
 
   const box = document.getElementById('viewNoteImages');
@@ -1777,6 +2398,24 @@ async function viewNote(id) {
     }
   }
   document.getElementById('modalViewNote').classList.add('show');
+}
+
+async function togglePinFromView() {
+  if (currentViewNoteId == null) return;
+  await toggleNotePin(currentViewNoteId);
+  const n = cache.notes.find(x => x.id === currentViewNoteId);
+  if (n) {
+    document.getElementById('viewNoteTitle').textContent = (n.pinned ? '📌 ' : '📝 ') + n.title;
+    const viewPinBtn = document.getElementById('viewPinBtn');
+    if (viewPinBtn) viewPinBtn.style.opacity = n.pinned ? '1' : '0.45';
+    const viewMeta = document.getElementById('viewNoteMeta');
+    if (viewMeta) {
+      const dStr = formatNoteDate(n.updatedAt || n.createdAt);
+      viewMeta.innerHTML = `<span class="badge badge-folder">📁 ${esc(getFolderPath(n.folderId))}</span>` +
+        (n.pinned ? `<span class="badge badge-pin">📌 Pinned</span>` : '') +
+        (dStr ? `<span>🕒 ${esc(dStr)}</span>` : '');
+    }
+  }
 }
 
 function editFromViewNote() {
@@ -1832,12 +2471,21 @@ function renderFlashcardStats() {
   document.getElementById('fcMastered').textContent = mastered;
 
   const cur = document.getElementById('fcFolder').value;
-  document.getElementById('fcFolder').innerHTML = '<option value="">— Folder အားလုံး —</option>' +
-    cache.folders.map(f => `<option value="${Number(f.id)}">📁 ${esc(f.name)}</option>`).join('');
+  const folderOpts = getSortedFolderOptions()
+    .map(o => `<option value="${Number(o.id)}">📁 ${esc(o.path)}</option>`).join('');
+  document.getElementById('fcFolder').innerHTML = '<option value="">— Folder အားလုံး —</option>' + folderOpts;
   document.getElementById('fcFolder').value = cur;
 
-  document.getElementById('fcCardFolder').innerHTML = '<option value="">— မသတ်မှတ်ပါ —</option>' +
-    cache.folders.map(f => `<option value="${Number(f.id)}">📁 ${esc(f.name)}</option>`).join('');
+  document.getElementById('fcCardFolder').innerHTML = '<option value="">— မသတ်မှတ်ပါ —</option>' + folderOpts;
+}
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 function renderFlashcardList() {
@@ -1850,13 +2498,16 @@ function renderFlashcardList() {
   }
   box.innerHTML = list.map(c => {
     const ready = (c.nextAt || 0) <= Date.now();
-    const folderName = (cache.folders.find(f => f.id === c.folderId) || {}).name || '';
+    const folderName = c.folderId != null ? getFolderPath(c.folderId) : '';
+    const hasImg = Boolean(c.frontImageId || c.backImageId);
+    const previewHtml = c.front.includes('$') ? renderRichText(c.front) : esc(c.front.slice(0, 80));
     return `<div class="tt-item ${ready ? 'active-now' : ''}" onclick="openEditFlashcard(${Number(c.id)})">
       <div style="min-width:0;flex:1">
-        <div class="tt-act">${esc(c.front.slice(0, 80))}</div>
+        <div class="tt-act">${previewHtml}</div>
         <div class="muted" style="margin-top:3px">
           <span class="badge" style="margin-left:0">Box ${c.box || 0}</span>
           ${folderName ? `<span class="badge">${esc(folderName)}</span>` : ''}
+          ${hasImg ? `<span class="badge">📷 ပုံပါ</span>` : ''}
           <span style="margin-left:6px">${ready ? '✅ လေ့ကျင့်ရန်အသင့်' : '⏰ ' + new Date(c.nextAt).toLocaleDateString('my-MM')}</span>
         </div>
       </div>
@@ -1869,25 +2520,89 @@ function renderFlashcardList() {
 }
 
 let editingFcId = null;
+let fcFrontExistingImgId = null, fcBackExistingImgId = null;
+let fcFrontNewImgData = null, fcBackNewImgData = null;
+
+async function renderFcImgBox(boxId, existingId, newData, side) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+  let src = newData;
+  if (!src && existingId) {
+    const im = await idbGetImage(existingId);
+    if (im) src = im.data;
+  }
+  if (!src) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div style="position:relative;display:inline-block;margin-bottom:10px">
+    <img class="fc-img-preview" src="${src}" style="margin:0">
+    <button type="button" class="thumb-del" onclick="clearFcImg('${side}')">✕</button>
+  </div>`;
+}
+
+function clearFcImg(side) {
+  if (side === 'front') {
+    fcFrontExistingImgId = null;
+    fcFrontNewImgData = null;
+    document.getElementById('fcFrontImgBox').innerHTML = '';
+  } else {
+    fcBackExistingImgId = null;
+    fcBackNewImgData = null;
+    document.getElementById('fcBackImgBox').innerHTML = '';
+  }
+}
+
+document.getElementById('fcFrontImgInput').addEventListener('change', async e => {
+  const file = e.target.files?.[0];
+  e.target.value = '';
+  if (!file || !file.type.startsWith('image/')) return;
+  try {
+    fcFrontNewImgData = await compressImage(file);
+    await renderFcImgBox('fcFrontImgBox', fcFrontExistingImgId, fcFrontNewImgData, 'front');
+  } catch(err) {}
+});
+
+document.getElementById('fcBackImgInput').addEventListener('change', async e => {
+  const file = e.target.files?.[0];
+  e.target.value = '';
+  if (!file || !file.type.startsWith('image/')) return;
+  try {
+    fcBackNewImgData = await compressImage(file);
+    await renderFcImgBox('fcBackImgBox', fcBackExistingImgId, fcBackNewImgData, 'back');
+  } catch(err) {}
+});
+
 function openAddFlashcard() {
   editingFcId = null;
+  fcFrontExistingImgId = null; fcBackExistingImgId = null;
+  fcFrontNewImgData = null; fcBackNewImgData = null;
   renderFlashcardStats();
   document.getElementById('modalFcTitle').textContent = '🧠 Flashcard အသစ်';
   document.getElementById('fcFront').value = '';
   document.getElementById('fcBack').value = '';
+  document.getElementById('fcFrontImgBox').innerHTML = '';
+  document.getElementById('fcBackImgBox').innerHTML = '';
+  updateMathPreview('fcFront', 'fcFrontPreview');
+  updateMathPreview('fcBack', 'fcBackPreview');
   document.getElementById('fcCardFolder').value = document.getElementById('fcFolder').value || '';
   document.getElementById('modalFlashcard').classList.add('show');
 }
 
-function openEditFlashcard(id) {
+async function openEditFlashcard(id) {
   const c = cache.flashcards.find(x => x.id === id);
   if (!c) return;
   editingFcId = id;
+  fcFrontExistingImgId = c.frontImageId || null;
+  fcBackExistingImgId = c.backImageId || null;
+  fcFrontNewImgData = null;
+  fcBackNewImgData = null;
   renderFlashcardStats();
   document.getElementById('modalFcTitle').textContent = '✏️ Flashcard ပြင်ရန်';
   document.getElementById('fcFront').value = c.front;
   document.getElementById('fcBack').value = c.back;
   document.getElementById('fcCardFolder').value = String(c.folderId || '');
+  updateMathPreview('fcFront', 'fcFrontPreview');
+  updateMathPreview('fcBack', 'fcBackPreview');
+  await renderFcImgBox('fcFrontImgBox', fcFrontExistingImgId, null, 'front');
+  await renderFcImgBox('fcBackImgBox', fcBackExistingImgId, null, 'back');
   document.getElementById('modalFlashcard').classList.add('show');
 }
 
@@ -1895,51 +2610,140 @@ async function saveFlashcardItem() {
   const front = document.getElementById('fcFront').value.trim(),
         back = document.getElementById('fcBack').value.trim(),
         fid = Number(document.getElementById('fcCardFolder').value) || null;
-  if (!front || !back) { alert('မေးခွန်းနှင့် အဖြေ နှစ်ခုလုံး ဖြည့်ပါ'); return; }
-  if (editingFcId) {
-    const i = cache.flashcards.findIndex(x => x.id === editingFcId);
-    if (i >= 0) cache.flashcards[i] = {...cache.flashcards[i], front, back, folderId: fid};
-  } else {
-    cache.flashcards.push({id: uid(), front, back, folderId: fid, box: 0, nextAt: Date.now(), reviews: 0, createdAt: Date.now()});
+  if ((!front && !fcFrontExistingImgId && !fcFrontNewImgData) || (!back && !fcBackExistingImgId && !fcBackNewImgData)) {
+    alert('မေးခွန်းနှင့် အဖြေ နှစ်ခုလုံး ဖြည့်ပါ');
+    return;
   }
-  if (await saveFlashcards()) {
-    closeModal('modalFlashcard');
-    renderFlashcardStats();
-    renderFlashcardList();
+
+  const btn = document.getElementById('saveFcBtn');
+  if (btn) btn.disabled = true;
+  try {
+    let cardId = editingFcId || uid();
+    let oldFrontId = null, oldBackId = null;
+    if (editingFcId) {
+      const existing = cache.flashcards.find(x => x.id === editingFcId);
+      oldFrontId = existing?.frontImageId || null;
+      oldBackId = existing?.backImageId || null;
+    }
+
+    let finalFrontImgId = fcFrontExistingImgId;
+    if (fcFrontNewImgData) {
+      finalFrontImgId = 'fcimg_' + uid();
+      await idbAddImage({id: finalFrontImgId, noteId: 'fc_' + cardId, data: fcFrontNewImgData, createdAt: Date.now()});
+    }
+    if (oldFrontId && oldFrontId !== finalFrontImgId) await idbDeleteImage(oldFrontId);
+
+    let finalBackImgId = fcBackExistingImgId;
+    if (fcBackNewImgData) {
+      finalBackImgId = 'fcimg_' + uid();
+      await idbAddImage({id: finalBackImgId, noteId: 'fc_' + cardId, data: fcBackNewImgData, createdAt: Date.now()});
+    }
+    if (oldBackId && oldBackId !== finalBackImgId) await idbDeleteImage(oldBackId);
+
+    if (editingFcId) {
+      const i = cache.flashcards.findIndex(x => x.id === editingFcId);
+      if (i >= 0) {
+        cache.flashcards[i] = {
+          ...cache.flashcards[i],
+          front: front || '(ပုံမေးခွန်း)',
+          back: back || '(ပုံအဖြေ)',
+          folderId: fid,
+          frontImageId: finalFrontImgId || null,
+          backImageId: finalBackImgId || null
+        };
+      }
+    } else {
+      cache.flashcards.push({
+        id: cardId,
+        front: front || '(ပုံမေးခွန်း)',
+        back: back || '(ပုံအဖြေ)',
+        folderId: fid,
+        frontImageId: finalFrontImgId || null,
+        backImageId: finalBackImgId || null,
+        box: 0,
+        nextAt: Date.now(),
+        reviews: 0,
+        createdAt: Date.now()
+      });
+    }
+
+    if (await saveFlashcards()) {
+      closeModal('modalFlashcard');
+      renderFlashcardStats();
+      renderFlashcardList();
+    }
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
 async function delFlashcard(id) {
   if (!confirm('ဒီ Flashcard ကို ဖျက်မလား?')) return;
+  const c = cache.flashcards.find(x => x.id === id);
+  if (c?.frontImageId) await idbDeleteImage(c.frontImageId);
+  if (c?.backImageId) await idbDeleteImage(c.backImageId);
   cache.flashcards = cache.flashcards.filter(x => x.id !== id);
   await saveFlashcards();
   renderFlashcardStats();
   renderFlashcardList();
 }
 
-let reviewQueue = [], reviewIdx = 0, reviewRevealed = false;
+let reviewQueue = [], reviewIdx = 0, reviewRevealed = false, reviewMissedCount = 0;
 function startReview() {
   const fid = document.getElementById('fcFolder').value ? Number(document.getElementById('fcFolder').value) : null;
-  reviewQueue = dueFlashcards(fid);
-  if (!reviewQueue.length) {
+  let cards = dueFlashcards(fid);
+  if (!cards.length) {
     const allInFolder = cache.flashcards.filter(c => fid == null || c.folderId === fid);
     if (!allInFolder.length) { alert('လေ့ကျင့်ရန် Flashcard မရှိသေးပါ။ ကတ်အသစ် အရင်ထည့်ပါ။'); return; }
     if (!confirm('ယနေ့ လေ့ကျင့်ရန်ကတ် မရှိသေးပါ။ ရှိပြီးသားကတ်အားလုံးကို ပြန်လေ့ကျင့်မလား?')) return;
-    reviewQueue = [...allInFolder];
+    cards = [...allInFolder];
   }
+  const shouldShuffle = document.getElementById('fcShuffleToggle')?.checked !== false;
+  const ordered = shouldShuffle ? shuffleArray(cards) : [...cards];
+  reviewQueue = ordered.map(c => ({card: c, retry: false}));
   reviewIdx = 0;
   reviewRevealed = false;
+  reviewMissedCount = 0;
   document.getElementById('modalReview').classList.add('show');
   showReviewCard();
 }
 
-function showReviewCard() {
-  const c = reviewQueue[reviewIdx];
-  if (!c) { closeModal('modalReview'); renderFlashcardStats(); renderFlashcardList(); return; }
+async function showReviewCard() {
+  const item = reviewQueue[reviewIdx];
+  if (!item) { closeModal('modalReview'); renderFlashcardStats(); renderFlashcardList(); return; }
+  const c = item.card;
   document.getElementById('revProgress').textContent = `${reviewIdx + 1} / ${reviewQueue.length}`;
-  document.getElementById('revFront').textContent = c.front;
-  document.getElementById('revBack').textContent = c.back;
-  document.getElementById('revBack').classList.add('hidden');
+  document.getElementById('revRetryBadge').classList.toggle('hidden', !item.retry);
+  document.getElementById('revFront').innerHTML = renderRichText(c.front);
+  document.getElementById('revBack').innerHTML = renderRichText(c.back);
+
+  const fImgBox = document.getElementById('revFrontImg');
+  const bImgBox = document.getElementById('revBackImg');
+  fImgBox.innerHTML = '';
+  bImgBox.innerHTML = '';
+
+  if (c.frontImageId) {
+    const im = await idbGetImage(c.frontImageId);
+    if (im) {
+      const el = document.createElement('img');
+      el.className = 'fc-img-preview';
+      el.src = im.data;
+      el.onclick = e => { e.stopPropagation(); openFullscreen(c.frontImageId, [c.frontImageId]); };
+      fImgBox.appendChild(el);
+    }
+  }
+  if (c.backImageId) {
+    const im = await idbGetImage(c.backImageId);
+    if (im) {
+      const el = document.createElement('img');
+      el.className = 'fc-img-preview';
+      el.src = im.data;
+      el.onclick = e => { e.stopPropagation(); openFullscreen(c.backImageId, [c.backImageId]); };
+      bImgBox.appendChild(el);
+    }
+  }
+
+  document.getElementById('revBackWrap').classList.add('hidden');
   document.getElementById('revActions').classList.remove('hidden');
   document.getElementById('revAnswerBtns').classList.add('hidden');
   reviewRevealed = false;
@@ -1948,28 +2752,44 @@ function showReviewCard() {
 function revealReview() {
   if (reviewRevealed) return;
   reviewRevealed = true;
-  document.getElementById('revBack').classList.remove('hidden');
+  document.getElementById('revBackWrap').classList.remove('hidden');
   document.getElementById('revActions').classList.add('hidden');
   document.getElementById('revAnswerBtns').classList.remove('hidden');
 }
 
 async function gradeReview(correct) {
-  const c = reviewQueue[reviewIdx];
-  if (!c) return;
+  const item = reviewQueue[reviewIdx];
+  if (!item) return;
+  const c = item.card;
   const idx = cache.flashcards.findIndex(x => x.id === c.id);
   if (idx >= 0) {
     const fc = cache.flashcards[idx];
     fc.reviews = (fc.reviews || 0) + 1;
-    fc.box = correct ? Math.min(5, (fc.box || 0) + 1) : 0;
+    if (correct) {
+      // If it was a retry card in the same session, keep it at Box 1 (1 day) instead of jumping too far
+      fc.box = item.retry ? Math.max(1, fc.box || 0) : Math.min(5, (fc.box || 0) + 1);
+    } else {
+      fc.box = 0;
+    }
     fc.nextAt = Date.now() + fcIntervals()[fc.box] * 86400000;
     await saveFlashcards();
+  }
+  if (!correct) {
+    reviewMissedCount++;
+    // Re-ask missed card at the end of the current session (cap total retries per card to avoid infinite loop)
+    const retriesSoFar = reviewQueue.filter(q => q.card.id === c.id && q.retry).length;
+    if (retriesSoFar < 2) {
+      reviewQueue.push({card: c, retry: true});
+    }
   }
   reviewIdx++;
   if (reviewIdx >= reviewQueue.length) {
     closeModal('modalReview');
     renderFlashcardStats();
     renderFlashcardList();
-    alert('🎉 လေ့ကျင့်မှု ပြီးဆုံးပါပြီ!');
+    alert(reviewMissedCount > 0
+      ? `🎉 လေ့ကျင့်မှု ပြီးဆုံးပါပြီ! (မမှတ်မိသေးသော ကတ် ${reviewMissedCount} ကြိမ် ပြန်နွှေးပြီးပါပြီ)`
+      : '🎉 အားလုံးမှတ်မိပြီး လေ့ကျင့်မှု ပြီးဆုံးပါပြီ!');
   } else {
     showReviewCard();
   }
@@ -2083,10 +2903,23 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   });
 });
 
+async function cleanupOrphanTempAudio() {
+  try {
+    const allAudio = await idbAllAudio();
+    for (const a of allAudio) {
+      if (a && a.noteId === 'temp') await idbDeleteAudio(a.id);
+    }
+  } catch(e) {}
+}
+
 (async function init() {
   try {
     await openDB();
+    await cleanupOrphanTempAudio();
     await loadAllData();
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    }
     document.getElementById('todayDate').textContent = safeDateLabel();
     renderTodaySchedule();
     renderBlocks();

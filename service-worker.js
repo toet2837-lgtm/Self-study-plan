@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daily-time-v1.0.6'; // Version အသစ်ပြောင်းထားပါ
+const CACHE_NAME = 'daily-time-v1.0.8'; // Version အသစ်ပြောင်းထားပါ
 const ASSETS_TO_CACHE = [
   './',
   './index.html'
