@@ -15,12 +15,17 @@
 <style>
 :root {
   --primary: #2563eb;
+  --primary-dark: #1d4ed8;
   --primary-soft: #eff6ff;
   --ink: #0f172a;
+  --ink-soft: #334155;
   --muted: #64748b;
   --line: #e2e8f0;
-  --bg: #f8fafc;
+  --bg: #f1f5f9;
+  --surface: #f8fafc;
   --card: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.86);
+  --nav-bg: rgba(255, 255, 255, 0.92);
   --green: #10b981;
   --green-soft: #ecfdf5;
   --red: #ef4444;
@@ -29,10 +34,35 @@
   --amber-soft: #fffbeb;
   --purple: #7c3aed;
   --purple-soft: #f5f3ff;
-  --radius: 18px;
-  --radius-sm: 12px;
-  --shadow-sm: 0 1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.02);
-  --shadow-md: 0 10px 25px -5px rgba(15,23,42,0.08);
+  --radius: 20px;
+  --radius-sm: 13px;
+  --shadow-sm: 0 2px 8px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03);
+  --shadow-md: 0 16px 36px -8px rgba(15,23,42,0.16);
+}
+
+[data-theme="dark"] {
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-soft: rgba(59, 130, 246, 0.16);
+  --ink: #f1f5f9;
+  --ink-soft: #cbd5e1;
+  --muted: #94a3b8;
+  --line: #1e293b;
+  --bg: #0b1120;
+  --surface: #131c31;
+  --card: #111827;
+  --header-bg: rgba(17, 24, 39, 0.86);
+  --nav-bg: rgba(17, 24, 39, 0.94);
+  --green: #34d399;
+  --green-soft: rgba(16, 185, 129, 0.15);
+  --red: #f87171;
+  --red-soft: rgba(239, 68, 68, 0.15);
+  --amber: #fbbf24;
+  --amber-soft: rgba(245, 158, 11, 0.14);
+  --purple: #a78bfa;
+  --purple-soft: rgba(139, 92, 246, 0.16);
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.28);
+  --shadow-md: 0 18px 40px -8px rgba(0,0,0,0.55);
 }
 
 * {
@@ -822,6 +852,301 @@ nav button.active { color: var(--primary); }
 
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 .recording { background: var(--red) !important; color: #fff !important; animation: pulse 1s infinite; }
+
+/* ================= UI/UX POLISH & DARK MODE ADAPTATIONS ================= */
+body {
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding-bottom: calc(92px + env(safe-area-inset-bottom));
+}
+
+header {
+  background: var(--header-bg);
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clock-pill {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 6px 12px;
+  border-radius: 99px;
+  letter-spacing: 0.2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.theme-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.secondary { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); }
+.icon-btn { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); }
+.icon-btn.ghost, .icon-btn.danger-ghost { border-color: transparent; background: transparent; }
+
+input, textarea, select {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+input:focus, textarea:focus, select:focus {
+  background: var(--card);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.empty {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+/* Enhanced Hero Card */
+.hero-status {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 52%, #4f46e5 100%);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 28px -8px rgba(37, 99, 235, 0.38);
+}
+[data-theme="dark"] .hero-status {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 55%, #3730a3 100%);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+}
+.hero-status::after {
+  content: "";
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+  top: -60px;
+  right: -45px;
+  pointer-events: none;
+}
+
+/* Schedule & Card Dark-safe refinements */
+.tt-item {
+  background: var(--card);
+  border-color: var(--line);
+  border-left-color: var(--line);
+}
+.tt-item.done {
+  background: var(--surface);
+  border-left-color: var(--green);
+}
+.tt-item.active-now {
+  background: var(--amber-soft);
+  border-color: rgba(245, 158, 11, 0.45);
+  border-left-color: var(--amber);
+}
+.check-circle { border-color: var(--muted); }
+
+.chip {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.folder-item, .note-card {
+  background: var(--card);
+  border-color: var(--line);
+}
+.folder-item:hover, .note-card:hover {
+  border-color: var(--primary);
+}
+.note-card.pinned {
+  background: var(--amber-soft);
+  border-left: 4px solid var(--amber);
+}
+.badge-folder {
+  background: var(--surface);
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+}
+
+/* Breadcrumb Pills */
+.breadcrumb {
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.breadcrumb span {
+  background: var(--primary-soft);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+}
+
+/* Search Box with Clear Button */
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.search-wrap input {
+  padding-right: 34px;
+  margin-bottom: 0;
+}
+.search-clear {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--ink-soft);
+  font-size: 11px;
+  padding: 0;
+}
+
+/* Flashcard Stat Tiles */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.stat-tile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.stat-tile.due { background: var(--purple-soft); border-color: rgba(124,58,237,0.22); }
+.stat-tile.mastered { background: var(--green-soft); border-color: rgba(16,185,129,0.22); }
+
+/* Review Modal Progress Bar & Card */
+.rev-bar-track {
+  height: 6px;
+  background: var(--surface);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.rev-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple), var(--primary));
+  width: 0%;
+  border-radius: 99px;
+  transition: width 0.25s ease;
+}
+#revCard {
+  background: linear-gradient(145deg, var(--primary-soft), var(--card)) !important;
+  border-color: var(--line) !important;
+}
+.rev-tap-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* Exam Hero Card */
+.exam-hero {
+  background: linear-gradient(145deg, var(--card) 0%, var(--primary-soft) 100%);
+  text-align: center;
+  padding: 26px 18px;
+}
+
+/* Math & Voice Dark-mode fixes */
+.math-inline, .math-block { color: var(--ink); }
+.math-block { background: var(--surface); border-color: var(--line); }
+.math-pad { background: var(--surface); border-color: var(--line); }
+.math-key { background: var(--card); color: var(--ink); border-color: var(--line); }
+.math-key.accent { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
+.math-preview { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.math-pad-hint {
+  width: 100%;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.voice-item { background: var(--surface); border-color: var(--line); }
+.toggle-pill { background: var(--surface); border-color: var(--line); color: var(--ink); }
+
+/* Modal Bottom-Sheet Handle & Dark Surface */
+.modal {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.modal::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--line);
+  margin: -6px auto 14px;
+}
+@media (min-width: 560px) {
+  .modal::before { display: none; }
+}
+#viewNoteBody { color: var(--ink-soft) !important; }
+
+/* Bottom Navigation Pill Indicator */
+nav {
+  background: var(--nav-bg);
+  border-top-color: var(--line);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  gap: 4px;
+}
+nav button {
+  border-radius: 14px;
+  padding: 7px 4px;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+nav button.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+nav button .ico {
+  font-size: 19px;
+  transition: transform 0.18s ease;
+}
+nav button.active .ico {
+  transform: translateY(-1px) scale(1.06);
+}
+
+/* Native Floating Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(86px + env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(16px);
+  background: #0f172a;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(15,23,42,0.28);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+}
+[data-theme="dark"] .toast {
+  background: #f8fafc;
+  color: #0f172a;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 </style>
 </head>
 <body>
@@ -831,7 +1156,10 @@ nav button.active { color: var(--primary); }
     <h1>📚 Study System</h1>
     <p id="todayDate">--</p>
   </div>
-  <div id="clockNow" style="font-size:15px;font-weight:800;color:var(--primary);background:var(--primary-soft);padding:6px 11px;border-radius:99px">--:--</div>
+  <div class="header-right">
+    <div id="clockNow" class="clock-pill">--:--</div>
+    <button id="themeToggleBtn" class="theme-btn" onclick="toggleTheme()" title="အလင်း/အမှောင် ပြောင်းရန်" aria-label="Toggle theme">🌙</button>
+  </div>
 </header>
 
 <main class="container">
@@ -899,7 +1227,10 @@ nav button.active { color: var(--primary); }
       </div>
       <div class="breadcrumb" id="noteBreadcrumb"></div>
       <div class="note-tools">
-        <input id="noteSearch" placeholder="🔎 မှတ်စု သို့မဟုတ် Folder ရှာရန်..." oninput="renderNotes()">
+        <div class="search-wrap">
+          <input id="noteSearch" placeholder="🔎 မှတ်စု / Folder ရှာရန်..." oninput="onNoteSearchInput()">
+          <button type="button" id="noteSearchClear" class="search-clear hidden" onclick="clearNoteSearch()" title="ရှင်းရန်">✕</button>
+        </div>
         <select id="noteSort" onchange="renderNotes()" title="စီစဉ်ပုံ">
           <option value="newest">🕒 အသစ်ဆုံး</option>
           <option value="oldest">📅 အဟောင်းဆုံး</option>
@@ -917,18 +1248,18 @@ nav button.active { color: var(--primary); }
         <h2>🧠 Flash Memory</h2>
         <button class="small" onclick="openAddFlashcard()">＋ ကတ်အသစ်</button>
       </div>
-      <div class="row" style="text-align:center;background:#f8fafc;padding:12px;border-radius:12px;border:1px solid var(--line)">
-        <div>
+      <div class="stat-grid">
+        <div class="stat-tile due">
           <div class="muted">လေ့ကျင့်ရန်</div>
-          <div id="fcDue" style="font-size:22px;font-weight:800;color:var(--purple)">0</div>
+          <div id="fcDue" style="font-size:22px;font-weight:800;color:var(--purple);margin-top:2px">0</div>
         </div>
-        <div>
+        <div class="stat-tile">
           <div class="muted">စုစုပေါင်း</div>
-          <div id="fcTotal" style="font-size:22px;font-weight:800;color:var(--ink)">0</div>
+          <div id="fcTotal" style="font-size:22px;font-weight:800;color:var(--ink);margin-top:2px">0</div>
         </div>
-        <div>
+        <div class="stat-tile mastered">
           <div class="muted">ကျွမ်းကျင်</div>
-          <div id="fcMastered" style="font-size:22px;font-weight:800;color:var(--green)">0</div>
+          <div id="fcMastered" style="font-size:22px;font-weight:800;color:var(--green);margin-top:2px">0</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap">
@@ -949,7 +1280,7 @@ nav button.active { color: var(--primary); }
 
   <!-- 4. EXAM DATE & BACKUP TAB -->
   <section id="tab-exam" class="tab">
-    <div class="card" style="text-align:center;padding:24px 16px">
+    <div class="card exam-hero">
       <div class="muted" id="examStatus" style="font-weight:600">စာမေးပွဲရက် မသတ်မှတ်ရသေးပါ</div>
       <div id="examCount" style="font-size:44px;font-weight:900;color:var(--primary);margin:6px 0;letter-spacing:-1px">--</div>
       <div id="examMessage" style="max-width:400px;margin:10px auto 0;padding:10px 14px;border-radius:12px;background:var(--primary-soft);color:var(--primary);font-size:12px;font-weight:600">
@@ -1147,12 +1478,14 @@ nav button.active { color: var(--primary); }
   <div class="modal">
     <div class="modal-head">
       <h2>🎯 လေ့ကျင့်ခန်း <span id="revRetryBadge" class="badge badge-pin hidden">🔁 ပြန်လေ့ကျင့်</span></h2>
-      <span class="muted" id="revProgress">1 / 1</span>
+      <span class="muted" id="revProgress" style="font-weight:700">1 / 1</span>
     </div>
-    <div id="revCard" onclick="revealReview()" style="border:1.5px solid #dbeafe;border-radius:16px;padding:22px 16px;margin:8px 0;background:linear-gradient(135deg,#eff6ff,#ffffff);text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;cursor:pointer">
+    <div class="rev-bar-track"><div id="revBarFill" class="rev-bar-fill"></div></div>
+    <div id="revCard" onclick="revealReview()" style="border:1.5px solid #dbeafe;border-radius:16px;padding:22px 16px;margin:8px 0;background:linear-gradient(135deg,#eff6ff,#ffffff);text-align:center;min-height:185px;display:flex;flex-direction:column;justify-content:center;cursor:pointer">
       <div id="revFront" style="font-size:17px;font-weight:700;color:var(--ink);line-height:1.6">--</div>
       <div id="revFrontImg"></div>
-      <div id="revBackWrap" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px dashed #bfdbfe">
+      <div id="revTapHint" class="rev-tap-hint">👆 ကတ်ကိုနှိပ်ပြီး အဖြေကြည့်ပါ</div>
+      <div id="revBackWrap" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)">
         <div id="revBack" style="font-size:15px;color:var(--green);font-weight:600;line-height:1.6"></div>
         <div id="revBackImg"></div>
       </div>
@@ -1176,6 +1509,8 @@ nav button.active { color: var(--primary); }
   <button class="next" onclick="fsNav(1)">›</button>
   <div class="counter" id="fsCounter">1 / 1</div>
 </div>
+
+<div id="appToast" class="toast" role="status" aria-live="polite"></div>
 
 <!-- BOTTOM NAVIGATION -->
 <nav>
@@ -1458,7 +1793,9 @@ function formatMathCore(rawEscaped) {
   let s = rawEscaped;
   // Operators & Greek symbols
   s = s.replace(/&lt;=/g, '≤').replace(/&gt;=/g, '≥').replace(/!=/g, '≠').replace(/-&gt;/g, '→').replace(/\+-/g, '±');
-  s = s.replace(/\\times/g, '×').replace(/\\cdot/g, '·').replace(/\\div/g, '÷').replace(/\\degree/g, '°');
+  s = s.replace(/\\pm/g, '±').replace(/\\mp/g, '∓').replace(/\\le(?:q)?\b/g, '≤').replace(/\\ge(?:q)?\b/g, '≥')
+       .replace(/\\ne(?:q)?\b/g, '≠').replace(/\\to\b/g, '→').replace(/\\approx\b/g, '≈').replace(/\\propto\b/g, '∝')
+       .replace(/\\times/g, '×').replace(/\\cdot/g, '·').replace(/\\div/g, '÷').replace(/\\degree/g, '°');
   s = s.replace(/\\pi|\bpi\b/g, 'π')
        .replace(/\\theta|\btheta\b/g, 'θ')
        .replace(/\\Delta|\bDelta\b/g, 'Δ')
@@ -1494,6 +1831,13 @@ function formatMathCore(rawEscaped) {
   return s;
 }
 
+const RAW_LATEX_RE = /\\(?:frac|sqrt|vec|pm|mp|times|cdot|div|pi|theta|Delta|delta|Omega|omega|lambda|alpha|beta|gamma|mu|sigma|infty|le|ge|ne|approx|propto)\b/;
+
+function hasMathSyntax(val) {
+  if (!val) return false;
+  return val.includes('$') || RAW_LATEX_RE.test(val);
+}
+
 function renderRichText(text) {
   let s = esc(text || '');
   const mathTokens = [];
@@ -1507,6 +1851,14 @@ function renderRichText(text) {
     const id = mathTokens.push(`<span class="math-inline">${formatMathCore(expr.trim())}</span>`) - 1;
     return `\uE010${id}\uE011`;
   });
+  // Auto-render lines containing raw LaTeX commands even without $ ... $
+  s = s.split('\n').map(line => {
+    if (!line.includes('\uE010') && RAW_LATEX_RE.test(line)) {
+      const id = mathTokens.push(`<div class="math-block">${formatMathCore(line.trim())}</div>`) - 1;
+      return `\uE010${id}\uE011`;
+    }
+    return line;
+  }).join('\n');
   s = s.replace(/^### (.*)$/gm, '<h3>$1</h3>').replace(/^## (.*)$/gm, '<h2>$1</h2>').replace(/^# (.*)$/gm, '<h1>$1</h1>');
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -1572,7 +1924,7 @@ function buildMathPad(padId, textareaId, previewId) {
   if (!pad) return;
   pad.innerHTML = MATH_KEYS.map((k, idx) =>
     `<button type="button" class="math-key ${k.accent ? 'accent' : ''}" title="${esc(k.title || k.label)}" onclick="insertMathKey('${textareaId}','${previewId}',${idx})">${esc(k.label)}</button>`
-  ).join('');
+  ).join('') + '<div class="math-pad-hint">💡 ဥပမာ: $Q/P = T$ သို့မဟုတ် \\frac{a}{b} ရိုက်နိုင်ပါသည်</div>';
 }
 
 function toggleMathPad(padId) {
@@ -1585,7 +1937,7 @@ function updateMathPreview(textareaId, previewId) {
   const box = document.getElementById(previewId);
   if (!ta || !box) return;
   const val = ta.value || '';
-  if (!val.includes('$')) {
+  if (!hasMathSyntax(val)) {
     box.classList.add('hidden');
     box.innerHTML = '';
     return;
@@ -1923,6 +2275,7 @@ async function toggleNotePin(id) {
   n.pinned = !n.pinned;
   if (await saveNotes()) {
     renderNotes();
+    showToast(n.pinned ? '📌 အပေါ်ဆုံးတွင် Pin ကပ်ပြီးပါပြီ' : 'Pin ဖြုတ်လိုက်ပါပြီ');
   }
 }
 
@@ -2326,6 +2679,7 @@ async function saveNoteItem() {
     await saveNotes();
     closeModal('modalNote');
     renderNotes();
+    showToast('💾 မှတ်စု သိမ်းဆည်းပြီးပါပြီ');
   } catch(e) {
     alert('သိမ်းမရပါ: ' + e.message);
   } finally {
@@ -2500,7 +2854,7 @@ function renderFlashcardList() {
     const ready = (c.nextAt || 0) <= Date.now();
     const folderName = c.folderId != null ? getFolderPath(c.folderId) : '';
     const hasImg = Boolean(c.frontImageId || c.backImageId);
-    const previewHtml = c.front.includes('$') ? renderRichText(c.front) : esc(c.front.slice(0, 80));
+    const previewHtml = hasMathSyntax(c.front) ? renderRichText(c.front) : esc(c.front.slice(0, 80));
     return `<div class="tt-item ${ready ? 'active-now' : ''}" onclick="openEditFlashcard(${Number(c.id)})">
       <div style="min-width:0;flex:1">
         <div class="tt-act">${previewHtml}</div>
@@ -2671,6 +3025,7 @@ async function saveFlashcardItem() {
       closeModal('modalFlashcard');
       renderFlashcardStats();
       renderFlashcardList();
+      showToast('🧠 Flashcard သိမ်းဆည်းပြီးပါပြီ');
     }
   } finally {
     if (btn) btn.disabled = false;
@@ -2713,6 +3068,10 @@ async function showReviewCard() {
   if (!item) { closeModal('modalReview'); renderFlashcardStats(); renderFlashcardList(); return; }
   const c = item.card;
   document.getElementById('revProgress').textContent = `${reviewIdx + 1} / ${reviewQueue.length}`;
+  const bar = document.getElementById('revBarFill');
+  if (bar) bar.style.width = Math.round(((reviewIdx + 1) / Math.max(1, reviewQueue.length)) * 100) + '%';
+  const hint = document.getElementById('revTapHint');
+  if (hint) hint.classList.remove('hidden');
   document.getElementById('revRetryBadge').classList.toggle('hidden', !item.retry);
   document.getElementById('revFront').innerHTML = renderRichText(c.front);
   document.getElementById('revBack').innerHTML = renderRichText(c.back);
@@ -2752,6 +3111,8 @@ async function showReviewCard() {
 function revealReview() {
   if (reviewRevealed) return;
   reviewRevealed = true;
+  const hint = document.getElementById('revTapHint');
+  if (hint) hint.classList.add('hidden');
   document.getElementById('revBackWrap').classList.remove('hidden');
   document.getElementById('revActions').classList.add('hidden');
   document.getElementById('revAnswerBtns').classList.remove('hidden');
@@ -2787,8 +3148,8 @@ async function gradeReview(correct) {
     closeModal('modalReview');
     renderFlashcardStats();
     renderFlashcardList();
-    alert(reviewMissedCount > 0
-      ? `🎉 လေ့ကျင့်မှု ပြီးဆုံးပါပြီ! (မမှတ်မိသေးသော ကတ် ${reviewMissedCount} ကြိမ် ပြန်နွှေးပြီးပါပြီ)`
+    showToast(reviewMissedCount > 0
+      ? `🎉 လေ့ကျင့်မှုပြီးပါပြီ (${reviewMissedCount} ကြိမ် ပြန်နွှေးပြီး)`
       : '🎉 အားလုံးမှတ်မိပြီး လေ့ကျင့်မှု ပြီးဆုံးပါပြီ!');
   } else {
     showReviewCard();
@@ -2820,7 +3181,7 @@ async function saveExamData() {
   if (!name || !date) { alert('စာမေးပွဲအမည်နှင့် ရက်စွဲ ဖြည့်ပါ'); return; }
   cache.examName = name;
   cache.examDate = date;
-  if (await saveExam()) { renderExam(); alert('စာမေးပွဲရက် သိမ်းဆည်းပြီးပါပြီ 🎯'); }
+  if (await saveExam()) { renderExam(); showToast('🎯 စာမေးပွဲရက် သိမ်းဆည်းပြီးပါပြီ'); }
 }
 
 async function clearExam() {
@@ -2903,6 +3264,54 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   });
 });
 
+/* ================= THEME, TOAST & SEARCH UX ================= */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('appToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', isDark ? '#111827' : '#ffffff');
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('study_theme', next); } catch(e) {}
+  applyTheme(next);
+  showToast(next === 'dark' ? '🌙 Dark Mode ဖွင့်လိုက်ပါပြီ' : '☀️ Light Mode ဖွင့်လိုက်ပါပြီ');
+}
+
+function initTheme() {
+  let saved = '';
+  try { saved = localStorage.getItem('study_theme') || ''; } catch(e) {}
+  if (!saved && window.matchMedia?.('(prefers-color-scheme: dark)').matches) saved = 'dark';
+  applyTheme(saved === 'dark' ? 'dark' : 'light');
+}
+
+function onNoteSearchInput() {
+  const val = document.getElementById('noteSearch')?.value || '';
+  const clr = document.getElementById('noteSearchClear');
+  if (clr) clr.classList.toggle('hidden', !val.length);
+  renderNotes();
+}
+
+function clearNoteSearch() {
+  const inp = document.getElementById('noteSearch');
+  if (inp) { inp.value = ''; inp.focus(); }
+  onNoteSearchInput();
+}
+
 async function cleanupOrphanTempAudio() {
   try {
     const allAudio = await idbAllAudio();
@@ -2913,6 +3322,7 @@ async function cleanupOrphanTempAudio() {
 }
 
 (async function init() {
+  initTheme();
   try {
     await openDB();
     await cleanupOrphanTempAudio();
