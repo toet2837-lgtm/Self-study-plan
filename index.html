@@ -1266,14 +1266,24 @@ nav button.active .ico {
         <label class="toggle-pill"><input type="checkbox" id="fcShuffleToggle" checked> 🔀 ကတ်ရောမွှေမည်</label>
         <span class="muted" style="font-size:11px">မမှတ်မိသောကတ်ကို အဆုံးတွင် ပြန်မေးမည်</span>
       </div>
-      <button class="purple" style="width:100%;margin-top:10px" onclick="startReview()">🎯 ယခု လေ့ကျင့်မည် (Review)</button>
+      <button id="fcReviewBtn" class="purple" style="width:100%;margin-top:10px" onclick="startReview()">🎯 ယခု လေ့ကျင့်မည် (Review)</button>
     </div>
 
     <div class="card">
       <div class="section-head">
-        <h2>📂 ကတ်များ စာရင်း</h2>
+        <h2 id="fcHeader">📁 ဘာသာရပ် Folder များ</h2>
+        <div style="display:flex;gap:6px">
+          <button class="secondary small" onclick="openAddFolder('flash')">＋ Folder</button>
+          <button class="small" onclick="openAddFlashcard()">＋ ကတ်</button>
+        </div>
       </div>
-      <select id="fcFolder" onchange="renderFlashcardList()"></select>
+      <div class="breadcrumb" id="fcBreadcrumb"></div>
+      <div class="note-tools">
+        <div class="search-wrap">
+          <input id="fcSearch" placeholder="🔎 Flashcard သို့မဟုတ် Folder ရှာရန်..." oninput="onFcSearchInput()">
+          <button type="button" id="fcSearchClear" class="search-clear hidden" onclick="clearFcSearch()" title="ရှင်းရန်">✕</button>
+        </div>
+      </div>
       <div id="fcList"></div>
     </div>
   </section>
@@ -2357,7 +2367,9 @@ async function renderNotes() {
   content.innerHTML = html;
 }
 
-function openAddFolder() {
+let folderModalContext = 'notes';
+function openAddFolder(ctx = 'notes') {
+  folderModalContext = ctx;
   editingFolderId = null;
   document.getElementById('modalFolderTitle').textContent = '📁 Folder အသစ်';
   document.getElementById('folderName').value = '';
@@ -2380,12 +2392,15 @@ async function saveFolderItem() {
     const f = cache.folders.find(x => x.id === editingFolderId);
     if (f) f.name = name;
   } else {
-    cache.folders.push({id: uid(), name, parentId: currentFolderId, createdAt: Date.now()});
+    const targetParent = folderModalContext === 'flash' ? currentFcFolderId : currentFolderId;
+    cache.folders.push({id: uid(), name, parentId: targetParent, createdAt: Date.now()});
   }
   if (await saveFolders()) {
     closeModal('modalFolder');
     renderNotes();
     renderFlashcardStats();
+    renderFlashcardList();
+    showToast('📁 Folder သိမ်းဆည်းပြီးပါပြီ');
   }
 }
 
@@ -2409,8 +2424,10 @@ async function delFolder(id) {
   await saveNotes();
   await saveFlashcards();
   if (folderIds.has(currentFolderId)) currentFolderId = null;
+  if (folderIds.has(currentFcFolderId)) currentFcFolderId = null;
   renderNotes();
   renderFlashcardStats();
+  renderFlashcardList();
 }
 
 /* Note Modal & Media Handling */
@@ -2810,27 +2827,77 @@ function closeFullscreen() {
 }
 
 /* ================= 3. FLASH MEMORY ================= */
+let currentFcFolderId = null;
+
 function fcIntervals() { return [0, 1, 2, 4, 7, 14]; }
+
+function getDescendantFolderIds(rootId) {
+  const ids = new Set([rootId]);
+  let changed = true, guard = 0;
+  while (changed && guard++ < 100) {
+    changed = false;
+    for (const f of cache.folders) {
+      if (f.parentId != null && ids.has(f.parentId) && !ids.has(f.id)) {
+        ids.add(f.id);
+        changed = true;
+      }
+    }
+  }
+  return ids;
+}
+
+function getScopedFlashcards(folderId) {
+  if (folderId == null) return cache.flashcards;
+  const ids = getDescendantFolderIds(folderId);
+  return cache.flashcards.filter(c => c.folderId != null && ids.has(c.folderId));
+}
+
 function dueFlashcards(folderId) {
   const now = Date.now();
-  return cache.flashcards.filter(c => (folderId == null || c.folderId === folderId) && (c.nextAt || 0) <= now);
+  return getScopedFlashcards(folderId).filter(c => (c.nextAt || 0) <= now);
+}
+
+function openFcFolder(id) {
+  currentFcFolderId = id;
+  renderFlashcardStats();
+  renderFlashcardList();
+}
+
+function onFcSearchInput() {
+  const val = document.getElementById('fcSearch')?.value || '';
+  const clr = document.getElementById('fcSearchClear');
+  if (clr) clr.classList.toggle('hidden', !val.length);
+  renderFlashcardList();
+}
+
+function clearFcSearch() {
+  const inp = document.getElementById('fcSearch');
+  if (inp) { inp.value = ''; inp.focus(); }
+  onFcSearchInput();
 }
 
 function renderFlashcardStats() {
   const now = Date.now();
-  const due = cache.flashcards.filter(c => (c.nextAt || 0) <= now).length;
-  const mastered = cache.flashcards.filter(c => (c.box || 0) >= 4).length;
+  const scoped = getScopedFlashcards(currentFcFolderId);
+  const due = scoped.filter(c => (c.nextAt || 0) <= now).length;
+  const mastered = scoped.filter(c => (c.box || 0) >= 4).length;
   document.getElementById('fcDue').textContent = due;
-  document.getElementById('fcTotal').textContent = cache.flashcards.length;
+  document.getElementById('fcTotal').textContent = scoped.length;
   document.getElementById('fcMastered').textContent = mastered;
 
-  const cur = document.getElementById('fcFolder').value;
+  const revBtn = document.getElementById('fcReviewBtn');
+  if (revBtn) {
+    if (currentFcFolderId == null) {
+      revBtn.textContent = '🎯 အားလုံး လေ့ကျင့်မည် (Review)';
+    } else {
+      const fName = (cache.folders.find(f => f.id === currentFcFolderId) || {}).name || 'Folder';
+      revBtn.textContent = `🎯 ${fName} လေ့ကျင့်မည် (Review)`;
+    }
+  }
+
   const folderOpts = getSortedFolderOptions()
     .map(o => `<option value="${Number(o.id)}">📁 ${esc(o.path)}</option>`).join('');
-  document.getElementById('fcFolder').innerHTML = '<option value="">— Folder အားလုံး —</option>' + folderOpts;
-  document.getElementById('fcFolder').value = cur;
-
-  document.getElementById('fcCardFolder').innerHTML = '<option value="">— မသတ်မှတ်ပါ —</option>' + folderOpts;
+  document.getElementById('fcCardFolder').innerHTML = '<option value="">🏠 ပင်မ (Folder အပြင်)</option>' + folderOpts;
 }
 
 function shuffleArray(arr) {
@@ -2843,34 +2910,88 @@ function shuffleArray(arr) {
 }
 
 function renderFlashcardList() {
-  const fid = document.getElementById('fcFolder').value ? Number(document.getElementById('fcFolder').value) : null;
-  const list = cache.flashcards.filter(c => fid == null || c.folderId === fid);
+  const breadcrumb = document.getElementById('fcBreadcrumb');
+  const header = document.getElementById('fcHeader');
   const box = document.getElementById('fcList');
-  if (!list.length) {
-    box.innerHTML = '<div class="empty">Flashcard မရှိသေးပါ</div>';
-    return;
+  const query = (document.getElementById('fcSearch')?.value || '').trim().toLowerCase();
+
+  let path = [], pid = currentFcFolderId, guard = 0;
+  while (pid !== null && pid !== undefined && guard++ < 100) {
+    const f = cache.folders.find(x => x.id === pid);
+    if (!f) break;
+    path.unshift(f);
+    pid = f.parentId ?? null;
   }
-  box.innerHTML = list.map(c => {
-    const ready = (c.nextAt || 0) <= Date.now();
-    const folderName = c.folderId != null ? getFolderPath(c.folderId) : '';
-    const hasImg = Boolean(c.frontImageId || c.backImageId);
-    const previewHtml = hasMathSyntax(c.front) ? renderRichText(c.front) : esc(c.front.slice(0, 80));
-    return `<div class="tt-item ${ready ? 'active-now' : ''}" onclick="openEditFlashcard(${Number(c.id)})">
+
+  if (breadcrumb) {
+    breadcrumb.innerHTML = `<span onclick="openFcFolder(null)">🏠 ပင်မ</span>` +
+      path.map(f => ` › <span onclick="openFcFolder(${Number(f.id)})">${esc(f.name)}</span>`).join('');
+  }
+  if (header) {
+    header.textContent = currentFcFolderId == null
+      ? '📁 ဘာသာရပ် Folder များ'
+      : '📁 ' + ((cache.folders.find(x => x.id === currentFcFolderId) || {}).name || 'Folder');
+  }
+
+  let html = '';
+  const now = Date.now();
+  const subFolders = (query ? cache.folders : getFolders(currentFcFolderId))
+    .filter(f => !query || f.name.toLowerCase().includes(query) || getFolderPath(f.id).toLowerCase().includes(query));
+
+  for (const f of subFolders) {
+    const totalCards = getScopedFlashcards(f.id).length;
+    const dueCards = getScopedFlashcards(f.id).filter(c => (c.nextAt || 0) <= now).length;
+    const subCount = getFolders(f.id).length;
+    const parentHint = query && f.parentId != null
+      ? `<div class="muted" style="font-size:11px;color:var(--primary)">${esc(getFolderPath(f.parentId))}</div>`
+      : '';
+    html += `<div class="folder-item" onclick="openFcFolder(${Number(f.id)})">
       <div style="min-width:0;flex:1">
-        <div class="tt-act">${previewHtml}</div>
-        <div class="muted" style="margin-top:3px">
-          <span class="badge" style="margin-left:0">Box ${c.box || 0}</span>
-          ${folderName ? `<span class="badge">${esc(folderName)}</span>` : ''}
-          ${hasImg ? `<span class="badge">📷 ပုံပါ</span>` : ''}
-          <span style="margin-left:6px">${ready ? '✅ လေ့ကျင့်ရန်အသင့်' : '⏰ ' + new Date(c.nextAt).toLocaleDateString('my-MM')}</span>
-        </div>
+        <div style="font-weight:700;font-size:14px">📁 ${esc(f.name)}${dueCards ? ` <span class="badge" style="background:var(--purple-soft);color:var(--purple)">🎯 ${dueCards} လေ့ကျင့်ရန်</span>` : ''}</div>
+        ${parentHint}
+        <div class="muted">${totalCards} ကတ်${subCount ? ` · ${subCount} အခန်း` : ''}</div>
       </div>
-      <div style="display:flex;gap:4px">
-        <button class="icon-btn ghost" onclick="event.stopPropagation();openEditFlashcard(${Number(c.id)})">✏️</button>
-        <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delFlashcard(${Number(c.id)})">🗑</button>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="icon-btn ghost" onclick="event.stopPropagation();openEditFolder(${Number(f.id)})">✏️</button>
+        <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delFolder(${Number(f.id)})">🗑</button>
+        <span style="color:var(--muted);font-size:18px;padding-left:2px">›</span>
       </div>
     </div>`;
-  }).join('');
+  }
+
+  const cards = (query
+    ? cache.flashcards.filter(c => (`${c.front} ${c.back} ${c.folderId != null ? getFolderPath(c.folderId) : ''}`).toLowerCase().includes(query))
+    : cache.flashcards.filter(c => (c.folderId ?? null) === (currentFcFolderId ?? null))
+  );
+
+  if (cards.length) {
+    html += `<div class="muted" style="font-weight:700;margin:12px 0 6px">🧠 Flashcards (${cards.length})</div>` + cards.map(c => {
+      const ready = (c.nextAt || 0) <= now;
+      const folderBadge = query && c.folderId != null ? `<span class="badge badge-folder">📁 ${esc(getFolderPath(c.folderId))}</span>` : '';
+      const hasImg = Boolean(c.frontImageId || c.backImageId);
+      const previewHtml = hasMathSyntax(c.front) ? renderRichText(c.front) : esc(c.front.slice(0, 80));
+      return `<div class="tt-item ${ready ? 'active-now' : ''}" onclick="openEditFlashcard(${Number(c.id)})">
+        <div style="min-width:0;flex:1">
+          <div class="tt-act">${previewHtml}</div>
+          <div class="muted" style="margin-top:4px;display:flex;flex-wrap:wrap;align-items:center;gap:4px">
+            <span class="badge" style="margin-left:0">Box ${c.box || 0}</span>
+            ${folderBadge}
+            ${hasImg ? `<span class="badge" style="margin-left:0">📷 ပုံပါ</span>` : ''}
+            <span>${ready ? '✅ လေ့ကျင့်ရန်အသင့်' : '⏰ ' + new Date(c.nextAt).toLocaleDateString('my-MM')}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:2px">
+          <button class="icon-btn ghost" onclick="event.stopPropagation();openEditFlashcard(${Number(c.id)})">✏️</button>
+          <button class="icon-btn danger-ghost" onclick="event.stopPropagation();delFlashcard(${Number(c.id)})">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  if (!html) {
+    html = `<div class="empty">${query ? 'ရှာဖွေမှု မတွေ့ပါ' : 'ဒီနေရာတွင် Flashcard မရှိသေးပါ (＋ ကတ် ကိုနှိပ်၍ ထည့်ပါ)'}</div>`;
+  }
+  box.innerHTML = html;
 }
 
 let editingFcId = null;
@@ -2936,7 +3057,7 @@ function openAddFlashcard() {
   document.getElementById('fcBackImgBox').innerHTML = '';
   updateMathPreview('fcFront', 'fcFrontPreview');
   updateMathPreview('fcBack', 'fcBackPreview');
-  document.getElementById('fcCardFolder').value = document.getElementById('fcFolder').value || '';
+  document.getElementById('fcCardFolder').value = currentFcFolderId != null ? String(currentFcFolderId) : '';
   document.getElementById('modalFlashcard').classList.add('show');
 }
 
@@ -3045,10 +3166,10 @@ async function delFlashcard(id) {
 
 let reviewQueue = [], reviewIdx = 0, reviewRevealed = false, reviewMissedCount = 0;
 function startReview() {
-  const fid = document.getElementById('fcFolder').value ? Number(document.getElementById('fcFolder').value) : null;
+  const fid = currentFcFolderId;
   let cards = dueFlashcards(fid);
   if (!cards.length) {
-    const allInFolder = cache.flashcards.filter(c => fid == null || c.folderId === fid);
+    const allInFolder = getScopedFlashcards(fid);
     if (!allInFolder.length) { alert('လေ့ကျင့်ရန် Flashcard မရှိသေးပါ။ ကတ်အသစ် အရင်ထည့်ပါ။'); return; }
     if (!confirm('ယနေ့ လေ့ကျင့်ရန်ကတ် မရှိသေးပါ။ ရှိပြီးသားကတ်အားလုံးကို ပြန်လေ့ကျင့်မလား?')) return;
     cards = [...allInFolder];
